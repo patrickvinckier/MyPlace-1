@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyPlace — Map & Store Selection Screens</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple-900:#1F1B37;--purple-700:#362E5E;--purple-500:#5B4E9E;--purple-300:#A49DC9;--purple-100:#DEDBEB;--purple-50:#F1F0F7;
+    --gold-900:#7A4800;--gold-700:#B56A00;--gold-100:#FDF0C8;--gold-50:#FFFBEE;
+    --blue-500:#1E63D0;--blue-100:#D6E6FA;--blue-50:#EBF3FD;
+    --warm-white:#FAFAF8;--gray-50:#F5F4F1;--gray-100:#ECEAE5;--gray-200:#D9D6CF;--gray-300:#B8B4AB;
+    --gray-400:#918D84;--gray-500:#6B6760;--gray-700:#3D3A35;--gray-900:#1A1816;
+    --success:#1A8C5B;--success-bg:#E6F6EF;--error:#C62828;--error-bg:#FDEAEA;
+    --grad-purple:linear-gradient(135deg,#362E5E 0%,#5B4E9E 100%);
+    --font:'Plus Jakarta Sans',system-ui,sans-serif;
+    --r-sm:8px;--r-md:12px;--r-lg:16px;--r-xl:24px;--r-full:9999px;
+    --shadow-sm:0 1px 3px rgba(26,24,22,0.08);--shadow-md:0 4px 12px rgba(26,24,22,0.10);
+    --shadow-lg:0 8px 24px rgba(26,24,22,0.12);--shadow-xl:0 16px 40px rgba(26,24,22,0.14);
+    --shadow-purple:0 8px 24px rgba(91,78,158,0.28);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--font);background:#EDECE9;padding:40px;}
+  .flow-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray-400);margin-bottom:32px;}
+  .screens-row{display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start;}
+  .screen-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;}
+  .screen-label{font-size:11px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.8px;}
+  .phone{width:320px;background:var(--warm-white);border-radius:44px;box-shadow:0 0 0 8px #D1CFC9,0 0 0 10px #C8C6C0,var(--shadow-lg);overflow:hidden;}
+  .phone-notch{height:40px;background:white;display:flex;align-items:center;justify-content:space-between;padding:0 24px;font-size:12px;font-weight:600;color:var(--gray-700);}
+  .topbar{background:white;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--gray-100);box-shadow:var(--shadow-sm);}
+  .topbar-logo{font-size:20px;font-weight:800;background:var(--grad-purple);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .topbar-back{font-size:14px;font-weight:600;color:var(--purple-500);}
+  .topbar-title{font-size:15px;font-weight:700;color:var(--gray-900);}
+  .icon-btn{width:36px;height:36px;border-radius:var(--r-md);background:var(--gray-50);display:flex;align-items:center;justify-content:center;font-size:16px;}
+  .body{padding:16px;background:var(--warm-white);}
+  .btn{width:100%;padding:14px;border-radius:var(--r-lg);border:none;font-family:var(--font);font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;}
+  .btn-primary{background:var(--grad-purple);color:white;box-shadow:var(--shadow-purple);}
+  .btn-ghost{background:transparent;color:var(--gray-500);border:1.5px solid var(--gray-200);}
+  .btn-directions{background:var(--blue-50);color:var(--blue-500);border:1.5px solid var(--blue-100);}
+
+  /* MAP */
+  .map-full{position:relative;height:360px;background:linear-gradient(180deg,#C8DFC8,#A8C8A8);overflow:hidden;}
+  .map-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.15) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.15) 1px,transparent 1px);background-size:28px 28px;}
+  .map-road-h{position:absolute;background:white;opacity:0.5;}
+  .map-road-v{position:absolute;background:white;opacity:0.4;}
+  .map-controls{position:absolute;top:12px;left:12px;right:52px;z-index:10;display:flex;flex-direction:column;gap:8px;}
+  .map-search{background:white;border-radius:var(--r-lg);padding:11px 14px;display:flex;align-items:center;gap:8px;box-shadow:var(--shadow-xl);}
+  .map-search-icon{font-size:14px;color:var(--gray-400);}
+  .map-search-text{flex:1;font-size:13px;color:var(--gray-400);}
+  .filter-row{display:flex;gap:6px;overflow-x:hidden;}
+  .filter-chip{background:white;border-radius:var(--r-full);padding:6px 12px;font-size:11px;font-weight:600;color:var(--gray-700);box-shadow:var(--shadow-md);white-space:nowrap;border:1.5px solid transparent;flex-shrink:0;}
+  .filter-chip-active{background:var(--purple-700);color:white;border-color:var(--purple-700);}
+  .map-loc-btn{position:absolute;top:12px;right:12px;width:40px;height:40px;background:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:var(--shadow-xl);z-index:10;}
+  .map-pin{position:absolute;z-index:5;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;}
+  .pin-dot{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:var(--shadow-md);border:2px solid white;}
+  .pin-purple{background:var(--grad-purple);}
+  .pin-white{background:white;border-color:var(--gray-200);}
+  .pin-label{background:white;border-radius:var(--r-sm);padding:2px 6px;font-size:9px;font-weight:700;color:var(--gray-700);box-shadow:var(--shadow-sm);margin-top:2px;white-space:nowrap;}
+  .pin-label-selected{background:var(--purple-700);color:white;}
+  .user-dot{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);z-index:6;width:14px;height:14px;border-radius:50%;background:var(--blue-500);border:2px solid white;box-shadow:0 0 0 6px rgba(30,99,208,0.2);}
+
+  /* BOTTOM SHEET */
+  .bottom-sheet{background:white;border-radius:24px 24px 0 0;box-shadow:0 -4px 20px rgba(26,24,22,0.12);}
+  .bs-handle{width:36px;height:4px;background:var(--gray-200);border-radius:var(--r-full);margin:10px auto 0;}
+  .bs-header{padding:12px 20px 8px;display:flex;align-items:center;justify-content:space-between;}
+  .bs-title{font-size:14px;font-weight:700;color:var(--gray-900);}
+  .bs-count{font-size:12px;color:var(--gray-400);}
+  .store-row{display:flex;align-items:center;gap:10px;padding:11px 20px;border-top:1px solid var(--gray-100);cursor:pointer;}
+  .store-row-selected{background:var(--purple-50);border-left:3px solid var(--purple-500);}
+  .store-row-icon{width:36px;height:36px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .store-row-icon-purple{background:var(--grad-purple);}
+  .store-row-icon-gray{background:var(--gray-100);}
+  .store-row-name{font-size:13px;font-weight:700;color:var(--gray-900);}
+  .store-row-detail{font-size:11px;color:var(--gray-400);margin-top:1px;}
+  .store-row-dist{font-size:12px;font-weight:700;color:var(--purple-500);}
+  .store-row-status-open{font-size:10px;font-weight:600;color:var(--success);}
+  .store-row-status-closed{font-size:10px;font-weight:600;color:var(--error);}
+
+  /* STORE DETAIL */
+  .store-hero{background:var(--grad-purple);padding:26px 20px 30px;position:relative;overflow:hidden;}
+  .store-hero::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.07);}
+  .store-hero-name{font-size:24px;font-weight:800;color:white;margin-bottom:4px;position:relative;}
+  .store-hero-addr{font-size:13px;color:rgba(255,255,255,0.75);position:relative;}
+  .store-hero-dist{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,0.15);color:white;font-size:11px;font-weight:600;padding:4px 12px;border-radius:var(--r-full);margin-top:10px;position:relative;}
+  .detail-row{display:flex;align-items:flex-start;gap:12px;padding:13px 0;border-bottom:1px solid var(--gray-100);}
+  .detail-row:last-child{border-bottom:none;}
+  .detail-icon{width:34px;height:34px;border-radius:var(--r-md);background:var(--purple-50);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .detail-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--gray-400);margin-bottom:2px;}
+  .detail-value{font-size:13px;font-weight:600;color:var(--gray-900);}
+  .detail-sub{font-size:11px;color:var(--gray-400);margin-top:1px;}
+  .avail-row{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;}
+  .avail-yes{font-size:10px;font-weight:600;padding:3px 8px;border-radius:var(--r-full);background:var(--success-bg);color:var(--success);}
+  .avail-no{font-size:10px;font-weight:600;padding:3px 8px;border-radius:var(--r-full);background:var(--error-bg);color:var(--error);}
+  .pickup-box{background:var(--purple-50);border-radius:var(--r-lg);padding:14px;margin:0 0 14px;}
+  .pickup-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--purple-700);margin-bottom:8px;}
+  .pickup-step{display:flex;gap:8px;margin-bottom:6px;}
+  .pickup-num{width:18px;height:18px;border-radius:50%;background:var(--purple-500);color:white;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+  .pickup-text{font-size:12px;color:var(--purple-900);line-height:1.5;}
+
+  /* AVAILABILITY SCREEN */
+  .avail-section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;margin:14px 0 8px;}
+  .avail-label-yes{color:var(--success);}
+  .avail-label-no{color:var(--error);}
+  .avail-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--gray-100);}
+  .avail-item:last-child{border-bottom:none;}
+  .avail-item-icon{width:32px;height:32px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+  .avail-item-icon-yes{background:var(--success-bg);}
+  .avail-item-icon-no{background:var(--error-bg);}
+  .avail-item-name{font-size:13px;font-weight:700;color:var(--gray-900);}
+  .avail-item-desc{font-size:11px;color:var(--gray-400);}
+  .avail-status-yes{font-size:11px;font-weight:600;color:var(--success);margin-left:auto;}
+  .avail-status-no{font-size:11px;font-weight:600;color:var(--error);margin-left:auto;opacity:0.7;}
+
+  /* CONFIRMED */
+  .confirm-hero{background:var(--grad-purple);padding:36px 20px;text-align:center;color:white;position:relative;overflow:hidden;}
+  .confirm-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.06);}
+  .confirm-check{width:68px;height:68px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 14px;position:relative;}
+  .confirm-title{font-size:24px;font-weight:800;margin-bottom:4px;position:relative;}
+  .confirm-sub{font-size:13px;opacity:0.8;position:relative;}
+  .confirm-card{background:var(--purple-50);border:1.5px solid var(--purple-100);border-radius:var(--r-xl);padding:16px;margin-bottom:14px;}
+  .confirm-card-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--purple-500);margin-bottom:8px;}
+  .confirm-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--purple-100);font-size:12px;}
+  .confirm-row:last-child{border-bottom:none;}
+  .confirm-row-icon{font-size:14px;width:20px;text-align:center;}
+  .confirm-row-label{color:var(--gray-500);}
+  .confirm-row-val{font-size:12px;font-weight:700;color:var(--gray-900);margin-left:auto;}
+  .next-steps{background:var(--gold-50);border:1.5px solid var(--gold-100);border-radius:var(--r-lg);padding:14px;margin-bottom:14px;}
+  .next-steps-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--gold-700);margin-bottom:8px;}
+  .next-step-row{display:flex;gap:8px;margin-bottom:5px;font-size:12px;color:var(--gold-900);line-height:1.4;}
+</style>
+</head>
+<body>
+
+<div class="flow-title">MyPlace — Map & Store Selection</div>
+<div class="screens-row">
+
+  <!-- MAP VIEW -->
+  <div class="screen-wrap">
+    <div class="screen-label">Map View</div>
+    <div class="phone">
+      <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+      <div class="topbar">
+        <div class="topbar-back">← Back</div>
+        <div class="topbar-title">Find a Store</div>
+        <div class="icon-btn">☰</div>
+      </div>
+      <div class="map-full">
+        <div class="map-grid"></div>
+        <div class="map-road-h" style="top:45%;left:0;right:0;height:10px"></div>
+        <div class="map-road-h" style="top:65%;left:0;right:0;height:6px;opacity:0.3"></div>
+        <div class="map-road-v" style="left:30%;top:0;bottom:0;width:8px"></div>
+        <div class="map-road-v" style="left:65%;top:0;bottom:0;width:6px;opacity:0.3"></div>
+        <div class="map-controls">
+          <div class="map-search">
+            <div class="map-search-icon">🔍</div>
+            <div class="map-search-text">Search by address or ZIP...</div>
+            <div style="font-size:12px;color:var(--gray-300)">✕</div>
+          </div>
+          <div class="filter-row">
+            <div class="filter-chip filter-chip-active">All Stores</div>
+            <div class="filter-chip">🟠 Home Depot</div>
+            <div class="filter-chip">🔵 Lowe's</div>
+            <div class="filter-chip">🔴 Target</div>
+          </div>
+        </div>
+        <div class="map-loc-btn">📍</div>
+        <div class="map-pin" style="left:42%;top:48%"><div class="pin-dot pin-purple">🏪</div><div class="pin-label pin-label-selected">Home Depot</div></div>
+        <div class="map-pin" style="left:68%;top:55%"><div class="pin-dot pin-white">🏬</div><div class="pin-label">Target</div></div>
+        <div class="map-pin" style="left:25%;top:62%"><div class="pin-dot pin-white">🏪</div><div class="pin-label">Lowe's</div></div>
+        <div class="map-pin" style="left:72%;top:35%"><div class="pin-dot pin-white">🏬</div><div class="pin-label">Walmart</div></div>
+        <div class="user-dot"></div>
+      </div>
+      <div class="bottom-sheet">
+        <div class="bs-handle"></div>
+        <div class="bs-header"><div class="bs-title">Nearby Stores</div><div class="bs-count">4 locations</div></div>
+        <div class="store-row store-row-selected">
+          <div class="store-row-icon store-row-icon-purple">🏪</div>
+          <div style="flex:1"><div class="store-row-name">Home Depot</div><div class="store-row-detail">Washington St, Boston</div></div>
+          <div style="text-align:right"><div class="store-row-dist">0.8 mi</div><div class="store-row-status-open">Open · until 9pm</div></div>
+        </div>
+        <div class="store-row">
+          <div class="store-row-icon store-row-icon-gray">🏬</div>
+          <div style="flex:1"><div class="store-row-name">Target</div><div class="store-row-detail">Commonwealth Ave</div></div>
+          <div style="text-align:right"><div class="store-row-dist">1.4 mi</div><div class="store-row-status-open">Open · until 10pm</div></div>
+        </div>
+        <div class="store-row">
+          <div class="store-row-icon store-row-icon-gray">🏪</div>
+          <div style="flex:1"><div class="store-row-name">Lowe's</div><div class="store-row-detail">Brighton Ave</div></div>
+          <div style="text-align:right"><div class="store-row-dist">2.1 mi</div><div class="store-row-status-closed">Closed · opens 8am</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STORE DETAIL -->
+  <div class="screen-wrap">
+    <div class="screen-label">Store Detail</div>
+    <div class="phone">
+      <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+      <div class="topbar">
+        <div class="topbar-back">← Map</div>
+        <div class="topbar-title">Store Details</div>
+        <div class="icon-btn">☰</div>
+      </div>
+      <div class="store-hero">
+        <div class="store-hero-name">Home Depot</div>
+        <div class="store-hero-addr">75 Washington St, Boston, MA 02111</div>
+        <div class="store-hero-dist">📍 0.8 miles away</div>
+      </div>
+      <div class="body" style="padding:0 16px">
+        <div class="detail-row">
+          <div class="detail-icon">🕐</div>
+          <div><div class="detail-label">Hours</div><div class="detail-value">Open · Closes at 9:00 PM</div><div class="detail-sub">Mon–Sat 6am–9pm · Sun 7am–8pm</div></div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-icon">📞</div>
+          <div><div class="detail-label">Phone</div><div class="detail-value" style="color:var(--purple-500)">(617) 556-0001</div></div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-icon">🧺</div>
+          <div style="flex:1">
+            <div class="detail-label">Bundle Availability</div>
+            <div class="avail-row">
+              <span class="avail-yes">✓ Scrubbing Bubbles</span>
+              <span class="avail-yes">✓ Mrs. Meyer's</span>
+              <span class="avail-yes">✓ Windex</span>
+              <span class="avail-no">✕ Pledge</span>
+              <span class="avail-yes">✓ Ziploc</span>
+            </div>
+            <div style="font-size:11px;color:var(--purple-500);font-weight:600;margin-top:6px;cursor:pointer">See full availability →</div>
+          </div>
+        </div>
+      </div>
+      <div class="pickup-box" style="margin:0 16px 14px">
+        <div class="pickup-title">📋 Pickup Instructions</div>
+        <div class="pickup-step"><div class="pickup-num">1</div><div class="pickup-text">Show your MyPlace QR code at the customer service desk</div></div>
+        <div class="pickup-step"><div class="pickup-num">2</div><div class="pickup-text">A team member will retrieve your bundle from the back</div></div>
+        <div class="pickup-step"><div class="pickup-num">3</div><div class="pickup-text">Verify your items and enjoy your home essentials!</div></div>
+      </div>
+      <div style="padding:0 16px 16px">
+        <div class="btn btn-primary">✓ Confirm This Location</div>
+        <div class="btn btn-directions">🗺 Get Directions</div>
+        <div class="btn btn-ghost" style="font-size:13px">← Choose a Different Store</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUNDLE AVAILABILITY -->
+  <div class="screen-wrap">
+    <div class="screen-label">Bundle Availability</div>
+    <div class="phone">
+      <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+      <div class="topbar">
+        <div class="topbar-back">← Store Details</div>
+        <div class="topbar-title">Bundle Items</div>
+        <div class="icon-btn">☰</div>
+      </div>
+      <div style="padding:12px 16px;background:var(--purple-50);border-bottom:1px solid var(--purple-100);display:flex;align-items:center;gap:10px">
+        <div style="font-size:13px;font-weight:700;color:var(--purple-900)">Home Depot · Washington St</div>
+        <div style="margin-left:auto;font-size:10px;font-weight:600;padding:3px 8px;background:var(--success-bg);color:var(--success);border-radius:var(--r-full)">5 of 6 available</div>
+      </div>
+      <div class="body">
+        <div class="avail-section-label avail-label-yes">✓ Available at this store</div>
+        <div style="background:white;border-radius:var(--r-lg);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:14px">
+          <div class="avail-item"><div class="avail-item-icon avail-item-icon-yes">🫧</div><div style="flex:1"><div class="avail-item-name">Scrubbing Bubbles</div><div class="avail-item-desc">Bathroom cleaner · 20 oz</div></div><div class="avail-status-yes">✓ In stock</div></div>
+          <div class="avail-item"><div class="avail-item-icon avail-item-icon-yes">🍋</div><div style="flex:1"><div class="avail-item-name">Mrs. Meyer's Dish Soap</div><div class="avail-item-desc">Lemon verbena · 16 oz</div></div><div class="avail-status-yes">✓ In stock</div></div>
+          <div class="avail-item"><div class="avail-item-icon avail-item-icon-yes">🪟</div><div style="flex:1"><div class="avail-item-name">Windex Glass Cleaner</div><div class="avail-item-desc">Original · 23 oz</div></div><div class="avail-status-yes">✓ In stock</div></div>
+          <div class="avail-item"><div class="avail-item-icon avail-item-icon-yes">🥡</div><div style="flex:1"><div class="avail-item-name">Ziploc Gallon Bags</div><div class="avail-item-desc">20 count</div></div><div class="avail-status-yes">✓ In stock</div></div>
+          <div class="avail-item"><div class="avail-item-icon avail-item-icon-yes">🚿</div><div style="flex:1"><div class="avail-item-name">Drano Clog Remover</div><div class="avail-item-desc">Max Gel · 32 oz</div></div><div class="avail-status-yes">✓ In stock</div></div>
+        </div>
+        <div class="avail-section-label avail-label-no">✕ Not available at this store</div>
+        <div style="background:white;border-radius:var(--r-lg);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:14px;opacity:0.7">
+          <div class="avail-item"><div class="avail-item-icon avail-item-icon-no">✨</div><div style="flex:1"><div class="avail-item-name">Pledge Multi-Surface</div><div class="avail-item-desc">Cleaner · 9.7 oz</div></div><div class="avail-status-no">✕ Out of stock</div></div>
+        </div>
+        <div style="background:var(--gold-50);border:1.5px solid var(--gold-100);border-radius:var(--r-lg);padding:12px;margin-bottom:14px;font-size:12px;color:var(--gold-900);line-height:1.5">💡 <strong>Missing an item?</strong> You'll still receive your full bundle value.</div>
+        <div class="btn btn-primary" style="font-size:14px">← Back to Store Details</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STORE CONFIRMED -->
+  <div class="screen-wrap">
+    <div class="screen-label">Store Confirmed</div>
+    <div class="phone">
+      <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+      <div class="topbar">
+        <div class="topbar-logo">MyPlace</div>
+        <div style="display:flex;gap:6px"><div class="icon-btn">🔔</div><div class="icon-btn">☰</div></div>
+      </div>
+      <div class="confirm-hero">
+        <div class="confirm-check">✓</div>
+        <div class="confirm-title">Store Selected!</div>
+        <div class="confirm-sub">Your pickup location has been saved</div>
+      </div>
+      <div class="body">
+        <div class="confirm-card">
+          <div class="confirm-card-title">Your Pickup Store</div>
+          <div class="confirm-row"><div class="confirm-row-icon">🏪</div><div class="confirm-row-label">Store</div><div class="confirm-row-val">Home Depot</div></div>
+          <div class="confirm-row"><div class="confirm-row-icon">📍</div><div class="confirm-row-label">Address</div><div class="confirm-row-val">75 Washington St</div></div>
+          <div class="confirm-row"><div class="confirm-row-icon">📏</div><div class="confirm-row-label">Distance</div><div class="confirm-row-val">0.8 miles</div></div>
+          <div class="confirm-row"><div class="confirm-row-icon">🕐</div><div class="confirm-row-label">Hours today</div><div class="confirm-row-val">Open until 9pm</div></div>
+        </div>
+        <div class="next-steps">
+          <div class="next-steps-title">What happens next</div>
+          <div class="next-step-row"><span>🎟</span><span>Your 5% discount code for Home Depot is now active</span></div>
+          <div class="next-step-row"><span>🧺</span><span>Head to the customer service desk with your QR code</span></div>
+          <div class="next-step-row"><span>🔄</span><span>You can change your store anytime from Home</span></div>
+        </div>
+        <div class="btn btn-primary">Continue →</div>
+        <div class="btn btn-ghost" style="font-size:13px">🗺 Get Directions</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
