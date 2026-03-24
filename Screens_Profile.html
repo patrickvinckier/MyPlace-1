@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyPlace — Profile & Account Screens</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple-900:#1F1B37;--purple-700:#362E5E;--purple-500:#5B4E9E;--purple-300:#A49DC9;--purple-100:#DEDBEB;--purple-50:#F1F0F7;
+    --gold-900:#7A4800;--gold-700:#B56A00;--gold-500:#E08C00;--gold-100:#FDF0C8;--gold-50:#FFFBEE;
+    --blue-900:#0A2D6E;--blue-700:#1348A8;
+    --warm-white:#FAFAF8;--gray-50:#F5F4F1;--gray-100:#ECEAE5;--gray-200:#D9D6CF;--gray-300:#B8B4AB;
+    --gray-400:#918D84;--gray-500:#6B6760;--gray-700:#3D3A35;--gray-900:#1A1816;
+    --success:#1A8C5B;--success-bg:#E6F6EF;--error:#C62828;--error-bg:#FDEAEA;
+    --warning:#C97B00;--warning-bg:#FEF3D8;
+    --grad-purple:linear-gradient(135deg,#362E5E 0%,#5B4E9E 100%);
+    --grad-gold:linear-gradient(135deg,#B56A00 0%,#E08C00 100%);
+    --grad-allstate:linear-gradient(135deg,#0A2D6E 0%,#1348A8 100%);
+    --font:'Plus Jakarta Sans',system-ui,sans-serif;
+    --r-sm:8px;--r-md:12px;--r-lg:16px;--r-xl:24px;--r-full:9999px;
+    --shadow-sm:0 1px 3px rgba(26,24,22,0.08);--shadow-md:0 4px 12px rgba(26,24,22,0.10);
+    --shadow-lg:0 8px 24px rgba(26,24,22,0.12);
+    --shadow-purple:0 8px 24px rgba(91,78,158,0.28);--shadow-gold:0 8px 24px rgba(224,140,0,0.22);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--font);background:#EDECE9;padding:40px;}
+  .flow-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray-400);margin-bottom:32px;}
+  .screens-row{display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start;}
+  .screen-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;}
+  .screen-label{font-size:11px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.8px;}
+  .phone{width:320px;background:var(--warm-white);border-radius:44px;box-shadow:0 0 0 8px #D1CFC9,0 0 0 10px #C8C6C0,var(--shadow-lg);overflow:hidden;}
+  .phone-notch{height:40px;background:white;display:flex;align-items:center;justify-content:space-between;padding:0 24px;font-size:12px;font-weight:600;color:var(--gray-700);}
+  .topbar{background:white;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--gray-100);box-shadow:var(--shadow-sm);}
+  .topbar-logo{font-size:20px;font-weight:800;background:var(--grad-purple);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .topbar-back{font-size:14px;font-weight:600;color:var(--purple-500);}
+  .topbar-title{font-size:15px;font-weight:700;color:var(--gray-900);}
+  .topbar-action{font-size:14px;font-weight:700;color:var(--purple-500);}
+  .icon-btn{width:36px;height:36px;border-radius:var(--r-md);background:var(--gray-50);display:flex;align-items:center;justify-content:center;font-size:16px;}
+  .body{padding:16px;background:var(--warm-white);}
+  .btn{width:100%;padding:14px;border-radius:var(--r-lg);border:none;font-family:var(--font);font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;}
+  .btn-primary{background:var(--grad-purple);color:white;box-shadow:var(--shadow-purple);}
+  .btn-ghost{background:transparent;color:var(--gray-500);border:1.5px solid var(--gray-200);}
+  .btn-danger{background:var(--error-bg);color:var(--error);border:none;}
+
+  /* PROFILE HUB */
+  .profile-hero{background:var(--grad-purple);padding:26px 20px 30px;position:relative;overflow:hidden;}
+  .profile-hero::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.07);}
+  .avatar{width:68px;height:68px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:30px;border:2px solid rgba(255,255,255,0.3);margin-bottom:12px;position:relative;}
+  .profile-name{font-size:22px;font-weight:800;color:white;margin-bottom:2px;position:relative;}
+  .profile-email{font-size:13px;color:rgba(255,255,255,0.7);position:relative;}
+  .profile-since{font-size:11px;color:rgba(255,255,255,0.5);margin-top:4px;position:relative;}
+
+  .savings-card{background:var(--gold-50);border:1.5px solid var(--gold-100);border-radius:var(--r-xl);padding:14px 16px;display:flex;align-items:center;gap:12px;margin:14px 16px 0;box-shadow:var(--shadow-sm);}
+  .savings-icon{width:44px;height:44px;background:var(--grad-gold);border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:var(--shadow-gold);flex-shrink:0;}
+  .savings-amount{font-size:22px;font-weight:800;color:var(--gold-900);}
+  .savings-label{font-size:11px;color:var(--gold-700);font-weight:500;}
+
+  .status-card{background:white;border-radius:var(--r-xl);border:1.5px solid var(--gray-100);margin:10px 16px 0;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow-sm);}
+  .status-icon{width:40px;height:40px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+  .status-icon-active{background:var(--success-bg);}
+  .status-title{font-size:14px;font-weight:700;color:var(--gray-900);}
+  .status-sub{font-size:12px;color:var(--gray-400);margin-top:1px;}
+  .status-link{font-size:12px;font-weight:700;color:var(--purple-500);margin-left:auto;}
+
+  .policy-card{background:white;border-radius:var(--r-xl);border:1.5px solid var(--gray-100);margin:10px 16px 0;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow-sm);}
+  .policy-icon{width:40px;height:40px;border-radius:var(--r-md);background:var(--purple-50);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+  .policy-title{font-size:14px;font-weight:700;color:var(--gray-900);}
+  .policy-num{font-size:12px;color:var(--gray-400);margin-top:1px;font-family:monospace;}
+  .verified-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:var(--r-full);background:var(--success-bg);color:var(--success);}
+
+  .section-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--gray-400);margin:16px 0 6px;}
+  .menu-row{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--gray-100);cursor:pointer;}
+  .menu-row:last-child{border-bottom:none;}
+  .menu-icon{width:36px;height:36px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+  .menu-icon-purple{background:var(--purple-50);}
+  .menu-icon-red{background:var(--error-bg);}
+  .menu-label{font-size:14px;font-weight:600;color:var(--gray-900);}
+  .menu-sub{font-size:12px;color:var(--gray-400);margin-top:1px;}
+  .menu-arrow{color:var(--gray-300);font-size:18px;margin-left:auto;}
+  .menu-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:var(--r-full);margin-left:auto;margin-right:6px;}
+  .badge-green{background:var(--success-bg);color:var(--success);}
+  .badge-purple{background:var(--purple-100);color:var(--purple-700);}
+  .signout-row{display:flex;align-items:center;gap:12px;padding:13px 0;cursor:pointer;margin-top:4px;}
+  .signout-label{font-size:14px;font-weight:700;color:var(--error);}
+
+  /* EDIT PROFILE */
+  .edit-field{margin-bottom:16px;}
+  .edit-label{font-size:12px;font-weight:700;color:var(--gray-500);margin-bottom:5px;display:flex;justify-content:space-between;align-items:center;}
+  .edit-label-btn{font-size:12px;font-weight:700;color:var(--purple-500);}
+  .edit-static{font-size:15px;font-weight:600;color:var(--gray-900);padding:12px 14px;background:white;border-radius:var(--r-md);border:1.5px solid var(--gray-100);}
+  .edit-active{border-color:var(--purple-500);box-shadow:0 0 0 3px var(--purple-50);color:var(--gray-900);}
+  .warning-notice{background:var(--warning-bg);border-radius:var(--r-md);padding:10px 12px;font-size:12px;color:var(--warning);margin-top:10px;line-height:1.5;}
+  .edit-actions{display:flex;gap:10px;margin-top:20px;}
+  .save-btn{flex:1;padding:13px;background:var(--grad-purple);color:white;border:none;border-radius:var(--r-lg);font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;}
+  .cancel-btn{padding:13px 20px;background:transparent;color:var(--gray-500);border:1.5px solid var(--gray-200);border-radius:var(--r-lg);font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;}
+
+  /* ADDRESS MANAGEMENT */
+  .addr-card{background:white;border-radius:var(--r-lg);border:1.5px solid var(--gray-100);padding:14px;margin-bottom:10px;box-shadow:var(--shadow-sm);}
+  .addr-card-primary{border-color:var(--purple-500);background:var(--purple-50);}
+  .addr-card-row{display:flex;align-items:flex-start;gap:10px;}
+  .addr-icon{width:36px;height:36px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .addr-icon-primary{background:var(--grad-purple);}
+  .addr-icon-gray{background:var(--gray-100);}
+  .addr-type{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:2px;}
+  .addr-type-primary{color:var(--purple-500);}
+  .addr-type-other{color:var(--gray-400);}
+  .addr-text{font-size:13px;font-weight:600;color:var(--gray-900);}
+  .addr-sub{font-size:12px;color:var(--gray-400);}
+  .addr-actions{display:flex;gap:12px;margin-top:10px;padding-top:8px;border-top:1px solid var(--gray-100);}
+  .addr-btn{font-size:12px;font-weight:700;color:var(--purple-500);}
+  .addr-btn-delete{color:var(--error);}
+  .add-addr{display:flex;align-items:center;gap:10px;padding:14px;border:1.5px dashed var(--gray-200);border-radius:var(--r-lg);cursor:pointer;}
+  .add-addr-label{font-size:13px;font-weight:600;color:var(--gray-500);}
+
+  /* NOTIFICATION PREFS */
+  .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--gray-100);}
+  .toggle-row:last-child{border-bottom:none;}
+  .toggle-label{font-size:14px;font-weight:600;color:var(--gray-900);}
+  .toggle-sub{font-size:12px;color:var(--gray-400);margin-top:2px;}
+  .toggle{width:44px;height:24px;border-radius:var(--r-full);position:relative;flex-shrink:0;}
+  .toggle-on{background:var(--purple-500);}
+  .toggle-off{background:var(--gray-200);}
+  .toggle-dot{position:absolute;top:3px;width:18px;height:18px;border-radius:50%;background:white;box-shadow:var(--shadow-sm);}
+  .toggle-dot-on{right:3px;}
+  .toggle-dot-off{left:3px;}
+
+  /* PRIVACY */
+  .data-action{display:flex;align-items:center;justify-content:space-between;padding:13px 14px;background:white;border-radius:var(--r-md);border:1px solid var(--gray-100);margin-bottom:8px;}
+  .data-action-label{font-size:14px;font-weight:600;color:var(--gray-900);}
+  .data-action-link{font-size:13px;font-weight:700;color:var(--purple-500);}
+  .data-action-danger{background:var(--error-bg);border-color:var(--error-bg);}
+  .data-action-danger .data-action-label{color:var(--error);}
+  .data-action-danger .data-action-link{color:var(--error);}
+
+  /* CHANGE PASSWORD */
+  .field{margin-bottom:13px;}
+  .label{font-size:12px;font-weight:700;color:var(--gray-700);margin-bottom:5px;display:block;}
+  .input{width:100%;padding:12px 14px;border-radius:var(--r-md);border:1.5px solid var(--gray-200);background:white;font-family:var(--font);font-size:14px;color:var(--gray-400);box-shadow:var(--shadow-sm);}
+  .input-active{border-color:var(--purple-500);box-shadow:0 0 0 3px var(--purple-50);}
+  .strength-bar{display:flex;gap:4px;margin:8px 0 4px;}
+  .strength-seg{flex:1;height:4px;border-radius:2px;}
+  .strength-green{background:var(--success);}
+  .strength-empty{background:var(--gray-100);}
+  .strength-label{font-size:11px;color:var(--success);font-weight:600;margin-bottom:12px;}
+
+  /* ALLSTATE ACCOUNT */
+  .allstate-header{background:var(--grad-allstate);padding:18px 20px;display:flex;align-items:center;gap:12px;}
+  .allstate-avatar{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:22px;border:2px solid rgba(255,255,255,0.3);flex-shrink:0;}
+  .allstate-title{font-size:16px;font-weight:800;color:white;}
+  .allstate-sub{font-size:12px;color:rgba(255,255,255,0.7);}
+  .active-badge{margin-left:auto;font-size:10px;font-weight:700;padding:4px 10px;background:var(--success-bg);color:var(--success);border-radius:var(--r-full);}
+  .detail-row{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--gray-100);}
+  .detail-row:last-child{border-bottom:none;}
+  .detail-label{font-size:13px;color:var(--gray-400);}
+  .detail-val{font-size:13px;font-weight:700;color:var(--gray-900);}
+</style>
+</head>
+<body>
+
+<div class="flow-title">MyPlace — Profile & Account</div>
+<div class="screens-row">
+
+  <!-- PROFILE HUB -->
+  <div class="screen-wrap">
+    <div class="screen-label">Profile Hub</div>
+    <div class="phone">
+      <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+      <div class="topbar"><div class="topbar-back">← Back</div><div class="topbar-title">My Profile</div><div class="icon-btn">☰</div></div>
+      <div class="profile-hero">
+        <div class="avatar">👤</div>
+        <div class="profile-name">Jane Smith</div>
+        <div class="profile-email">jane@example.com</div>
+        <div class="profile-since">Member since March 2024</div>
+      </div>
+      <div class="savings-card">
+        <div class="savings-icon">💰</div>
+        <div><div class="savings-amount">$47.50</div><div class="savings-label">Total saved with MyPlace</div></div>
+      </div>
+      <div class="status-card">
+        <div class="status-icon status-icon-active">📦</div>
+        <div style="flex:1"><div class="status-title">Subscription Active</div><div class="status-sub">Next delivery in 12 days</div></div>
+        <div class="status-link">Manage →</div>
+      </div>
+      <div class="policy-card">
+        <div class="policy-icon">🛡️</div>
+        <div style="flex:1"><div class="policy-title">Allstate Renters Policy</div><div class="policy-num">#123 456 789</div></div>
+        <div class="verified-badge">✓ Verified</div>
+      </div>
+      <div class="body">
+        <div class="section-lbl">Account Settings</div>
+        <div class="menu-row"><div class="menu-icon menu-icon-purple">✏️</div><div><div class="menu-label">Edit Profile</div><div class="menu-sub">Name, email, phone</div></div><div class="menu-arrow">›</div></div>
+        <div class="menu-row"><div class="menu-icon menu-icon-purple">📍</div><div><div class="menu-label">Address Management</div><div class="menu-sub">Delivery addresses</div></div><div class="menu-arrow">›</div></div>
+        <div class="menu-row"><div class="menu-icon menu-icon-purple">🔑</div><div><div class="menu-label">Change Password</div><div class="menu-sub">Update your password</div></div><div class="menu-arrow">›</div></div>
+        <div class="menu-row"><div class="menu-icon menu-icon-purple">🛡️</div><div><div class="menu-label">Linked Allstate Account</div><div class="menu-sub">Policy details</div></div><div class="menu-badge badge-green">✓ Verified</div><div class="menu-arrow">›</div></div>
+        <div class="section-lbl">Preferences</div>
+        <div class="menu-row"><div class="menu-icon menu-icon-purple">🔔</div><div><div class="menu-label">Notification Preferences</div><div class="menu-sub">Delivery, offers, reminders</div></div><div class="menu-badge badge-purple">3 on</div><div class="menu-arrow">›</div></div>
+        <div class="menu-row"><div class="menu-icon menu-icon-purple">🔒</div><div><div class="menu-label">Privacy Settings</div><div class="menu-sub">Data and marketing</div></div><div class="menu-arrow">›</div></div>
+        <div class="signout-row"><div class="menu-icon menu-icon-red">↪</div><div class="signout-label">Sign Out</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDIT PROFILE -->
+  <div class="screen-wrap">
+    <div class="screen-label">Edit Profile</div>
+    <div class="phone">
+      <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+      <div class="topbar"><div class="topbar-back">← Profile</div><div class="topbar-title">Edit Profile</div><div class="topbar-action">Save</div></div>
+      <div class="body">
+        <div class="edit-field">
+          <div class="edit-label">Full Name <span class="edit-label-btn">Edit</span></div>
+          <div class="edit-static">Jane Smith</div>
+        </div>
+        <div class="edit-field">
+          <div class="edit-label">Email Address <span class="edit-label-btn">Edit</span></div>
+          <div class="edit-static edit-active">jane.smith@example.com|</div>
+        </div>
+        <div class="edit-field">
+          <div class="edit-label">Phone Number <span class="edit-label-btn">Edit</span></div>
+          <div class="edit-static">(617) 555-0192</div>
+        </div>
+        <div class="warning-notice">⚠️ Changing your email will require re-verification before taking effect.</div>
+        <div class="edit-actions">
+          <button class="save-btn">Save Changes</button>
+          <button class="cancel-btn">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADDRESS MANAGEMENT -->
+  <div class="screen-wrap">
+    <div class="screen-label">Address Management</div>
+    <div class="phone">
+      <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+      <div class="topbar"><div class="topbar-back">← Profile</div><div class="topbar-title">Addresses</div><div class="topbar-action">+ Add</div></div>
+      <div class="body">
+        <div class="section-lbl">Your Addresses</div>
+        <div class="addr-card addr-card-primary">
+          <div class="addr-card-row">
+            <div class="addr-icon addr-icon-primary">🏠</div>
+            <div style="flex:1">
+              <div class="addr-type addr-type-primary">Primary Delivery</div>
+              <div class="addr-text">123 Main St, Apt 4B</div>
+              <div class="addr-sub">Boston, MA 02101</div>
+            </div>
+          </div>
+          <div class="addr-actions">
+            <span class="addr-btn">Edit</span>
+          </div>
+        </div>
+        <div class="addr-card">
+          <div class="addr-card-row">
+            <div class="addr-icon addr-icon-gray">🏢</div>
+            <div style="flex:1">
+              <div class="addr-type addr-type-other">Work</div>
+              <div class="addr-text">456 Office Park, Suite 200</div>
+              <div class="addr-sub">Cambridge, MA 02139</div>
+            </div>
+          </div>
+          <div class="addr-actions">
+            <span class="addr-btn">Edit</span>
+            <span class="addr-btn">Set as primary</span>
+            <span class="addr-btn addr-btn-delete" style="margin-left:auto">Delete</span>
+          </div>
+        </div>
+        <div class="add-addr">
+          <span style="font-size:20px">➕</span>
+          <span class="add-addr-label">Add new address</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTIFICATION PREFERENCES -->
+  <div class="screen-wrap">
+    <div class="screen-label">Notification Preferences</div>
+    <div class="phone">
+      <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+      <div class="topbar"><div class="topbar-back">← Profile</div><div class="topbar-title">Notifications</div><div style="width:40px"></div></div>
+      <div class="body">
+        <div class="section-lbl">Delivery</div>
+        <div class="toggle-row"><div><div class="toggle-label">Delivery Updates</div><div class="toggle-sub">Shipping & arrival alerts</div></div><div class="toggle toggle-on"><div class="toggle-dot toggle-dot-on"></div></div></div>
+        <div class="toggle-row"><div><div class="toggle-label">Order Confirmed</div><div class="toggle-sub">When an order is placed</div></div><div class="toggle toggle-on"><div class="toggle-dot toggle-dot-on"></div></div></div>
+        <div class="section-lbl">Offers & Reminders</div>
+        <div class="toggle-row"><div><div class="toggle-label">Exclusive Offers</div><div class="toggle-sub">Deals for Allstate customers</div></div><div class="toggle toggle-on"><div class="toggle-dot toggle-dot-on"></div></div></div>
+        <div class="toggle-row"><div><div class="toggle-label">Renewal Reminders</div><div class="toggle-sub">Before policy renewal</div></div><div class="toggle toggle-off"><div class="toggle-dot toggle-dot-off"></div></div></div>
+        <div class="toggle-row"><div><div class="toggle-label">Marketing Emails</div><div class="toggle-sub">Product news & updates</div></div><div class="toggle toggle-off"><div class="toggle-dot toggle-dot-off"></div></div></div>
+        <div class="btn btn-primary" style="margin-top:20px">Save Preferences</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRIVACY SETTINGS -->
+  <div class="screen-wrap">
+    <div class="screen-label">Privacy Settings</div>
+    <div class="phone">
+      <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+      <div class="topbar"><div class="topbar-back">← Profile</div><div class="topbar-title">Privacy</div><div style="width:40px"></div></div>
+      <div class="body">
+        <div class="section-lbl">Data Usage</div>
+        <div class="toggle-row"><div><div class="toggle-label">Usage Analytics</div><div class="toggle-sub">Help improve the app</div></div><div class="toggle toggle-on"><div class="toggle-dot toggle-dot-on"></div></div></div>
+        <div class="toggle-row"><div><div class="toggle-label">Personalization</div><div class="toggle-sub">Tailored product suggestions</div></div><div class="toggle toggle-on"><div class="toggle-dot toggle-dot-on"></div></div></div>
+        <div class="section-lbl">Your Data</div>
+        <div class="data-action"><span class="data-action-label">Download My Data</span><span class="data-action-link">Request →</span></div>
+        <div class="data-action data-action-danger"><span class="data-action-label">Delete My Account</span><span class="data-action-link">→</span></div>
+        <div class="btn btn-primary" style="margin-top:20px">Save Settings</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHANGE PASSWORD -->
+  <div class="screen-wrap">
+    <div class="screen-label">Change Password</div>
+    <div class="phone">
+      <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+      <div class="topbar"><div class="topbar-back">← Profile</div><div class="topbar-title">Change Password</div><div style="width:40px"></div></div>
+      <div class="body">
+        <div style="font-size:14px;color:var(--gray-400);margin-bottom:20px;line-height:1.5">Enter your current password, then choose a new one.</div>
+        <div class="field"><label class="label">Current Password</label><div class="input">••••••••</div></div>
+        <div class="field"><label class="label">New Password</label><div class="input input-active">••••••••|</div></div>
+        <div class="field"><label class="label">Confirm New Password</label><div class="input">••••••••</div></div>
+        <div class="strength-bar">
+          <div class="strength-seg strength-green"></div>
+          <div class="strength-seg strength-green"></div>
+          <div class="strength-seg strength-green"></div>
+          <div class="strength-seg strength-empty"></div>
+        </div>
+        <div class="strength-label">Strong password</div>
+        <div class="btn btn-primary">Update Password</div>
+        <div class="btn btn-ghost">Cancel</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LINKED ALLSTATE ACCOUNT -->
+  <div class="screen-wrap">
+    <div class="screen-label">Linked Allstate Account</div>
+    <div class="phone">
+      <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+      <div class="topbar"><div class="topbar-back">← Profile</div><div class="topbar-title">Allstate Account</div><div style="width:40px"></div></div>
+      <div style="background:var(--warm-white)">
+        <div class="allstate-header">
+          <div class="allstate-avatar">🛡️</div>
+          <div><div class="allstate-title">Allstate Insurance</div><div class="allstate-sub">Linked & Verified</div></div>
+          <div class="active-badge">✓ Active</div>
+        </div>
+        <div class="detail-row"><span class="detail-label">Policy Type</span><span class="detail-val">Renters Insurance</span></div>
+        <div class="detail-row"><span class="detail-label">Policy Number</span><span class="detail-val">#123 456 789</span></div>
+        <div class="detail-row"><span class="detail-label">Coverage Address</span><span class="detail-val">123 Main St</span></div>
+        <div class="detail-row"><span class="detail-label">Renewal Date</span><span class="detail-val">Jan 15, 2026</span></div>
+        <div class="detail-row"><span class="detail-label">Verified On</span><span class="detail-val">Mar 12, 2024</span></div>
+        <div style="padding:16px;display:flex;flex-direction:column;gap:8px">
+          <div class="btn btn-ghost" style="font-size:14px">Re-verify Policy</div>
+          <div class="btn btn-ghost" style="font-size:14px">Contact Allstate →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
