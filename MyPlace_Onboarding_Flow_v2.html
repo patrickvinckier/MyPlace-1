@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyPlace — Onboarding Flow</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue-900: #0A2D6E; --blue-700: #1348A8; --blue-500: #1E63D0;
+    --blue-300: #6B9FE8; --blue-100: #D6E6FA; --blue-50: #EBF3FD;
+    --purple-900: #1F1B37; --purple-700: #362E5E; --purple-500: #5B4E9E;
+    --purple-300: #A49DC9; --purple-100: #DEDBEB; --purple-50: #F1F0F7;
+    --gold-900: #7A4800; --gold-700: #B56A00; --gold-500: #E08C00;
+    --gold-300: #FBCC4D; --gold-100: #FDF0C8; --gold-50: #FFFBEE;
+    --warm-white: #FAFAF8; --gray-50: #F5F4F1; --gray-100: #ECEAE5;
+    --gray-200: #D9D6CF; --gray-300: #B8B4AB; --gray-400: #918D84;
+    --gray-500: #6B6760; --gray-700: #3D3A35; --gray-900: #1A1816;
+    --success: #1A8C5B; --success-bg: #E6F6EF;
+    --error: #C62828; --error-bg: #FDEAEA;
+    --warning: #C97B00; --warning-bg: #FEF3D8;
+    --grad-blue: linear-gradient(135deg, #362E5E 0%, #5B4E9E 100%);
+    --grad-purple: linear-gradient(135deg, #362E5E 0%, #5B4E9E 100%);
+    --grad-brand: linear-gradient(135deg, #362E5E 0%, #5B4E9E 100%);
+    --grad-gold: linear-gradient(135deg, #B56A00 0%, #E08C00 100%);
+    --grad-warm: linear-gradient(135deg, #F1F0F7 0%, #EBF3FD 100%);
+    --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 24px; --r-full: 9999px;
+    --shadow-sm: 0 1px 3px rgba(26,24,22,0.08), 0 1px 2px rgba(26,24,22,0.04);
+    --shadow-md: 0 4px 12px rgba(26,24,22,0.10), 0 2px 4px rgba(26,24,22,0.06);
+    --shadow-lg: 0 8px 24px rgba(26,24,22,0.12), 0 4px 8px rgba(26,24,22,0.06);
+    --shadow-xl: 0 16px 40px rgba(26,24,22,0.14), 0 6px 12px rgba(26,24,22,0.06);
+    --shadow-blue: 0 8px 24px rgba(91,78,158,0.28);
+    --shadow-purple: 0 8px 24px rgba(91,78,158,0.28);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-body); background: #EDECE9; color: var(--gray-900); line-height: 1.5; }
+
+  /* PAGE HEADER */
+  .page-header {
+    background: var(--grad-brand);
+    padding: 40px 60px;
+    position: relative; overflow: hidden;
+  }
+  .page-header::before {
+    content: ''; position: absolute; top: -80px; right: -80px;
+    width: 320px; height: 320px; border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+  .page-header-inner { position: relative; z-index: 1; }
+  .page-header h1 { font-family: var(--font-display); font-size: 42px; color: white; font-style: italic; margin-bottom: 6px; }
+  .page-header p { color: rgba(255,255,255,0.7); font-size: 15px; }
+  .flow-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.15); color: white;
+    font-size: 12px; font-weight: 600; padding: 5px 14px;
+    border-radius: var(--r-full); letter-spacing: 0.5px;
+    margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.2);
+  }
+  .flow-steps {
+    display: flex; gap: 6px; flex-wrap: wrap; margin-top: 20px;
+  }
+  .flow-step {
+    font-size: 11px; font-weight: 600; padding: 4px 12px;
+    border-radius: var(--r-full); background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.15);
+    cursor: pointer; transition: all 0.2s; text-decoration: none;
+  }
+  .flow-step:hover, .flow-step.active {
+    background: rgba(255,255,255,0.3); color: white; border-color: rgba(255,255,255,0.4);
+  }
+
+  /* MAIN LAYOUT */
+  .main { max-width: 1200px; margin: 0 auto; padding: 48px 32px; }
+
+  /* SCREEN BLOCK */
+  .screen-block {
+    margin-bottom: 80px;
+    scroll-margin-top: 32px;
+  }
+  .screen-header {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 32px;
+  }
+  .screen-number {
+    width: 40px; height: 40px; border-radius: var(--r-full);
+    background: var(--grad-brand); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700; flex-shrink: 0;
+    box-shadow: var(--shadow-purple);
+  }
+  .screen-title-group {}
+  .screen-title { font-family: var(--font-display); font-size: 26px; color: var(--gray-900); }
+  .screen-subtitle { font-size: 13px; color: var(--gray-400); margin-top: 2px; }
+
+  /* TWO-COL: MOCKUP + BREAKDOWN */
+  .screen-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+  @media (max-width: 800px) { .screen-layout { grid-template-columns: 1fr; } }
+
+  /* PHONE MOCKUP */
+  .phone {
+    width: 300px;
+    background: var(--warm-white);
+    border-radius: 40px;
+    box-shadow: var(--shadow-xl), 0 0 0 8px #D1CFC9, 0 0 0 10px #C8C6C0;
+    overflow: hidden;
+    position: sticky;
+    top: 32px;
+  }
+  .phone-notch {
+    height: 36px; background: white;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 20px; font-size: 11px; font-weight: 600; color: var(--gray-700);
+  }
+  .phone-notch-center {
+    width: 80px; height: 20px; background: var(--gray-900);
+    border-radius: 0 0 12px 12px; margin: 0 auto;
+    position: absolute; left: 50%; transform: translateX(-50%);
+  }
+  .phone-screen { overflow: hidden; min-height: 580px; }
+
+  /* TOPBAR */
+  .topbar {
+    background: white; height: 52px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 18px; border-bottom: 1px solid var(--gray-100);
+    box-shadow: var(--shadow-sm);
+  }
+  .topbar-logo {
+    font-family: var(--font-display); font-size: 18px; font-style: italic;
+    background: var(--grad-brand);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .topbar-back {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 600; color: var(--purple-500);
+  }
+  .topbar-actions { display: flex; gap: 4px; }
+  .icon-btn {
+    width: 32px; height: 32px; border-radius: var(--r-md);
+    background: var(--gray-50); border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+  }
+
+  /* SCREEN BODY HELPERS */
+  .s-body { padding: 20px 18px; background: var(--warm-white); }
+  .s-hero {
+    background: var(--grad-brand); padding: 40px 20px 32px;
+    text-align: center; color: white;
+  }
+  .s-hero-logo { font-family: var(--font-display); font-size: 36px; font-style: italic; margin-bottom: 4px; }
+  .s-hero-sub { font-size: 13px; opacity: 0.75; }
+  .s-hero-sm {
+    background: var(--grad-brand); padding: 28px 20px 24px;
+    color: white;
+  }
+  .s-hero-sm-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; opacity: 0.7; margin-bottom: 4px; }
+  .s-hero-sm-title { font-family: var(--font-display); font-size: 22px; }
+
+  .s-title { font-family: var(--font-display); font-size: 22px; color: var(--gray-900); margin-bottom: 6px; }
+  .s-sub { font-size: 13px; color: var(--gray-400); margin-bottom: 20px; line-height: 1.5; }
+  .s-label { font-size: 11px; font-weight: 700; color: var(--gray-700); margin-bottom: 6px; display: block; }
+  .s-divider { height: 1px; background: var(--gray-100); margin: 16px 0; }
+
+  /* MOCK INPUTS */
+  .m-input-group { margin-bottom: 12px; }
+  .m-label { font-size: 11px; font-weight: 600; color: var(--gray-700); margin-bottom: 4px; display: block; }
+  .m-input {
+    width: 100%; padding: 10px 12px; border-radius: var(--r-md);
+    border: 1.5px solid var(--gray-200); background: white;
+    font-family: var(--font-body); font-size: 13px; color: var(--gray-900);
+    box-shadow: var(--shadow-sm); outline: none;
+  }
+  .m-input.focus { border-color: var(--purple-500); box-shadow: 0 0 0 3px var(--purple-50); }
+  .m-input.success { border-color: var(--success); }
+  .m-input.error { border-color: var(--error); }
+  .m-helper { font-size: 10px; color: var(--gray-400); margin-top: 3px; }
+  .m-error-msg { font-size: 10px; color: var(--error); margin-top: 3px; }
+  .m-success-msg { font-size: 10px; color: var(--success); margin-top: 3px; }
+
+  /* MOCK BUTTONS */
+  .m-btn {
+    width: 100%; padding: 13px; border-radius: var(--r-lg);
+    border: none; font-family: var(--font-body); font-size: 14px;
+    font-weight: 600; cursor: pointer; margin-bottom: 8px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: all 0.2s;
+  }
+  .m-btn-primary { background: var(--grad-brand); color: white; box-shadow: var(--shadow-purple); }
+  .m-btn-blue { background: var(--grad-purple); color: white; box-shadow: var(--shadow-purple); }
+  .m-btn-ghost { background: transparent; color: var(--gray-500); border: 1.5px solid var(--gray-200); }
+  .m-btn-link { background: transparent; color: var(--blue-500); font-size: 13px; padding: 8px; box-shadow: none; }
+  .m-btn-disabled { background: var(--gray-100); color: var(--gray-300); box-shadow: none; cursor: not-allowed; }
+
+  /* MOCK OTP */
+  .otp-row { display: flex; gap: 8px; justify-content: center; margin: 16px 0; }
+  .otp-box {
+    width: 44px; height: 52px; border-radius: var(--r-md);
+    border: 1.5px solid var(--gray-200); background: white;
+    font-size: 22px; font-weight: 700; color: var(--gray-900);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .otp-box.filled { border-color: var(--purple-500); background: var(--purple-50); }
+  .otp-box.active { border-color: var(--purple-500); box-shadow: 0 0 0 3px var(--purple-50); }
+
+  /* MOCK PROGRESS */
+  .progress-bar {
+    height: 3px; background: var(--gray-100); border-radius: var(--r-full);
+    margin-bottom: 20px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; border-radius: var(--r-full);
+    background: var(--grad-purple); transition: width 0.3s ease;
+  }
+
+  /* MOCK ALERT */
+  .m-alert {
+    display: flex; gap: 10px; padding: 12px; border-radius: var(--r-lg);
+    margin-bottom: 12px; border-left: 3px solid;
+  }
+  .m-alert-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .m-alert-title { font-size: 12px; font-weight: 700; margin-bottom: 2px; }
+  .m-alert-msg { font-size: 11px; opacity: 0.85; }
+  .m-alert-success { background: var(--success-bg); border-color: var(--success); color: var(--success); }
+  .m-alert-error { background: var(--error-bg); border-color: var(--error); color: var(--error); }
+  .m-alert-info { background: var(--purple-50); border-color: var(--purple-500); color: var(--purple-700); }
+  .m-alert-warning { background: var(--warning-bg); border-color: var(--warning); color: var(--warning); }
+
+  /* MOCK BADGE */
+  .m-badge {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: 10px; font-weight: 600; padding: 3px 8px;
+    border-radius: var(--r-full);
+  }
+  .m-badge-blue { background: var(--blue-100); color: var(--blue-700); }
+  .m-badge-success { background: var(--success-bg); color: var(--success); }
+  .m-badge-gold { background: var(--gold-100); color: var(--gold-900); }
+
+  /* MOCK CHECKBOX */
+  .m-check-row {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 0; border-bottom: 1px solid var(--gray-100);
+  }
+  .m-check-row:last-child { border-bottom: none; }
+  .m-checkbox {
+    width: 18px; height: 18px; border-radius: 5px;
+    border: 1.5px solid var(--gray-200); background: white;
+    flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center;
+  }
+  .m-checkbox.checked { background: var(--purple-500); border-color: var(--purple-500); color: white; font-size: 10px; }
+  .m-check-text { font-size: 11px; color: var(--gray-700); line-height: 1.5; }
+  .m-check-link { color: var(--blue-500); text-decoration: underline; }
+
+  /* MOCK SUCCESS STATE */
+  .success-state {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 32px 20px; text-align: center;
+  }
+  .success-icon {
+    width: 72px; height: 72px; border-radius: var(--r-full);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px; margin-bottom: 16px;
+  }
+  .success-icon-green { background: var(--success-bg); }
+  .success-icon-blue { background: var(--blue-50); }
+
+  /* MOCK LOCATION */
+  .location-map-placeholder {
+    background: linear-gradient(180deg, #E8F0E8 0%, #D4E8D4 100%);
+    height: 160px; border-radius: var(--r-lg);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px; position: relative; overflow: hidden;
+    border: 1.5px solid var(--gray-200);
+  }
+  .map-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  .map-pin {
+    position: relative; z-index: 1;
+    width: 36px; height: 36px; border-radius: var(--r-full);
+    background: var(--grad-blue); display: flex; align-items: center;
+    justify-content: center; font-size: 18px; box-shadow: var(--shadow-blue);
+  }
+
+  /* ── BREAKDOWN PANEL ── */
+  .breakdown {
+    background: white; border-radius: var(--r-xl);
+    box-shadow: var(--shadow-md); overflow: hidden;
+  }
+  .breakdown-header {
+    background: var(--gray-50); padding: 20px 24px;
+    border-bottom: 1px solid var(--gray-100);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .breakdown-header h3 { font-size: 16px; font-weight: 700; color: var(--gray-900); }
+  .breakdown-header p { font-size: 12px; color: var(--gray-400); margin-top: 2px; }
+
+  .breakdown-body { padding: 24px; }
+
+  .spec-section { margin-bottom: 28px; }
+  .spec-section:last-child { margin-bottom: 0; }
+  .spec-section-title {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; color: var(--gray-400); margin-bottom: 12px;
+    padding-bottom: 6px; border-bottom: 1px solid var(--gray-100);
+  }
+
+  .spec-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .spec-table td { padding: 8px 10px; border-bottom: 1px solid var(--gray-100); vertical-align: top; }
+  .spec-table tr:last-child td { border-bottom: none; }
+  .spec-table td:first-child { font-weight: 600; color: var(--gray-700); width: 38%; white-space: nowrap; }
+  .spec-table td:last-child { color: var(--gray-500); }
+
+  code {
+    font-family: monospace; font-size: 11px; background: var(--gray-100);
+    color: var(--blue-700); padding: 2px 6px; border-radius: 4px;
+  }
+
+  .component-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; font-weight: 600; padding: 3px 8px;
+    border-radius: var(--r-full); margin: 2px;
+  }
+  .tag-blue { background: var(--blue-50); color: var(--blue-700); border: 1px solid var(--blue-100); }
+  .tag-purple { background: var(--purple-50); color: var(--purple-700); border: 1px solid var(--purple-100); }
+  .tag-gold { background: var(--gold-50); color: var(--gold-700); border: 1px solid var(--gold-100); }
+  .tag-gray { background: var(--gray-50); color: var(--gray-500); border: 1px solid var(--gray-100); }
+  .tag-green { background: var(--success-bg); color: var(--success); border: 1px solid #B8E8D4; }
+
+  .nav-flow {
+    background: var(--gray-50); border-radius: var(--r-lg);
+    padding: 14px 16px; display: flex; flex-direction: column; gap: 6px;
+  }
+  .nav-flow-item {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; color: var(--gray-600);
+  }
+  .nav-flow-arrow { color: var(--gray-300); font-size: 14px; }
+  .nav-flow-screen {
+    background: white; border: 1px solid var(--gray-100);
+    border-radius: var(--r-sm); padding: 4px 10px;
+    font-weight: 600; color: var(--gray-700); font-size: 12px;
+  }
+  .nav-flow-trigger { color: var(--blue-500); font-size: 11px; font-style: italic; }
+
+  .note-box {
+    background: var(--gold-50); border: 1.5px solid var(--gold-100);
+    border-radius: var(--r-md); padding: 12px 14px;
+    font-size: 12px; color: var(--gold-900); margin-top: 12px;
+    display: flex; gap: 8px;
+  }
+
+  /* DIVIDER BETWEEN SCREENS */
+  .screen-divider {
+    display: flex; align-items: center; gap: 16px;
+    margin: 48px 0 64px;
+  }
+  .screen-divider-line { flex: 1; height: 1px; background: var(--gray-200); }
+  .screen-divider-dot {
+    width: 8px; height: 8px; border-radius: var(--r-full);
+    background: var(--purple-300);
+  }
+
+  /* FOOTER */
+  .page-footer {
+    text-align: center; padding: 48px 0 32px;
+    border-top: 1px solid var(--gray-200); margin-top: 32px;
+    color: var(--gray-400); font-size: 13px;
+  }
+  .page-footer strong { color: var(--gray-700); }
+</style>
+</head>
+<body>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="flow-badge">FLOW 1 OF 5</div>
+    <h1>Onboarding / Entry</h1>
+    <p>9 screens · New user sign-up, identity verification, policy check, and store selection</p>
+    <div class="flow-steps">
+      <a href="#s1" class="flow-step active">1 Sign In</a>
+      <a href="#s2" class="flow-step">2 Create Account</a>
+      <a href="#s3" class="flow-step">3 Verify Contact</a>
+      <a href="#s4" class="flow-step">4 Terms & Conditions</a>
+      <a href="#s5" class="flow-step">5 Policy Entry</a>
+      <a href="#s6" class="flow-step">6 Verification Success</a>
+      <a href="#s7" class="flow-step">7 Verification Failure</a>
+      <a href="#s8" class="flow-step">8 Location Permissions</a>
+      <a href="#s9" class="flow-step">9 Address Entry</a>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- ═══════════════════════════════════ SCREEN 1 — SIGN IN ═══ -->
+  <div class="screen-block" id="s1">
+    <div class="screen-header">
+      <div class="screen-number">1</div>
+      <div class="screen-title-group">
+        <div class="screen-title">Sign In</div>
+        <div class="screen-subtitle">Entry point for returning users · Unauthenticated state</div>
+      </div>
+    </div>
+    <div class="screen-layout">
+
+      <!-- MOCKUP -->
+      <div class="phone">
+        <div class="phone-notch">
+          <span>9:41</span>
+          <span>●●●</span>
+        </div>
+        <div class="phone-screen">
+          <div class="s-hero">
+            <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;opacity:0.6;margin-bottom:8px">Welcome back</div>
+            <div class="s-hero-logo">MyPlace</div>
+            <div class="s-hero-sub">Your home, covered.</div>
+          </div>
+          <div class="s-body">
+            <div class="m-input-group">
+              <span class="m-label">Email or Phone</span>
+              <input class="m-input" placeholder="jane@example.com" readonly>
+            </div>
+            <div class="m-input-group">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+                <span class="m-label" style="margin-bottom:0">Password</span>
+                <a style="font-size:10px;color:var(--blue-500);text-decoration:none;font-weight:500">Forgot password?</a>
+              </div>
+              <input class="m-input" type="password" placeholder="••••••••" readonly>
+            </div>
+            <div style="margin-top:20px">
+              <button class="m-btn m-btn-primary">Sign In</button>
+              <button class="m-btn m-btn-ghost">Create an Account</button>
+            </div>
+            <div style="text-align:center;margin-top:12px">
+              <span style="font-size:10px;color:var(--gray-300)">Protected by Allstate · </span>
+              <span style="font-size:10px;color:var(--blue-500)">Privacy Policy</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BREAKDOWN -->
+      <div class="breakdown">
+        <div class="breakdown-header">
+          <div>
+            <h3>Screen 1 — Sign In</h3>
+            <p>First screen all users see · Brand moment + authentication</p>
+          </div>
+        </div>
+        <div class="breakdown-body">
+          <div class="spec-section">
+            <div class="spec-section-title">Components Used</div>
+            <div>
+              <span class="component-tag tag-purple">Hero Section (Brand Gradient)</span>
+              <span class="component-tag tag-purple">Input — Email/Phone</span>
+              <span class="component-tag tag-purple">Input — Password</span>
+              <span class="component-tag tag-purple">Inline Link — Forgot Password</span>
+              <span class="component-tag tag-purple">Button — Primary Brand Gradient (Sign In)</span>
+              <span class="component-tag tag-gray">Button — Ghost (Create Account)</span>
+              <span class="component-tag tag-gray">Footer Link — Privacy Policy</span>
+            </div>
+          </div>
+
+          <div class="spec-section">
+            <div class="spec-section-title">Layout Specs</div>
+            <table class="spec-table">
+              <tr><td>Hero height</td><td>~180px · Brand gradient · Logo centered</td></tr>
+              <tr><td>Logo style</td><td><code>DM Serif Display</code> italic · 36px · white</td></tr>
+              <tr><td>Body padding</td><td>20px horizontal · 20px top</td></tr>
+              <tr><td>Input spacing</td><td>12px between input groups</td></tr>
+              <tr><td>Button stack</td><td>Primary first · Ghost second · 8px gap</td></tr>
+              <tr><td>Footer text</td><td>10px · centered · <code>gray-300</code> + <code>blue-500</code> link</td></tr>
+            </table>
+          </div>
+
+          <div class="spec-section">
+            <div class="spec-section-title">Interaction States</div>
+            <table class="spec-table">
+              <tr><td>Input focus</td><td>Border → <code>blue-500</code> · Glow ring <code>blue-50</code></td></tr>
+              <tr><td>Sign In tap</td><td>Scale 0.97 · 150ms · API call → loading state on button</td></tr>
+              <tr><td>Loading state</td><td>Button text → spinner + "Signing in…"</td></tr>
+              <tr><td>Auth error</td><td>Error alert above buttons: "Incorrect email or password"</td></tr>
+              <tr><td>Show password</td><td>Eye icon in password field · toggles visibility</td></tr>
+            </table>
+          </div>
+
+          <div class="spec-section">
+            <div class="spec-section-title">Navigation</div>
+            <div class="nav-flow">
+              <div class="nav-flow-item">
+                <span class="nav-flow-screen">Sign In</span>
+                <span class="nav-flow-arrow">→</span>
+                <span class="nav-flow-trigger">Tap "Sign In" + success</span>
+                <span class="nav-flow-arrow">→</span>
+                <span class="nav-flow-screen">Home</span>
+              </div>
+              <div class="nav-flow-item">
+                <span class="nav-flow-screen">Sign In</span>
+                <span class="nav-flow-arrow">→</span>
+                <span class="nav-flow-trigger">Tap "Forgot Password"</span>
+                <span class="nav-flow-arrow">→</span>
+                <span class="nav-flow-screen">Forgot Password</span>
+              </div>
+              <div class="nav-flow-item">
+                <span class="nav-flow-screen">Sign In</span>
+                <span class="nav-flow-arrow">→</span>
+                <span class="nav-flow-trigger">Tap "Create Account"</span>
+                <span class="nav-flow-arrow">→</span>
+                <span class="nav-flow-screen">Create Account</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="note-box">💡 The hero section is the primary brand impression. Logo should use the actual MyPlace logo asset (not just text) once supplied by design. The italic DM Serif Display is the typographic fallback.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen-divider"><div class="screen-divider-line"></div><div class="screen-divider-dot"></div><div class="screen-divider-line"></div></div>
+
+  <!-- ═══════════════════════════════════ SCREEN 1B — FORGOT PASSWORD ═══ -->
+  <div class="screen-block" id="s1b">
+    <div class="screen-header">
+      <div class="screen-number" style="background:var(--grad-blue)">1b</div>
+      <div class="screen-title-group">
+        <div class="screen-title">Forgot Password</div>
+        <div class="screen-subtitle">Triggered from Sign In · Password reset via email or phone</div>
+      </div>
+    </div>
+    <div class="screen-layout">
+      <div class="phone">
+        <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+        <div class="phone-screen">
+          <div class="topbar">
+            <div class="topbar-back">← <span>Sign In</span></div>
+            <div class="topbar-logo">MyPlace</div>
+            <div style="width:60px"></div>
+          </div>
+          <div class="s-body">
+            <div style="margin-bottom:20px;margin-top:8px">
+              <div class="s-title">Reset your password</div>
+              <div class="s-sub">Enter your email or phone and we'll send a reset link.</div>
+            </div>
+            <div class="m-input-group">
+              <span class="m-label">Email or Phone <span style="color:var(--error)">*</span></span>
+              <input class="m-input focus" placeholder="jane@example.com" readonly>
+            </div>
+            <div style="margin-top:20px">
+              <button class="m-btn m-btn-blue">Send Reset Link</button>
+              <button class="m-btn m-btn-ghost">Back to Sign In</button>
+            </div>
+            <div style="background:var(--purple-50);border-radius:var(--r-lg);padding:14px;margin-top:16px">
+              <div style="font-size:11px;font-weight:700;color:var(--purple-700);margin-bottom:3px">Check your inbox</div>
+              <div style="font-size:11px;color:var(--gray-400)">If an account exists, a reset link will arrive within 2 minutes.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="breakdown">
+        <div class="breakdown-header">
+          <div><h3>Screen 1b — Forgot Password</h3><p>Secondary screen · Simple single-field form</p></div>
+        </div>
+        <div class="breakdown-body">
+          <div class="spec-section">
+            <div class="spec-section-title">Components Used</div>
+            <div>
+              <span class="component-tag tag-purple">Top Bar — Back Navigation</span>
+              <span class="component-tag tag-purple">Input — Email/Phone</span>
+              <span class="component-tag tag-purple">Button — Primary Blue</span>
+              <span class="component-tag tag-gray">Button — Ghost</span>
+              <span class="component-tag tag-purple">Info Box — Check inbox</span>
+            </div>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Layout Specs</div>
+            <table class="spec-table">
+              <tr><td>Top bar</td><td>Back arrow + "Sign In" label · Logo centered · No menu icon</td></tr>
+              <tr><td>Title</td><td><code>DM Serif Display</code> 22px · <code>gray-900</code></td></tr>
+              <tr><td>Subtitle</td><td>13px · <code>gray-400</code> · 1.5 line height</td></tr>
+              <tr><td>Info box</td><td>Shown after submit · <code>blue-50</code> bg · <code>r-lg</code></td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">States</div>
+            <table class="spec-table">
+              <tr><td>Pre-submit</td><td>Info box hidden · Button active when field not empty</td></tr>
+              <tr><td>Post-submit</td><td>Info box appears · Button text → "Resend Link" · 60s cooldown</td></tr>
+              <tr><td>Error</td><td>Generic only — never confirm if account exists (security)</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Navigation</div>
+            <div class="nav-flow">
+              <div class="nav-flow-item"><span class="nav-flow-screen">Forgot Password</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Back arrow or "Back to Sign In"</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Sign In</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen-divider"><div class="screen-divider-line"></div><div class="screen-divider-dot"></div><div class="screen-divider-line"></div></div>
+
+  <!-- ═══════════════════════════════════ SCREEN 2 — CREATE ACCOUNT ═══ -->
+  <div class="screen-block" id="s2">
+    <div class="screen-header">
+      <div class="screen-number">2</div>
+      <div class="screen-title-group">
+        <div class="screen-title">Create Account</div>
+        <div class="screen-subtitle">New user registration · Personal info + credentials</div>
+      </div>
+    </div>
+    <div class="screen-layout">
+      <div class="phone">
+        <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+        <div class="phone-screen">
+          <div class="s-hero-sm">
+            <div class="s-hero-sm-eyebrow">Step 1 of 4</div>
+            <div class="s-hero-sm-title">Create your account</div>
+          </div>
+          <div class="progress-bar" style="margin:0;border-radius:0"><div class="progress-fill" style="width:25%"></div></div>
+          <div class="s-body">
+            <div class="m-input-group">
+              <span class="m-label">Full Name <span style="color:var(--error)">*</span></span>
+              <input class="m-input" placeholder="Jane Smith" readonly>
+            </div>
+            <div class="m-input-group">
+              <span class="m-label">Email Address <span style="color:var(--error)">*</span></span>
+              <input class="m-input" placeholder="jane@example.com" readonly>
+            </div>
+            <div class="m-input-group">
+              <span class="m-label">Phone Number</span>
+              <input class="m-input" placeholder="(555) 000-0000" readonly>
+              <div class="m-helper">For delivery updates and account recovery</div>
+            </div>
+            <div class="m-input-group">
+              <span class="m-label">Password <span style="color:var(--error)">*</span></span>
+              <input class="m-input" type="password" placeholder="Min. 8 characters" readonly>
+            </div>
+            <div class="m-input-group">
+              <span class="m-label">Confirm Password <span style="color:var(--error)">*</span></span>
+              <input class="m-input" type="password" placeholder="Re-enter password" readonly>
+            </div>
+            <button class="m-btn m-btn-primary" style="margin-top:8px">Continue →</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="breakdown">
+        <div class="breakdown-header">
+          <div><h3>Screen 2 — Create Account</h3><p>Step 1 of 4 in onboarding · Progressive disclosure</p></div>
+        </div>
+        <div class="breakdown-body">
+          <div class="spec-section">
+            <div class="spec-section-title">Components Used</div>
+            <div>
+              <span class="component-tag tag-purple">Hero SM (Brand Gradient) + Step Label</span>
+              <span class="component-tag tag-purple">Progress Bar — 25%</span>
+              <span class="component-tag tag-purple">Input — Full Name</span>
+              <span class="component-tag tag-purple">Input — Email</span>
+              <span class="component-tag tag-purple">Input — Phone (optional)</span>
+              <span class="component-tag tag-purple">Input — Password + show/hide toggle</span>
+              <span class="component-tag tag-purple">Input — Confirm Password</span>
+              <span class="component-tag tag-purple">Button — Primary Brand (Continue)</span>
+            </div>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Layout Specs</div>
+            <table class="spec-table">
+              <tr><td>Hero height</td><td>~80px · Compact · Step label eyebrow + title</td></tr>
+              <tr><td>Progress bar</td><td>3px · Full width · No border-radius on edges (flush)</td></tr>
+              <tr><td>Field order</td><td>Name → Email → Phone → Password → Confirm</td></tr>
+              <tr><td>Required fields</td><td>Name, Email, Password, Confirm · Phone optional</td></tr>
+              <tr><td>Scroll behavior</td><td>Screen scrolls · Continue button stays at bottom of form (not fixed)</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Validation Rules</div>
+            <table class="spec-table">
+              <tr><td>Email</td><td>Valid format check on blur · Duplicate check on submit</td></tr>
+              <tr><td>Password</td><td>Min 8 chars · Strength indicator (optional v2)</td></tr>
+              <tr><td>Confirm</td><td>Must match password · Error on mismatch immediately</td></tr>
+              <tr><td>Continue btn</td><td>Disabled until required fields valid</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Navigation</div>
+            <div class="nav-flow">
+              <div class="nav-flow-item"><span class="nav-flow-screen">Create Account</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Continue + valid</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Verify Contact</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Create Account</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Back / Sign In link</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Sign In</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen-divider"><div class="screen-divider-line"></div><div class="screen-divider-dot"></div><div class="screen-divider-line"></div></div>
+
+  <!-- ═══════════════════════════════════ SCREEN 3 — VERIFY CONTACT ═══ -->
+  <div class="screen-block" id="s3">
+    <div class="screen-header">
+      <div class="screen-number">3</div>
+      <div class="screen-title-group">
+        <div class="screen-title">Verify Email or Phone</div>
+        <div class="screen-subtitle">Step 2 of 4 · OTP verification · 6-digit code</div>
+      </div>
+    </div>
+    <div class="screen-layout">
+      <div class="phone">
+        <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+        <div class="phone-screen">
+          <div class="s-hero-sm">
+            <div class="s-hero-sm-eyebrow">Step 2 of 4</div>
+            <div class="s-hero-sm-title">Verify your email</div>
+          </div>
+          <div class="progress-bar" style="margin:0;border-radius:0"><div class="progress-fill" style="width:50%"></div></div>
+          <div class="s-body">
+            <div style="text-align:center;margin:16px 0 8px">
+              <div style="font-size:28px;margin-bottom:8px">📬</div>
+              <div style="font-size:13px;color:var(--gray-500)">We sent a 6-digit code to</div>
+              <div style="font-size:14px;font-weight:700;color:var(--gray-900);margin-top:2px"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1c767d72795c79647d716c7079327f7371">[email&#160;protected]</a></div>
+            </div>
+            <div class="otp-row">
+              <div class="otp-box filled">4</div>
+              <div class="otp-box filled">7</div>
+              <div class="otp-box filled">2</div>
+              <div class="otp-box active"></div>
+              <div class="otp-box"></div>
+              <div class="otp-box"></div>
+            </div>
+            <div style="text-align:center;margin:8px 0 16px">
+              <span style="font-size:11px;color:var(--gray-400)">Code expires in </span>
+              <span style="font-size:11px;font-weight:700;color:var(--purple-500)">4:32</span>
+            </div>
+            <button class="m-btn m-btn-blue">Verify Code</button>
+            <button class="m-btn m-btn-link" style="color:var(--purple-500)">Resend code</button>
+            <button class="m-btn m-btn-link" style="color:var(--gray-400)">Use phone number instead</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="breakdown">
+        <div class="breakdown-header">
+          <div><h3>Screen 3 — Verify Contact</h3><p>Step 2 of 4 · OTP input with fallback options</p></div>
+        </div>
+        <div class="breakdown-body">
+          <div class="spec-section">
+            <div class="spec-section-title">Components Used</div>
+            <div>
+              <span class="component-tag tag-purple">Hero SM + Step Label</span>
+              <span class="component-tag tag-purple">Progress Bar — 50%</span>
+              <span class="component-tag tag-purple">OTP Input — 6 boxes</span>
+              <span class="component-tag tag-purple">Countdown Timer</span>
+              <span class="component-tag tag-purple">Button — Primary Blue (Verify)</span>
+              <span class="component-tag tag-gray">Button — Link (Resend)</span>
+              <span class="component-tag tag-gray">Button — Link (Switch to phone)</span>
+            </div>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">OTP Box Specs</div>
+            <table class="spec-table">
+              <tr><td>Box size</td><td>44px × 52px · <code>r-md</code> · <code>shadow-sm</code></td></tr>
+              <tr><td>Empty state</td><td><code>gray-200</code> border · white bg</td></tr>
+              <tr><td>Filled state</td><td><code>blue-500</code> border · <code>blue-50</code> bg · 22px bold</td></tr>
+              <tr><td>Active (cursor)</td><td><code>blue-500</code> border · glow ring</td></tr>
+              <tr><td>Error state</td><td>All boxes → <code>error</code> border · shake animation</td></tr>
+              <tr><td>Auto-advance</td><td>Focus moves to next box after each digit entry</td></tr>
+              <tr><td>Paste support</td><td>Paste 6 digits → fills all boxes automatically</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Timer & Resend Logic</div>
+            <table class="spec-table">
+              <tr><td>Countdown</td><td>5 minutes · <code>blue-500</code> bold · updates live</td></tr>
+              <tr><td>Resend available</td><td>After timer expires OR after 60s cooldown</td></tr>
+              <tr><td>Resend disabled</td><td><code>gray-300</code> · "Resend in 0:42" text</td></tr>
+              <tr><td>Max attempts</td><td>5 · Then lock with support link</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Navigation</div>
+            <div class="nav-flow">
+              <div class="nav-flow-item"><span class="nav-flow-screen">Verify Contact</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Valid code entered</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Terms & Conditions</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Verify Contact</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Back arrow</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Create Account</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen-divider"><div class="screen-divider-line"></div><div class="screen-divider-dot"></div><div class="screen-divider-line"></div></div>
+
+  <!-- ═══════════════════════════════════ SCREEN 4 — TERMS ═══ -->
+  <div class="screen-block" id="s4">
+    <div class="screen-header">
+      <div class="screen-number">4</div>
+      <div class="screen-title-group">
+        <div class="screen-title">Terms & Conditions</div>
+        <div class="screen-subtitle">Step 3 of 4 · Explicit consent required before proceeding</div>
+      </div>
+    </div>
+    <div class="screen-layout">
+      <div class="phone">
+        <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+        <div class="phone-screen">
+          <div class="s-hero-sm">
+            <div class="s-hero-sm-eyebrow">Step 3 of 4</div>
+            <div class="s-hero-sm-title">A few quick agreements</div>
+          </div>
+          <div class="progress-bar" style="margin:0;border-radius:0"><div class="progress-fill" style="width:75%"></div></div>
+          <div class="s-body">
+            <div style="font-size:12px;color:var(--gray-400);margin-bottom:16px">Please review and accept to continue. You can read the full documents using the links below.</div>
+            <div>
+              <div class="m-check-row">
+                <div class="m-checkbox checked">✓</div>
+                <div class="m-check-text">I agree to the <a class="m-check-link">Terms of Service</a> and <a class="m-check-link">Privacy Policy</a></div>
+              </div>
+              <div class="m-check-row">
+                <div class="m-checkbox checked">✓</div>
+                <div class="m-check-text">I agree to the <a class="m-check-link">MyPlace Program Terms</a></div>
+              </div>
+              <div class="m-check-row">
+                <div class="m-checkbox"></div>
+                <div class="m-check-text">I'd like to receive emails about exclusive offers and savings <span style="color:var(--gray-300)">(optional)</span></div>
+              </div>
+            </div>
+            <div style="margin-top:20px">
+              <button class="m-btn m-btn-blue">Accept & Continue →</button>
+              <div style="text-align:center;margin-top:8px">
+                <span style="font-size:10px;color:var(--gray-400)">You must accept required terms to use MyPlace</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="breakdown">
+        <div class="breakdown-header">
+          <div><h3>Screen 4 — Terms & Conditions</h3><p>Step 3 of 4 · Consent + optional marketing opt-in</p></div>
+        </div>
+        <div class="breakdown-body">
+          <div class="spec-section">
+            <div class="spec-section-title">Components Used</div>
+            <div>
+              <span class="component-tag tag-purple">Hero SM + Step Label</span>
+              <span class="component-tag tag-purple">Progress Bar — 75%</span>
+              <span class="component-tag tag-purple">Checkbox — Terms of Service (required)</span>
+              <span class="component-tag tag-purple">Checkbox — Program Terms (required)</span>
+              <span class="component-tag tag-gray">Checkbox — Marketing opt-in (optional)</span>
+              <span class="component-tag tag-purple">Button — Primary Blue (Accept & Continue)</span>
+              <span class="component-tag tag-gray">Inline Links — full document links</span>
+            </div>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Checkbox Specs</div>
+            <table class="spec-table">
+              <tr><td>Box size</td><td>18×18px · <code>r-sm</code> (5px) · <code>gray-200</code> border</td></tr>
+              <tr><td>Checked state</td><td><code>blue-500</code> bg · white checkmark · no border</td></tr>
+              <tr><td>Row divider</td><td>1px <code>gray-100</code> between rows</td></tr>
+              <tr><td>Link style</td><td><code>blue-500</code> · underline · opens modal or new tab</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Button Logic</div>
+            <table class="spec-table">
+              <tr><td>Disabled state</td><td>When required checkboxes unchecked → <code>btn-disabled</code></td></tr>
+              <tr><td>Enabled state</td><td>Both required boxes checked → full blue button</td></tr>
+              <tr><td>Marketing opt-in</td><td>Stored to user profile regardless; default unchecked</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Navigation</div>
+            <div class="nav-flow">
+              <div class="nav-flow-item"><span class="nav-flow-screen">Terms</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Accept & Continue</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Policy Entry</span></div>
+            </div>
+          </div>
+          <div class="note-box">💡 Marketing opt-in is intentionally separated from required terms. Never bundle them — pre-checked marketing boxes violate GDPR and CASL. Default is unchecked.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen-divider"><div class="screen-divider-line"></div><div class="screen-divider-dot"></div><div class="screen-divider-line"></div></div>
+
+  <!-- ═══════════════════════════════════ SCREEN 5 — POLICY ENTRY ═══ -->
+  <div class="screen-block" id="s5">
+    <div class="screen-header">
+      <div class="screen-number">5</div>
+      <div class="screen-title-group">
+        <div class="screen-title">Policy Number Entry</div>
+        <div class="screen-subtitle">Step 4 of 4 · Allstate eligibility verification</div>
+      </div>
+    </div>
+    <div class="screen-layout">
+      <div class="phone">
+        <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+        <div class="phone-screen">
+          <div class="s-hero-sm">
+            <div class="s-hero-sm-eyebrow">Step 4 of 4</div>
+            <div class="s-hero-sm-title">Verify your policy</div>
+          </div>
+          <div class="progress-bar" style="margin:0;border-radius:0"><div class="progress-fill" style="width:90%"></div></div>
+          <div class="s-body">
+            <div style="background:var(--purple-50);border-radius:var(--r-lg);padding:14px;margin-bottom:16px;display:flex;gap:10px;align-items:flex-start">
+              <span style="font-size:18px;flex-shrink:0">🛡️</span>
+              <div>
+                <div style="font-size:12px;font-weight:700;color:var(--purple-700);margin-bottom:2px">Allstate customers only</div>
+                <div style="font-size:11px;color:var(--purple-500)">MyPlace is an exclusive benefit for eligible Allstate policyholders.</div>
+              </div>
+            </div>
+            <div class="m-input-group">
+              <span class="m-label">Allstate Policy Number <span style="color:var(--error)">*</span></span>
+              <input class="m-input" placeholder="e.g. 123 456 789" readonly>
+              <div class="m-helper">Find this on your Allstate ID card or declarations page</div>
+            </div>
+            <div class="m-input-group" style="margin-top:4px">
+              <span class="m-label">ZIP Code <span style="color:var(--error)">*</span></span>
+              <input class="m-input" placeholder="02101" readonly>
+              <div class="m-helper">Must match the ZIP on your policy</div>
+            </div>
+            <div style="margin-top:20px">
+              <button class="m-btn m-btn-primary">Verify My Policy</button>
+              <button class="m-btn m-btn-link" style="color:var(--purple-500)">Can't find your policy number?</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="breakdown">
+        <div class="breakdown-header">
+          <div><h3>Screen 5 — Policy Number Entry</h3><p>Step 4 of 4 · Eligibility gate before full access</p></div>
+        </div>
+        <div class="breakdown-body">
+          <div class="spec-section">
+            <div class="spec-section-title">Components Used</div>
+            <div>
+              <span class="component-tag tag-purple">Hero SM + Step Label</span>
+              <span class="component-tag tag-purple">Progress Bar — 90%</span>
+              <span class="component-tag tag-purple">Info Box — Allstate exclusive</span>
+              <span class="component-tag tag-purple">Input — Policy Number</span>
+              <span class="component-tag tag-purple">Input — ZIP Code</span>
+              <span class="component-tag tag-purple">Button — Primary Brand (Verify)</span>
+              <span class="component-tag tag-gray">Button — Link (Can't find policy)</span>
+            </div>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Input Specs</div>
+            <table class="spec-table">
+              <tr><td>Policy format</td><td>Accept with/without spaces/dashes · Normalize on submit</td></tr>
+              <tr><td>ZIP code</td><td>5-digit numeric · Validate format before API call</td></tr>
+              <tr><td>Keyboard</td><td>Policy: text · ZIP: numeric keypad (<code>inputmode="numeric"</code>)</td></tr>
+              <tr><td>Helper text</td><td>Both fields have helper text · 10px <code>gray-400</code></td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">API & Loading State</div>
+            <table class="spec-table">
+              <tr><td>On submit</td><td>Button → loading spinner + "Checking policy…"</td></tr>
+              <tr><td>Success</td><td>→ Policy Verification Success screen</td></tr>
+              <tr><td>Not found</td><td>→ Policy Verification Failure screen</td></tr>
+              <tr><td>API error</td><td>Inline alert: "Something went wrong. Please try again."</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Navigation</div>
+            <div class="nav-flow">
+              <div class="nav-flow-item"><span class="nav-flow-screen">Policy Entry</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Verify + success</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Verification Success</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Policy Entry</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Verify + not found</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Verification Failure</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Policy Entry</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">"Can't find" link</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Support: Contact</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen-divider"><div class="screen-divider-line"></div><div class="screen-divider-dot"></div><div class="screen-divider-line"></div></div>
+
+  <!-- ═══════ SCREENS 6 & 7 — VERIFICATION SUCCESS & FAILURE ═══ -->
+  <div class="screen-block" id="s6">
+    <div class="screen-header">
+      <div class="screen-number" style="background:linear-gradient(135deg,#1A8C5B,#22A870)">6</div>
+      <div class="screen-title-group">
+        <div class="screen-title">Policy Verification — Success & Failure</div>
+        <div class="screen-subtitle">Two outcome screens from the same API call</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:32px">
+
+      <!-- SUCCESS PHONE -->
+      <div>
+        <div style="text-align:center;margin-bottom:12px;font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--success)">✓ Success State</div>
+        <div class="phone" style="position:static">
+          <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+          <div class="phone-screen">
+            <div class="topbar">
+              <div class="topbar-logo">MyPlace</div>
+              <div></div>
+            </div>
+            <div class="s-body">
+              <div class="success-state">
+                <div class="success-icon success-icon-green" style="width:80px;height:80px;font-size:36px">✓</div>
+                <div style="font-family:var(--font-display);font-size:22px;color:var(--gray-900);margin-bottom:8px">You're eligible!</div>
+                <div style="font-size:13px;color:var(--gray-400);line-height:1.5;margin-bottom:20px">Your Allstate policy has been verified. Your MyPlace benefits are ready.</div>
+                <div style="background:var(--success-bg);border-radius:var(--r-lg);padding:14px;width:100%;margin-bottom:20px;text-align:left">
+                  <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--success);margin-bottom:4px">Confirmed Policy</div>
+                  <div style="font-size:13px;font-weight:600;color:var(--gray-900)">Allstate Renters Policy</div>
+                  <div style="font-size:11px;color:var(--gray-400)">#123 456 789 · Boston, MA</div>
+                </div>
+                <button class="m-btn m-btn-primary" style="width:100%">Continue →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAILURE PHONE -->
+      <div id="s7">
+        <div style="text-align:center;margin-bottom:12px;font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--error)">✕ Failure State</div>
+        <div class="phone" style="position:static">
+          <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+          <div class="phone-screen">
+            <div class="topbar">
+              <div class="topbar-back">← <span>Back</span></div>
+              <div class="topbar-logo">MyPlace</div>
+              <div style="width:50px"></div>
+            </div>
+            <div class="s-body">
+              <div class="success-state">
+                <div class="success-icon" style="background:var(--error-bg);width:80px;height:80px;font-size:36px">✕</div>
+                <div style="font-family:var(--font-display);font-size:22px;color:var(--gray-900);margin-bottom:8px">Policy not found</div>
+                <div style="font-size:13px;color:var(--gray-400);line-height:1.5;margin-bottom:20px">We couldn't verify your policy. Please check your details and try again.</div>
+                <div style="background:var(--warning-bg);border-radius:var(--r-lg);padding:14px;width:100%;margin-bottom:16px;text-align:left">
+                  <div style="font-size:11px;font-weight:600;color:var(--warning)">Common reasons:</div>
+                  <div style="font-size:11px;color:var(--gray-500);margin-top:4px;line-height:1.6">· Policy number entered incorrectly<br>· ZIP doesn't match policy address<br>· Policy may be inactive</div>
+                </div>
+                <button class="m-btn m-btn-blue" style="width:100%">Try Again</button>
+                <button class="m-btn m-btn-ghost" style="width:100%">Contact Support</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SHARED BREAKDOWN -->
+    <div class="breakdown">
+      <div class="breakdown-header">
+        <div><h3>Screens 6 & 7 — Verification Outcomes</h3><p>Two states from same Policy Entry submit · Success path continues · Failure path retries or escalates</p></div>
+      </div>
+      <div class="breakdown-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px">
+          <div>
+            <div class="spec-section">
+              <div class="spec-section-title">Success — Components</div>
+              <div>
+                <span class="component-tag tag-green">Success Icon Circle (80px)</span>
+                <span class="component-tag tag-green">Policy Confirmation Card</span>
+                <span class="component-tag tag-purple">Button — Primary Brand (Continue)</span>
+              </div>
+            </div>
+            <div class="spec-section">
+              <div class="spec-section-title">Success — Specs</div>
+              <table class="spec-table">
+                <tr><td>Icon</td><td>80px circle · <code>success-bg</code> · ✓ at 36px</td></tr>
+                <tr><td>Confirmation card</td><td><code>success-bg</code> bg · Policy name + number + city</td></tr>
+                <tr><td>Animation</td><td>Icon scales in (0→1.1→1) · 400ms spring</td></tr>
+              </table>
+            </div>
+            <div class="spec-section">
+              <div class="spec-section-title">Navigation</div>
+              <div class="nav-flow">
+                <div class="nav-flow-item"><span class="nav-flow-screen">Success</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Continue</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Location Permissions</span></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="spec-section">
+              <div class="spec-section-title">Failure — Components</div>
+              <div>
+                <span class="component-tag tag-gray">Error Icon Circle (80px)</span>
+                <span class="component-tag tag-gold">Warning Box — Common Reasons</span>
+                <span class="component-tag tag-purple">Button — Primary Blue (Try Again)</span>
+                <span class="component-tag tag-gray">Button — Ghost (Contact Support)</span>
+              </div>
+            </div>
+            <div class="spec-section">
+              <div class="spec-section-title">Failure — Specs</div>
+              <table class="spec-table">
+                <tr><td>Icon</td><td>80px circle · <code>error-bg</code> · ✕ at 36px</td></tr>
+                <tr><td>Reasons box</td><td><code>warning-bg</code> · Soft tone — not alarming</td></tr>
+                <tr><td>Try Again</td><td>Returns to Policy Entry with fields pre-filled</td></tr>
+                <tr><td>Attempt limit</td><td>After 3 failures → show Contact Support prominently</td></tr>
+              </table>
+            </div>
+            <div class="spec-section">
+              <div class="spec-section-title">Navigation</div>
+              <div class="nav-flow">
+                <div class="nav-flow-item"><span class="nav-flow-screen">Failure</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Try Again</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Policy Entry</span></div>
+                <div class="nav-flow-item"><span class="nav-flow-screen">Failure</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Contact Support</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Support: Contact</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen-divider"><div class="screen-divider-line"></div><div class="screen-divider-dot"></div><div class="screen-divider-line"></div></div>
+
+  <!-- ═══════════════════════════════════ SCREEN 8 — LOCATION ═══ -->
+  <div class="screen-block" id="s8">
+    <div class="screen-header">
+      <div class="screen-number">8</div>
+      <div class="screen-title-group">
+        <div class="screen-title">Location Permissions</div>
+        <div class="screen-subtitle">One-time permission request · ZIP code fallback if denied</div>
+      </div>
+    </div>
+    <div class="screen-layout">
+      <div class="phone">
+        <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+        <div class="phone-screen">
+          <div class="topbar">
+            <div class="topbar-logo">MyPlace</div>
+            <div></div>
+          </div>
+          <div class="s-body" style="text-align:center;padding-top:32px">
+            <div style="font-size:48px;margin-bottom:16px">📍</div>
+            <div style="font-family:var(--font-display);font-size:22px;color:var(--gray-900);margin-bottom:8px">Find stores near you</div>
+            <div style="font-size:13px;color:var(--gray-400);line-height:1.5;margin-bottom:28px">Allow location access to see nearby stores where you can pick up your bundle.</div>
+            <button class="m-btn m-btn-primary">Allow Location Access</button>
+            <div class="s-divider"></div>
+            <div style="font-size:12px;color:var(--gray-400);margin-bottom:10px">Or enter your ZIP code manually</div>
+            <div class="m-input-group" style="text-align:left">
+              <input class="m-input" placeholder="Enter ZIP code" style="text-align:center;font-size:18px;font-weight:600;letter-spacing:4px" readonly>
+            </div>
+            <button class="m-btn m-btn-blue" style="margin-top:8px">Use This ZIP</button>
+            <div style="margin-top:12px;font-size:10px;color:var(--gray-300)">Location is only used to find nearby stores.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="breakdown">
+        <div class="breakdown-header">
+          <div><h3>Screen 8 — Location Permissions</h3><p>Single purpose · Two paths to same outcome (map works either way)</p></div>
+        </div>
+        <div class="breakdown-body">
+          <div class="spec-section">
+            <div class="spec-section-title">Components Used</div>
+            <div>
+              <span class="component-tag tag-purple">Top Bar — Logo only (no back)</span>
+              <span class="component-tag tag-purple">Button — Primary Brand (Allow Location)</span>
+              <span class="component-tag tag-gray">Divider with label</span>
+              <span class="component-tag tag-purple">Input — ZIP code (centered, large)</span>
+              <span class="component-tag tag-purple">Button — Primary Blue (Use This ZIP)</span>
+              <span class="component-tag tag-gray">Micro copy — privacy reassurance</span>
+            </div>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Layout Specs</div>
+            <table class="spec-table">
+              <tr><td>Layout</td><td>Centered · Icon + title + body · Two options separated by divider</td></tr>
+              <tr><td>Location icon</td><td>48px emoji or custom SVG · Top of content area</td></tr>
+              <tr><td>ZIP input style</td><td>Centered text · 18px · letter-spacing 4px · Numeric keypad</td></tr>
+              <tr><td>Privacy note</td><td>10px · <code>gray-300</code> · Intentionally subtle</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Permission Flow</div>
+            <table class="spec-table">
+              <tr><td>Allow tapped</td><td>Triggers native browser location prompt · If granted → map uses GPS · If denied → falls back to ZIP input</td></tr>
+              <tr><td>ZIP submitted</td><td>Validates 5-digit format · Stores as user preference · Map centers on ZIP</td></tr>
+              <tr><td>Skip / later</td><td>Not offered — location is required for store map. ZIP is the fallback.</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Navigation</div>
+            <div class="nav-flow">
+              <div class="nav-flow-item"><span class="nav-flow-screen">Location</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Allow or ZIP submitted</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Map Flow (Store Selection)</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Map Flow</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Store confirmed</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Address Entry</span></div>
+            </div>
+          </div>
+          <div class="note-box">💡 No back arrow on this screen — users can't skip location/ZIP. It's required for the store map. The ZIP fallback ensures 100% of users can proceed.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen-divider"><div class="screen-divider-line"></div><div class="screen-divider-dot"></div><div class="screen-divider-line"></div></div>
+
+  <!-- ═══════════════════════════════════ SCREEN 9 — ADDRESS ═══ -->
+  <div class="screen-block" id="s9">
+    <div class="screen-header">
+      <div class="screen-number">9</div>
+      <div class="screen-title-group">
+        <div class="screen-title">Address Entry</div>
+        <div class="screen-subtitle">Final onboarding step · Tote bag delivery address</div>
+      </div>
+    </div>
+    <div class="screen-layout">
+      <div class="phone">
+        <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+        <div class="phone-screen">
+          <div class="s-hero-sm" style="padding:20px 18px 16px">
+            <div class="s-hero-sm-eyebrow">Almost there!</div>
+            <div class="s-hero-sm-title">Where should we send your bundle?</div>
+          </div>
+          <div class="progress-bar" style="margin:0;border-radius:0"><div class="progress-fill" style="width:100%"></div></div>
+          <div class="s-body">
+            <div class="m-alert m-alert-info" style="margin-bottom:16px">
+              <div class="m-alert-icon">📦</div>
+              <div><div class="m-alert-title">Free tote bag delivery</div><div class="m-alert-msg">Your SC Johnson home essentials tote will be shipped here.</div></div>
+            </div>
+            <div class="m-input-group">
+              <span class="m-label">Street Address <span style="color:var(--error)">*</span></span>
+              <input class="m-input" placeholder="123 Main Street" readonly>
+            </div>
+            <div class="m-input-group">
+              <span class="m-label">Apt, Unit, Floor</span>
+              <input class="m-input" placeholder="Apt 4B (optional)" readonly>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <div class="m-input-group">
+                <span class="m-label">City <span style="color:var(--error)">*</span></span>
+                <input class="m-input" placeholder="Boston" readonly>
+              </div>
+              <div class="m-input-group">
+                <span class="m-label">State <span style="color:var(--error)">*</span></span>
+                <input class="m-input" placeholder="MA" readonly>
+              </div>
+            </div>
+            <div class="m-input-group">
+              <span class="m-label">ZIP Code <span style="color:var(--error)">*</span></span>
+              <input class="m-input" placeholder="02101" readonly>
+            </div>
+            <button class="m-btn m-btn-primary" style="margin-top:8px">🏠 Go to MyPlace →</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="breakdown">
+        <div class="breakdown-header">
+          <div><h3>Screen 9 — Address Entry</h3><p>Final onboarding screen · Tote bag delivery address · Progress bar completes</p></div>
+        </div>
+        <div class="breakdown-body">
+          <div class="spec-section">
+            <div class="spec-section-title">Components Used</div>
+            <div>
+              <span class="component-tag tag-purple">Hero SM — "Almost there!" + Progress 100%</span>
+              <span class="component-tag tag-purple">Info Alert — Tote bag delivery</span>
+              <span class="component-tag tag-purple">Input — Street Address</span>
+              <span class="component-tag tag-purple">Input — Apt/Unit (optional)</span>
+              <span class="component-tag tag-purple">Input — City (half width)</span>
+              <span class="component-tag tag-purple">Input — State (half width)</span>
+              <span class="component-tag tag-purple">Input — ZIP Code</span>
+              <span class="component-tag tag-purple">Button — Primary Brand (Go to MyPlace)</span>
+            </div>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Layout Specs</div>
+            <table class="spec-table">
+              <tr><td>Hero tone</td><td>"Almost there!" — celebratory, not functional</td></tr>
+              <tr><td>Progress bar</td><td>100% fill · Signals completion of onboarding</td></tr>
+              <tr><td>Info alert</td><td><code>m-alert-info</code> · Sets expectations for tote delivery</td></tr>
+              <tr><td>City + State</td><td>Side by side · 50/50 grid · 8px gap</td></tr>
+              <tr><td>CTA copy</td><td>"Go to MyPlace →" · Home emoji · Celebratory moment</td></tr>
+              <tr><td>Autocomplete</td><td>Enable browser address autocomplete on street field</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Validation</div>
+            <table class="spec-table">
+              <tr><td>Required</td><td>Street, City, State, ZIP · Apt optional</td></tr>
+              <tr><td>ZIP format</td><td>5-digit US · Numeric keypad</td></tr>
+              <tr><td>State</td><td>2-letter abbrev or dropdown picker</td></tr>
+              <tr><td>Address verify</td><td>Optional USPS API check on submit (v2)</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Navigation</div>
+            <div class="nav-flow">
+              <div class="nav-flow-item"><span class="nav-flow-screen">Address Entry</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">"Go to MyPlace" + valid</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Home (Pre-Subscription)</span></div>
+            </div>
+          </div>
+          <div class="note-box">💡 The CTA copy "Go to MyPlace →" with the 🏠 emoji is intentional — it marks the end of setup and the beginning of the product experience. This is the payoff moment for onboarding.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="page-footer">
+    <strong>MyPlace — Onboarding Flow</strong> · 9 screens · Design System v1.2 · For Figma implementation<br>
+    <span style="margin-top:6px;display:block">Next: Home Screens (Pre & Post Subscription) →</span>
+  </div>
+
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  const links = document.querySelectorAll('.flow-step');
+  links.forEach(l => l.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySele
