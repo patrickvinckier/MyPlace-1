@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyPlace — Subscription Registration Screens</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple-900:#1F1B37;--purple-700:#362E5E;--purple-500:#5B4E9E;--purple-300:#A49DC9;--purple-100:#DEDBEB;--purple-50:#F1F0F7;
+    --gold-900:#7A4800;--gold-700:#B56A00;--gold-500:#E08C00;--gold-100:#FDF0C8;--gold-50:#FFFBEE;
+    --blue-500:#1E63D0;--blue-100:#D6E6FA;--blue-50:#EBF3FD;
+    --warm-white:#FAFAF8;--gray-50:#F5F4F1;--gray-100:#ECEAE5;--gray-200:#D9D6CF;--gray-300:#B8B4AB;
+    --gray-400:#918D84;--gray-500:#6B6760;--gray-700:#3D3A35;--gray-900:#1A1816;
+    --success:#1A8C5B;--success-bg:#E6F6EF;--error:#C62828;
+    --grad-purple:linear-gradient(135deg,#362E5E 0%,#5B4E9E 100%);
+    --grad-gold:linear-gradient(135deg,#B56A00 0%,#E08C00 100%);
+    --font:'Plus Jakarta Sans',system-ui,sans-serif;
+    --r-sm:8px;--r-md:12px;--r-lg:16px;--r-xl:24px;--r-full:9999px;
+    --shadow-sm:0 1px 3px rgba(26,24,22,0.08);--shadow-md:0 4px 12px rgba(26,24,22,0.10);
+    --shadow-lg:0 8px 24px rgba(26,24,22,0.12);
+    --shadow-purple:0 8px 24px rgba(91,78,158,0.28);--shadow-gold:0 8px 24px rgba(224,140,0,0.22);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--font);background:#EDECE9;padding:40px;}
+  .flow-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray-400);margin-bottom:32px;}
+  .screens-row{display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start;}
+  .screen-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;}
+  .screen-label{font-size:11px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.8px;}
+  .phone{width:320px;background:var(--warm-white);border-radius:44px;box-shadow:0 0 0 8px #D1CFC9,0 0 0 10px #C8C6C0,var(--shadow-lg);overflow:hidden;}
+  .phone-notch{height:40px;background:white;display:flex;align-items:center;justify-content:space-between;padding:0 24px;font-size:12px;font-weight:600;color:var(--gray-700);}
+  .topbar{background:white;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--gray-100);box-shadow:var(--shadow-sm);}
+  .topbar-logo{font-size:20px;font-weight:800;background:var(--grad-purple);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .topbar-back{font-size:14px;font-weight:600;color:var(--purple-500);}
+  .topbar-title{font-size:15px;font-weight:700;color:var(--gray-900);}
+  .icon-btn{width:36px;height:36px;border-radius:var(--r-md);background:var(--gray-50);display:flex;align-items:center;justify-content:center;font-size:16px;}
+  .step-hero{background:var(--grad-purple);padding:22px 20px 24px;position:relative;overflow:hidden;}
+  .step-hero::before{content:'';position:absolute;top:-20px;right:-20px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,0.06);}
+  .step-eyebrow{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:4px;}
+  .step-title{font-size:22px;font-weight:800;color:white;position:relative;}
+  .step-sub{font-size:13px;color:rgba(255,255,255,0.75);margin-top:3px;position:relative;}
+  .progress{height:3px;background:rgba(255,255,255,0.2);}
+  .progress-fill{height:100%;background:rgba(255,255,255,0.9);}
+  .body{padding:16px;background:var(--warm-white);}
+  .section-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--gray-400);margin:14px 0 8px;padding-bottom:5px;border-bottom:1px solid var(--gray-100);}
+  .btn{width:100%;padding:14px;border-radius:var(--r-lg);border:none;font-family:var(--font);font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;}
+  .btn-primary{background:var(--grad-purple);color:white;box-shadow:var(--shadow-purple);}
+  .btn-ghost{background:transparent;color:var(--gray-500);border:1.5px solid var(--gray-200);}
+
+  /* PRODUCT CARDS */
+  .select-all-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;margin-bottom:4px;}
+  .select-all-label{font-size:14px;font-weight:700;color:var(--gray-700);}
+  .toggle{width:42px;height:24px;border-radius:var(--r-full);background:var(--gray-200);position:relative;}
+  .toggle-dot{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:white;box-shadow:var(--shadow-sm);}
+  .toggle-on{background:var(--purple-500);}
+  .toggle-on .toggle-dot{left:auto;right:3px;}
+
+  .product-card{background:white;border-radius:var(--r-lg);border:1.5px solid var(--gray-100);box-shadow:var(--shadow-sm);margin-bottom:8px;overflow:hidden;}
+  .product-card-selected{border-color:var(--purple-500);box-shadow:0 0 0 3px var(--purple-50),var(--shadow-sm);}
+  .product-card-main{display:flex;align-items:center;gap:10px;padding:11px 12px;}
+  .product-img{width:46px;height:46px;border-radius:var(--r-md);background:var(--gray-50);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;border:1px solid var(--gray-100);}
+  .product-name{font-size:13px;font-weight:700;color:var(--gray-900);}
+  .product-desc{font-size:11px;color:var(--gray-400);margin-top:1px;}
+  .product-cadence{font-size:11px;font-weight:600;color:var(--purple-500);margin-top:2px;}
+  .product-cadence-off{color:var(--gray-300);}
+  .product-select{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--gray-200);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .product-select-checked{background:var(--purple-500);border-color:var(--purple-500);color:white;font-size:11px;}
+  .qty-row{display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--purple-50);border-top:1px solid var(--purple-100);}
+  .qty-label{font-size:12px;font-weight:600;color:var(--purple-700);flex:1;}
+  .qty-btn{width:26px;height:26px;border-radius:var(--r-sm);border:1.5px solid var(--purple-100);background:white;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--purple-700);}
+  .qty-val{font-size:14px;font-weight:800;color:var(--purple-700);min-width:20px;text-align:center;}
+  .summary-bar{background:var(--purple-900);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;}
+  .summary-count{font-size:13px;font-weight:700;color:white;}
+  .summary-sub{font-size:11px;color:var(--purple-300);margin-top:1px;}
+  .summary-btn{background:white;color:var(--purple-700);border:none;border-radius:var(--r-lg);padding:10px 18px;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;}
+
+  /* CADENCE */
+  .cadence-card{background:white;border-radius:var(--r-lg);border:1.5px solid var(--gray-100);box-shadow:var(--shadow-sm);margin-bottom:10px;overflow:hidden;}
+  .cadence-header{display:flex;align-items:center;gap:10px;padding:13px 14px;}
+  .cadence-icon{width:38px;height:38px;border-radius:var(--r-md);background:var(--gray-50);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+  .cadence-name{font-size:14px;font-weight:700;color:var(--gray-900);}
+  .cadence-sub{font-size:11px;color:var(--gray-400);}
+  .suggested-badge{font-size:10px;font-weight:700;background:var(--gold-100);color:var(--gold-900);padding:3px 8px;border-radius:var(--r-full);margin-left:auto;}
+  .cadence-control{padding:0 14px 14px;display:flex;align-items:center;gap:10px;}
+  .cadence-btn{width:30px;height:30px;border-radius:var(--r-sm);border:1.5px solid var(--purple-100);background:white;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--purple-700);}
+  .cadence-track{flex:1;height:4px;background:var(--purple-100);border-radius:var(--r-full);position:relative;}
+  .cadence-fill{position:absolute;left:0;top:0;height:100%;background:var(--grad-purple);border-radius:var(--r-full);}
+  .cadence-badge{background:var(--purple-50);border:1.5px solid var(--purple-100);border-radius:var(--r-md);padding:5px 12px;font-size:13px;font-weight:800;color:var(--purple-700);white-space:nowrap;}
+
+  /* DELIVERY METHOD */
+  .method-card{background:white;border-radius:var(--r-xl);border:1.5px solid var(--gray-100);padding:16px;margin-bottom:10px;box-shadow:var(--shadow-sm);}
+  .method-card-selected{border-color:var(--purple-500);background:var(--purple-50);}
+  .method-row{display:flex;align-items:flex-start;gap:12px;}
+  .method-icon{width:46px;height:46px;border-radius:var(--r-lg);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+  .method-icon-purple{background:var(--grad-purple);box-shadow:var(--shadow-purple);}
+  .method-icon-gray{background:var(--gray-100);}
+  .method-title{font-size:15px;font-weight:800;color:var(--gray-900);margin-bottom:2px;}
+  .method-sub{font-size:12px;color:var(--gray-400);line-height:1.5;}
+  .method-radio{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--gray-200);margin-left:auto;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;}
+  .method-radio-checked{background:var(--purple-500);border-color:var(--purple-500);}
+  .method-radio-checked::after{content:'';width:8px;height:8px;border-radius:50%;background:white;}
+  .addr-preview{background:white;border-radius:var(--r-md);padding:10px 12px;border:1px solid var(--purple-100);margin-top:10px;}
+  .addr-preview-label{font-size:10px;font-weight:700;color:var(--purple-500);margin-bottom:2px;}
+  .addr-preview-text{font-size:13px;font-weight:600;color:var(--gray-900);}
+  .addr-preview-sub{font-size:12px;color:var(--gray-400);}
+
+  /* PAYMENT */
+  .field{margin-bottom:13px;}
+  .label{font-size:12px;font-weight:700;color:var(--gray-700);margin-bottom:5px;display:block;}
+  .required{color:var(--error);}
+  .input{width:100%;padding:12px 14px;border-radius:var(--r-md);border:1.5px solid var(--gray-200);background:white;font-family:var(--font);font-size:14px;color:var(--gray-400);box-shadow:var(--shadow-sm);}
+  .input-prefilled{background:var(--purple-50);border-color:var(--purple-100);color:var(--purple-700);}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .order-summary{background:var(--purple-50);border:1.5px solid var(--purple-100);border-radius:var(--r-lg);padding:14px;margin-bottom:14px;}
+  .order-summary-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--purple-500);margin-bottom:8px;}
+  .order-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--purple-100);font-size:13px;}
+  .order-row:last-child{border-bottom:none;font-weight:700;font-size:14px;padding-top:8px;}
+  .order-label{color:var(--gray-500);}
+  .order-val{font-weight:600;color:var(--gray-900);}
+  .terms-box{background:var(--gray-50);border-radius:var(--r-md);padding:12px 14px;margin-bottom:13px;font-size:12px;color:var(--gray-500);line-height:1.6;}
+  .terms-link{color:var(--purple-500);font-weight:600;}
+
+  /* SUCCESS */
+  .success-hero{background:var(--grad-purple);padding:40px 20px;text-align:center;color:white;position:relative;overflow:hidden;}
+  .success-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.06);}
+  .success-hero::after{content:'';position:absolute;bottom:-60px;left:-20px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,0.04);}
+  .success-check{width:76px;height:76px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:34px;margin:0 auto 16px;position:relative;}
+  .success-title{font-size:26px;font-weight:800;margin-bottom:6px;position:relative;}
+  .success-sub{font-size:14px;opacity:0.8;line-height:1.5;position:relative;}
+  .success-detail-card{background:white;border-radius:var(--r-xl);border:1.5px solid var(--gray-100);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:12px;}
+  .success-detail-header{background:var(--purple-50);padding:11px 14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--purple-500);}
+  .success-detail-row{display:flex;align-items:center;gap:10px;padding:11px 14px;border-top:1px solid var(--gray-100);}
+  .success-detail-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0;}
+  .success-detail-text{font-size:13px;color:var(--gray-700);}
+  .success-detail-val{font-size:13px;font-weight:700;color:var(--gray-900);margin-left:auto;}
+  .teaser-box{background:var(--gold-50);border:1.5px solid var(--gold-100);border-radius:var(--r-lg);padding:14px;margin-bottom:14px;}
+  .teaser-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--gold-700);margin-bottom:8px;}
+  .teaser-row{font-size:13px;color:var(--gold-900);margin-bottom:5px;}
+</style>
+</head>
+<body>
+
+<div class="flow-title">MyPlace — Subscription Registration</div>
+<div class="screens-row">
+
+  <!-- CHOOSE PRODUCTS -->
+  <div class="screen-wrap">
+    <div class="screen-label">Choose Products</div>
+    <div class="phone">
+      <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+      <div class="topbar"><div class="topbar-back">← Back</div><div class="topbar-title">Choose Products</div><div class="icon-btn">☰</div></div>
+      <div class="step-hero">
+        <div class="step-eyebrow">Step 1 of 4</div>
+        <div class="step-title">What do you need?</div>
+        <div class="step-sub">Select products for your recurring delivery</div>
+      </div>
+      <div class="progress"><div class="progress-fill" style="width:25%"></div></div>
+      <div class="body" style="padding-bottom:0">
+        <div class="select-all-row">
+          <span class="select-all-label">Select All Products</span>
+          <div class="toggle"><div class="toggle-dot"></div></div>
+        </div>
+        <div class="section-lbl">🧹 Cleaning</div>
+        <div class="product-card product-card-selected">
+          <div class="product-card-main">
+            <div class="product-img">🫧</div>
+            <div style="flex:1"><div class="product-name">Scrubbing Bubbles</div><div class="product-desc">Bathroom cleaner · 20 oz</div><div class="product-cadence">Every 30 days · suggested</div></div>
+            <div class="product-select product-select-checked">✓</div>
+          </div>
+          <div class="qty-row"><span class="qty-label">Quantity per delivery</span><div style="display:flex;align-items:center;gap:8px"><div class="qty-btn">−</div><div class="qty-val">1</div><div class="qty-btn">+</div></div></div>
+        </div>
+        <div class="product-card product-card-selected">
+          <div class="product-card-main">
+            <div class="product-img">🍋</div>
+            <div style="flex:1"><div class="product-name">Mrs. Meyer's Dish Soap</div><div class="product-desc">Lemon verbena · 16 oz</div><div class="product-cadence">Every 30 days · suggested</div></div>
+            <div class="product-select product-select-checked">✓</div>
+          </div>
+          <div class="qty-row"><span class="qty-label">Quantity per delivery</span><div style="display:flex;align-items:center;gap:8px"><div class="qty-btn">−</div><div class="qty-val">2</div><div class="qty-btn">+</div></div></div>
+        </div>
+        <div class="section-lbl">🗂 Storage</div>
+        <div class="product-card">
+          <div class="product-card-main">
+            <div class="product-img">🥡</div>
+            <div style="flex:1"><div class="product-name">Ziploc Gallon Bags</div><div class="product-desc">20 count</div><div class="product-cadence product-cadence-off">Every 60 days · suggested</div></div>
+            <div class="product-select"></div>
+          </div>
+        </div>
+        <div class="section-lbl">🔧 Home Maintenance</div>
+        <div class="product-card">
+          <div class="product-card-main">
+            <div class="product-img">🚿</div>
+            <div style="flex:1"><div class="product-name">Drano Clog Remover</div><div class="product-desc">Max Gel · 32 oz</div><div class="product-cadence product-cadence-off">Every 90 days · suggested</div></div>
+            <div class="product-select"></div>
+          </div>
+        </div>
+      </div>
+      <div class="summary-bar">
+        <div><div class="summary-count">2 products selected</div><div class="summary-sub">Scrubbing Bubbles, Mrs. Meyer's</div></div>
+        <div class="summary-btn">Continue →</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SET CADENCE -->
+  <div class="screen-wrap">
+    <div class="screen-label">Set Up Delivery Schedule</div>
+    <div class="phone">
+      <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+      <div class="topbar"><div class="topbar-back">← Products</div><div class="topbar-title">Delivery Schedule</div><div class="icon-btn">☰</div></div>
+      <div class="step-hero">
+        <div class="step-eyebrow">Step 2 of 4</div>
+        <div class="step-title">How often do you need it?</div>
+        <div class="step-sub">Pre-filled suggestions — adjust as needed</div>
+      </div>
+      <div class="progress"><div class="progress-fill" style="width:50%"></div></div>
+      <div class="body">
+        <div class="cadence-card">
+          <div class="cadence-header">
+            <div class="cadence-icon">🫧</div>
+            <div style="flex:1"><div class="cadence-name">Scrubbing Bubbles</div><div class="cadence-sub">Bathroom cleaner · Qty: 1</div></div>
+            <div class="suggested-badge">Suggested</div>
+          </div>
+          <div class="cadence-control">
+            <div class="cadence-btn">−</div>
+            <div class="cadence-track"><div class="cadence-fill" style="width:33%"></div></div>
+            <div class="cadence-btn">+</div>
+            <div class="cadence-badge">30 days</div>
+          </div>
+        </div>
+        <div class="cadence-card">
+          <div class="cadence-header">
+            <div class="cadence-icon">🍋</div>
+            <div style="flex:1"><div class="cadence-name">Mrs. Meyer's Dish Soap</div><div class="cadence-sub">Lemon verbena · Qty: 2</div></div>
+            <div class="suggested-badge">Suggested</div>
+          </div>
+          <div class="cadence-control">
+            <div class="cadence-btn">−</div>
+            <div class="cadence-track"><div class="cadence-fill" style="width:33%"></div></div>
+            <div class="cadence-btn">+</div>
+            <div class="cadence-badge">30 days</div>
+          </div>
+        </div>
+        <div style="background:var(--blue-50);border:1.5px solid var(--blue-100);border-radius:var(--r-lg);padding:13px 14px;margin-bottom:16px;display:flex;gap:10px">
+          <span style="font-size:18px;flex-shrink:0">💡</span>
+          <div><div style="font-size:13px;font-weight:700;color:var(--blue-500);margin-bottom:2px">You can change this anytime</div><div style="font-size:12px;color:var(--gray-500);line-height:1.5">Adjust your schedule from the Home screen at any time.</div></div>
+        </div>
+        <div class="btn btn-primary">Continue →</div>
+        <div class="btn btn-ghost">← Back to Products</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DELIVERY METHOD -->
+  <div class="screen-wrap">
+    <div class="screen-label">Delivery Method</div>
+    <div class="phone">
+      <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+      <div class="topbar"><div class="topbar-back">← Schedule</div><div class="topbar-title">How to Receive</div><div class="icon-btn">☰</div></div>
+      <div class="step-hero">
+        <div class="step-eyebrow">Step 3 of 4</div>
+        <div class="step-title">How would you like to receive your products?</div>
+      </div>
+      <div class="progress"><div class="progress-fill" style="width:75%"></div></div>
+      <div class="body">
+        <div class="method-card method-card-selected">
+          <div class="method-row">
+            <div class="method-icon method-icon-purple">🏠</div>
+            <div style="flex:1">
+              <div class="method-title">Ship to My Address</div>
+              <div class="method-sub">Delivered to your door. Free shipping on all subscription orders.</div>
+              <div class="addr-preview">
+                <div class="addr-preview-label">Delivering to</div>
+                <div class="addr-preview-text">123 Main St, Apt 4B</div>
+                <div class="addr-preview-sub">Boston, MA 02101 · <span style="color:var(--purple-500);font-weight:600">Change</span></div>
+              </div>
+            </div>
+            <div class="method-radio method-radio-checked"></div>
+          </div>
+        </div>
+        <div class="method-card">
+          <div class="method-row">
+            <div class="method-icon method-icon-gray">🏪</div>
+            <div style="flex:1">
+              <div class="method-title">Pick Up In Store</div>
+              <div class="method-sub">Collect at your selected store using your QR code. Available same-day.</div>
+              <div style="margin-top:6px;font-size:12px;font-weight:600;color:var(--gray-500)">Home Depot · Washington St</div>
+            </div>
+            <div class="method-radio"></div>
+          </div>
+        </div>
+        <div style="height:10px"></div>
+        <div class="btn btn-primary">Continue →</div>
+        <div class="btn btn-ghost">← Back</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD PAYMENT -->
+  <div class="screen-wrap">
+    <div class="screen-label">Add Payment</div>
+    <div class="phone">
+      <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+      <div class="topbar"><div class="topbar-back">← Delivery</div><div class="topbar-title">Payment</div><div class="icon-btn">☰</div></div>
+      <div class="step-hero">
+        <div class="step-eyebrow">Step 4 of 4 · Almost done!</div>
+        <div class="step-title">Add a payment method</div>
+      </div>
+      <div class="progress"><div class="progress-fill" style="width:90%"></div></div>
+      <div class="body">
+        <div class="order-summary">
+          <div class="order-summary-title">Order Summary</div>
+          <div class="order-row"><span class="order-label">Scrubbing Bubbles × 1</span><span class="order-val">Every 30 days</span></div>
+          <div class="order-row"><span class="order-label">Mrs. Meyer's Soap × 2</span><span class="order-val">Every 30 days</span></div>
+          <div class="order-row"><span class="order-label">Shipping</span><span class="order-val" style="color:var(--success)">Free</span></div>
+          <div class="order-row"><span>Total per cycle</span><span style="color:var(--purple-500)">Included with policy</span></div>
+        </div>
+        <div class="field"><label class="label">Name on Card <span class="required">*</span></label><div class="input">Jane Smith</div></div>
+        <div class="field"><label class="label">Card Number <span class="required">*</span></label><div class="input">•••• •••• •••• ••••</div></div>
+        <div class="two-col">
+          <div class="field"><label class="label">Expiration <span class="required">*</span></label><div class="input">MM / YY</div></div>
+          <div class="field"><label class="label">CVC <span class="required">*</span></label><div class="input">•••</div></div>
+        </div>
+        <div class="field"><label class="label">Delivery Address</label><div class="input input-prefilled">123 Main St, Apt 4B, Boston MA</div></div>
+        <div class="terms-box">By subscribing, you agree to the <span class="terms-link">MyPlace Subscription Terms</span>. Cancel anytime from the Home screen — no fees.</div>
+        <div class="btn btn-primary">🔒 Start My Subscription</div>
+        <div class="btn btn-ghost">← Back</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBSCRIPTION CONFIRMED -->
+  <div class="screen-wrap">
+    <div class="screen-label">Subscription Confirmed</div>
+    <div class="phone">
+      <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+      <div class="topbar">
+        <div class="topbar-logo">MyPlace</div>
+        <div style="display:flex;gap:6px"><div class="icon-btn">🔔</div><div class="icon-btn">☰</div></div>
+      </div>
+      <div class="success-hero">
+        <div class="success-check">🎉</div>
+        <div class="success-title">You're all set!</div>
+        <div class="success-sub">Your subscription is active. Home essentials are on their way.</div>
+      </div>
+      <div class="body">
+        <div class="success-detail-card">
+          <div class="success-detail-header">Your Subscription</div>
+          <div class="success-detail-row"><div class="success-detail-icon">🫧</div><div class="success-detail-text">Scrubbing Bubbles × 1</div><div class="success-detail-val">Every 30 days</div></div>
+          <div class="success-detail-row"><div class="success-detail-icon">🍋</div><div class="success-detail-text">Mrs. Meyer's Soap × 2</div><div class="success-detail-val">Every 30 days</div></div>
+          <div class="success-detail-row"><div class="success-detail-icon">🏠</div><div class="success-detail-text">Ships to 123 Main St</div><div class="success-detail-val">Free shipping</div></div>
+          <div class="success-detail-row"><div class="success-detail-icon">📅</div><div class="success-detail-text">First delivery</div><div class="success-detail-val" style="color:var(--purple-500)">In 3–5 days</div></div>
+        </div>
+        <div class="teaser-box">
+          <div class="teaser-title">From your Home screen you can</div>
+          <div class="teaser-row">⚡ Order immediately with Need it Now</div>
+          <div class="teaser-row">🔄 Adjust your delivery schedule anytime</div>
+          <div class="teaser-row">➕ Add more products to your subscription</div>
+        </div>
+        <div class="btn btn-primary">🏠 Go to Home →</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
