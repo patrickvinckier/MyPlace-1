@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyPlace — Subscription Registration</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple-900:#1F1B37;--purple-700:#362E5E;--purple-500:#5B4E9E;--purple-300:#A49DC9;--purple-100:#DEDBEB;--purple-50:#F1F0F7;
+    --blue-500:#1E63D0;--blue-100:#D6E6FA;--blue-50:#EBF3FD;
+    --gold-900:#7A4800;--gold-700:#B56A00;--gold-500:#E08C00;--gold-300:#FBCC4D;--gold-100:#FDF0C8;--gold-50:#FFFBEE;
+    --warm-white:#FAFAF8;--gray-50:#F5F4F1;--gray-100:#ECEAE5;--gray-200:#D9D6CF;--gray-300:#B8B4AB;
+    --gray-400:#918D84;--gray-500:#6B6760;--gray-700:#3D3A35;--gray-900:#1A1816;
+    --success:#1A8C5B;--success-bg:#E6F6EF;--error:#C62828;--error-bg:#FDEAEA;
+    --grad-purple:linear-gradient(135deg,#362E5E 0%,#5B4E9E 100%);
+    --grad-gold:linear-gradient(135deg,#B56A00 0%,#E08C00 100%);
+    --font:'Plus Jakarta Sans',system-ui,sans-serif;
+    --r-sm:8px;--r-md:12px;--r-lg:16px;--r-xl:24px;--r-full:9999px;
+    --shadow-sm:0 1px 3px rgba(26,24,22,0.08),0 1px 2px rgba(26,24,22,0.04);
+    --shadow-md:0 4px 12px rgba(26,24,22,0.10),0 2px 4px rgba(26,24,22,0.06);
+    --shadow-lg:0 8px 24px rgba(26,24,22,0.12),0 4px 8px rgba(26,24,22,0.06);
+    --shadow-xl:0 16px 40px rgba(26,24,22,0.14),0 6px 12px rgba(26,24,22,0.06);
+    --shadow-purple:0 8px 24px rgba(91,78,158,0.28);
+    --shadow-gold:0 8px 24px rgba(224,140,0,0.22);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--font);background:#EDECE9;color:var(--gray-900);line-height:1.5;}
+
+  /* PAGE HEADER */
+  .page-header{background:var(--grad-purple);padding:40px 60px;position:relative;overflow:hidden;}
+  .page-header::before{content:'';position:absolute;top:-80px;right:-80px;width:320px;height:320px;border-radius:50%;background:rgba(255,255,255,0.05);}
+  .page-header::after{content:'';position:absolute;bottom:-60px;left:20%;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,0.03);}
+  .page-header-inner{position:relative;z-index:1;}
+  .flow-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.15);color:white;font-size:12px;font-weight:600;padding:5px 14px;border-radius:var(--r-full);letter-spacing:0.5px;margin-bottom:16px;border:1px solid rgba(255,255,255,0.2);}
+  .page-header h1{font-size:40px;font-weight:800;color:white;margin-bottom:6px;letter-spacing:-0.5px;}
+  .page-header p{color:rgba(255,255,255,0.7);font-size:15px;}
+  .flow-steps{display:flex;gap:6px;flex-wrap:wrap;margin-top:20px;}
+  .flow-step{font-size:11px;font-weight:600;padding:4px 12px;border-radius:var(--r-full);background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.15);cursor:pointer;transition:all 0.2s;text-decoration:none;}
+  .flow-step:hover,.flow-step.active{background:rgba(255,255,255,0.25);color:white;border-color:rgba(255,255,255,0.35);}
+
+  .main{max-width:1300px;margin:0 auto;padding:48px 32px;}
+
+  /* SECTION LABEL */
+  .section-label{display:flex;align-items:center;gap:12px;margin-bottom:28px;}
+  .section-number{width:36px;height:36px;border-radius:var(--r-full);background:var(--grad-purple);color:white;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;box-shadow:var(--shadow-purple);}
+  .section-title{font-size:24px;font-weight:800;color:var(--gray-900);letter-spacing:-0.3px;}
+  .section-sub{font-size:13px;color:var(--gray-400);margin-top:2px;}
+
+  /* SCREEN BLOCK */
+  .screen-block{margin-bottom:72px;scroll-margin-top:32px;}
+  .screen-layout{display:grid;grid-template-columns:300px 1fr;gap:40px;align-items:start;}
+  @media(max-width:900px){.screen-layout{grid-template-columns:1fr;}}
+
+  /* PHONE */
+  .phone{width:300px;background:var(--warm-white);border-radius:40px;box-shadow:var(--shadow-xl),0 0 0 8px #D1CFC9,0 0 0 10px #C8C6C0;overflow:hidden;position:sticky;top:32px;}
+  .phone-notch{height:36px;background:white;display:flex;align-items:center;justify-content:space-between;padding:0 20px;font-size:11px;font-weight:600;color:var(--gray-700);}
+
+  /* TOPBAR */
+  .topbar{background:white;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid var(--gray-100);box-shadow:var(--shadow-sm);}
+  .topbar-logo{font-size:18px;font-weight:800;background:var(--grad-purple);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .topbar-back{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--purple-500);}
+  .topbar-title{font-size:14px;font-weight:700;color:var(--gray-900);}
+  .icon-btn{width:32px;height:32px;border-radius:var(--r-md);background:var(--gray-50);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;}
+
+  /* STEP HERO */
+  .step-hero{background:var(--grad-purple);padding:20px 18px 22px;position:relative;overflow:hidden;}
+  .step-hero::before{content:'';position:absolute;top:-20px;right:-20px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,0.06);}
+  .step-eyebrow{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:4px;}
+  .step-title{font-size:20px;font-weight:800;color:white;position:relative;}
+  .step-sub{font-size:12px;color:rgba(255,255,255,0.7);margin-top:3px;position:relative;}
+
+  /* PROGRESS BAR */
+  .progress-bar{height:3px;background:rgba(255,255,255,0.2);overflow:hidden;}
+  .progress-fill{height:100%;background:rgba(255,255,255,0.9);transition:width 0.4s ease;}
+
+  /* SCREEN BODY */
+  .s-body{padding:16px;background:var(--warm-white);}
+
+  /* SECTION HEADER */
+  .s-section-header{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--gray-400);margin:14px 0 8px;padding-bottom:5px;border-bottom:1px solid var(--gray-100);}
+
+  /* SELECT ALL ROW */
+  .select-all-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;margin-bottom:4px;}
+  .select-all-label{font-size:13px;font-weight:700;color:var(--gray-700);}
+  .toggle{width:40px;height:22px;border-radius:var(--r-full);background:var(--purple-500);position:relative;cursor:pointer;flex-shrink:0;}
+  .toggle-dot{position:absolute;top:3px;right:3px;width:16px;height:16px;border-radius:50%;background:white;box-shadow:var(--shadow-sm);}
+  .toggle.off{background:var(--gray-200);}
+  .toggle.off .toggle-dot{right:auto;left:3px;}
+
+  /* PRODUCT CARD */
+  .product-card{background:white;border-radius:var(--r-lg);border:1.5px solid var(--gray-100);box-shadow:var(--shadow-sm);margin-bottom:8px;overflow:hidden;transition:all 0.2s;}
+  .product-card.selected{border-color:var(--purple-500);box-shadow:0 0 0 3px var(--purple-50),var(--shadow-sm);}
+  .product-card-main{display:flex;align-items:center;gap:10px;padding:10px 12px;}
+  .product-img{width:44px;height:44px;border-radius:var(--r-md);background:var(--gray-50);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;border:1px solid var(--gray-100);}
+  .product-info{flex:1;min-width:0;}
+  .product-name{font-size:12px;font-weight:700;color:var(--gray-900);}
+  .product-desc{font-size:10px;color:var(--gray-400);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .product-cadence{font-size:10px;font-weight:600;color:var(--purple-500);margin-top:2px;}
+  .product-select-btn{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--gray-200);display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;}
+  .product-select-btn.checked{background:var(--purple-500);border-color:var(--purple-500);color:white;font-size:11px;}
+
+  /* QUANTITY ROW */
+  .quantity-row{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--purple-50);border-top:1px solid var(--purple-100);}
+  .qty-label{font-size:11px;font-weight:600;color:var(--purple-700);flex:1;}
+  .qty-stepper{display:flex;align-items:center;gap:8px;}
+  .qty-btn{width:24px;height:24px;border-radius:var(--r-sm);border:1.5px solid var(--purple-200,#C4BAE0);background:white;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;cursor:pointer;color:var(--purple-700);}
+  .qty-val{font-size:13px;font-weight:800;color:var(--purple-700);min-width:20px;text-align:center;}
+
+  /* SUMMARY BAR */
+  .summary-bar{background:var(--purple-900);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;}
+  .summary-count{font-size:12px;font-weight:700;color:white;}
+  .summary-sub{font-size:10px;color:var(--purple-300);margin-top:1px;}
+
+  /* CADENCE CARD */
+  .cadence-card{background:white;border-radius:var(--r-lg);border:1.5px solid var(--gray-100);box-shadow:var(--shadow-sm);margin-bottom:8px;overflow:hidden;}
+  .cadence-card-header{display:flex;align-items:center;gap:10px;padding:12px 14px;}
+  .cadence-product-icon{width:36px;height:36px;border-radius:var(--r-md);background:var(--gray-50);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+  .cadence-product-name{font-size:13px;font-weight:700;color:var(--gray-900);}
+  .cadence-product-sub{font-size:10px;color:var(--gray-400);}
+  .cadence-control{padding:0 14px 12px;display:flex;align-items:center;gap:10px;}
+  .cadence-stepper{display:flex;align-items:center;gap:10px;flex:1;}
+  .cadence-btn{width:28px;height:28px;border-radius:var(--r-sm);border:1.5px solid var(--purple-200,#C4BAE0);background:white;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;color:var(--purple-700);font-weight:700;}
+  .cadence-track{flex:1;height:4px;background:var(--purple-100);border-radius:var(--r-full);position:relative;}
+  .cadence-fill{position:absolute;left:0;top:0;height:100%;background:var(--grad-purple);border-radius:var(--r-full);}
+  .cadence-value-badge{background:var(--purple-50);border:1.5px solid var(--purple-100);border-radius:var(--r-md);padding:4px 10px;font-size:12px;font-weight:800;color:var(--purple-700);white-space:nowrap;}
+  .suggested-badge{font-size:9px;font-weight:700;background:var(--gold-100);color:var(--gold-900);padding:2px 6px;border-radius:var(--r-full);margin-left:auto;}
+
+  /* DELIVERY METHOD */
+  .method-card{background:white;border-radius:var(--r-xl);border:1.5px solid var(--gray-100);padding:16px;margin-bottom:10px;cursor:pointer;transition:all 0.2s;box-shadow:var(--shadow-sm);}
+  .method-card.selected{border-color:var(--purple-500);background:var(--purple-50);box-shadow:0 0 0 3px var(--purple-50);}
+  .method-card-row{display:flex;align-items:flex-start;gap:12px;}
+  .method-icon{width:44px;height:44px;border-radius:var(--r-lg);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+  .method-icon-purple{background:var(--grad-purple);box-shadow:var(--shadow-purple);}
+  .method-icon-gray{background:var(--gray-100);}
+  .method-title{font-size:14px;font-weight:800;color:var(--gray-900);margin-bottom:2px;}
+  .method-sub{font-size:12px;color:var(--gray-400);line-height:1.5;}
+  .method-radio{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--gray-200);margin-left:auto;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;}
+  .method-radio.checked{background:var(--purple-500);border-color:var(--purple-500);}
+  .method-radio.checked::after{content:'';width:8px;height:8px;border-radius:50%;background:white;}
+
+  /* PAYMENT FORM */
+  .m-input-group{margin-bottom:12px;}
+  .m-label{display:block;font-size:11px;font-weight:700;color:var(--gray-700);margin-bottom:5px;}
+  .m-input{width:100%;padding:11px 13px;border-radius:var(--r-md);border:1.5px solid var(--gray-200);background:white;font-family:var(--font);font-size:13px;color:var(--gray-900);box-shadow:var(--shadow-sm);outline:none;}
+  .m-input::placeholder{color:var(--gray-300);}
+  .m-input.prefilled{background:var(--purple-50);border-color:var(--purple-100);color:var(--purple-700);}
+  .two-col-inputs{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+
+  /* ORDER SUMMARY */
+  .order-summary{background:var(--purple-50);border:1.5px solid var(--purple-100);border-radius:var(--r-lg);padding:12px 14px;margin-bottom:14px;}
+  .order-summary-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--purple-500);margin-bottom:8px;}
+  .order-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--purple-100);font-size:12px;}
+  .order-row:last-child{border-bottom:none;font-weight:700;color:var(--purple-900);padding-top:8px;font-size:13px;}
+  .order-row-label{color:var(--gray-500);}
+  .order-row-val{font-weight:600;color:var(--gray-900);}
+
+  /* TERMS */
+  .terms-box{background:var(--gray-50);border-radius:var(--r-md);padding:10px 12px;margin-bottom:12px;font-size:11px;color:var(--gray-500);line-height:1.6;}
+  .terms-link{color:var(--purple-500);font-weight:600;}
+
+  /* BUTTONS */
+  .m-btn{width:100%;padding:13px;border-radius:var(--r-lg);border:none;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;}
+  .m-btn-primary{background:var(--grad-purple);color:white;box-shadow:var(--shadow-purple);}
+  .m-btn-ghost{background:transparent;color:var(--gray-500);border:1.5px solid var(--gray-200);}
+  .m-btn-disabled{background:var(--gray-100);color:var(--gray-300);cursor:not-allowed;}
+
+  /* SUCCESS */
+  .success-hero{background:var(--grad-purple);padding:36px 20px;text-align:center;color:white;position:relative;overflow:hidden;}
+  .success-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.06);}
+  .success-hero::after{content:'';position:absolute;bottom:-60px;left:-20px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,0.04);}
+  .success-check{width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 16px;position:relative;}
+  .success-title{font-size:24px;font-weight:800;margin-bottom:6px;position:relative;}
+  .success-sub{font-size:13px;opacity:0.8;position:relative;line-height:1.5;}
+
+  .success-body{padding:16px;}
+  .success-detail-card{background:white;border-radius:var(--r-xl);border:1.5px solid var(--gray-100);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:12px;}
+  .success-detail-header{background:var(--purple-50);padding:10px 14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--purple-500);}
+  .success-detail-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid var(--gray-100);}
+  .success-detail-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0;}
+  .success-detail-text{font-size:12px;color:var(--gray-700);}
+  .success-detail-val{font-size:12px;font-weight:700;color:var(--gray-900);margin-left:auto;}
+
+  /* BREAKDOWN */
+  .breakdown{background:white;border-radius:var(--r-xl);box-shadow:var(--shadow-md);overflow:hidden;}
+  .breakdown-header{background:var(--gray-50);padding:18px 22px;border-bottom:1px solid var(--gray-100);}
+  .breakdown-header h3{font-size:15px;font-weight:800;color:var(--gray-900);}
+  .breakdown-header p{font-size:12px;color:var(--gray-400);margin-top:2px;}
+  .breakdown-body{padding:22px;}
+
+  .spec-section{margin-bottom:24px;}
+  .spec-section:last-child{margin-bottom:0;}
+  .spec-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray-400);margin-bottom:10px;padding-bottom:5px;border-bottom:1px solid var(--gray-100);}
+
+  .spec-table{width:100%;border-collapse:collapse;font-size:12px;}
+  .spec-table td{padding:7px 9px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+  .spec-table tr:last-child td{border-bottom:none;}
+  .spec-table td:first-child{font-weight:600;color:var(--gray-700);width:36%;white-space:nowrap;}
+  .spec-table td:last-child{color:var(--gray-500);}
+
+  code{font-family:monospace;font-size:11px;background:var(--gray-100);color:var(--purple-700);padding:2px 5px;border-radius:4px;}
+
+  .component-tag{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:var(--r-full);margin:2px;}
+  .tag-purple{background:var(--purple-50);color:var(--purple-700);border:1px solid var(--purple-100);}
+  .tag-gold{background:var(--gold-50);color:var(--gold-700);border:1px solid var(--gold-100);}
+  .tag-gray{background:var(--gray-50);color:var(--gray-500);border:1px solid var(--gray-100);}
+  .tag-green{background:var(--success-bg);color:var(--success);border:1px solid #B8E8D4;}
+
+  .nav-flow{background:var(--gray-50);border-radius:var(--r-lg);padding:12px 14px;display:flex;flex-direction:column;gap:6px;}
+  .nav-flow-item{display:flex;align-items:center;gap:6px;font-size:11px;flex-wrap:wrap;}
+  .nav-flow-screen{background:white;border:1px solid var(--gray-100);border-radius:var(--r-sm);padding:3px 8px;font-weight:600;color:var(--gray-700);font-size:11px;white-space:nowrap;}
+  .nav-flow-arrow{color:var(--gray-300);font-size:12px;}
+  .nav-flow-trigger{color:var(--purple-500);font-size:11px;font-style:italic;}
+
+  .note-box{background:var(--gold-50);border:1.5px solid var(--gold-100);border-radius:var(--r-md);padding:11px 13px;font-size:12px;color:var(--gold-900);margin-top:12px;display:flex;gap:8px;line-height:1.5;}
+
+  .screen-divider{display:flex;align-items:center;gap:16px;margin:56px 0;}
+  .screen-divider-line{flex:1;height:1px;background:var(--gray-200);}
+  .screen-divider-dot{width:8px;height:8px;border-radius:var(--r-full);background:var(--purple-300);}
+
+  .page-footer{text-align:center;padding:48px 0 32px;border-top:1px solid var(--gray-200);margin-top:32px;color:var(--gray-400);font-size:13px;}
+  .page-footer strong{color:var(--gray-700);}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="flow-badge">FLOW 4 OF 5</div>
+    <h1>Subscription Registration</h1>
+    <p>6 screens · Product selection → Cadence → Delivery method → Payment → Confirmed</p>
+    <div class="flow-steps">
+      <a href="#s1" class="flow-step active">1 Choose Products</a>
+      <a href="#s2" class="flow-step">2 Set Cadence</a>
+      <a href="#s3" class="flow-step">3 Delivery Method</a>
+      <a href="#s4" class="flow-step">4 Add Payment</a>
+      <a href="#s5" class="flow-step">5 Confirmed</a>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- ══ SCREEN 1 — CHOOSE PRODUCTS ══ -->
+  <div class="screen-block" id="s1">
+    <div class="section-label">
+      <div class="section-number">1</div>
+      <div>
+        <div class="section-title">Choose Your Products</div>
+        <div class="section-sub">Step 1 of 4 · Category grouped · Select all toggle · Quantity + cadence per product</div>
+      </div>
+    </div>
+    <div class="screen-layout">
+
+      <div class="phone">
+        <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+        <div class="topbar">
+          <div class="topbar-back">← <span>Back</span></div>
+          <div class="topbar-title">Choose Products</div>
+          <div class="icon-btn">☰</div>
+        </div>
+        <div class="step-hero">
+          <div class="step-eyebrow">Step 1 of 4</div>
+          <div class="step-title">What do you need?</div>
+          <div class="step-sub">Select the products for your recurring delivery</div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:25%"></div></div>
+
+        <div class="s-body" style="padding-bottom:0">
+          <!-- Select All -->
+          <div class="select-all-row">
+            <span class="select-all-label">Select All Products</span>
+            <div class="toggle"><div class="toggle-dot"></div></div>
+          </div>
+
+          <!-- CLEANING category -->
+          <div class="s-section-header">🧹 Cleaning</div>
+
+          <!-- Scrubbing Bubbles — selected -->
+          <div class="product-card selected">
+            <div class="product-card-main">
+              <div class="product-img">🫧</div>
+              <div class="product-info">
+                <div class="product-name">Scrubbing Bubbles</div>
+                <div class="product-desc">Bathroom cleaner · 20 oz</div>
+                <div class="product-cadence">Every 30 days · suggested</div>
+              </div>
+              <div class="product-select-btn checked">✓</div>
+            </div>
+            <div class="quantity-row">
+              <span class="qty-label">Quantity per delivery</span>
+              <div class="qty-stepper">
+                <div class="qty-btn">−</div>
+                <div class="qty-val">1</div>
+                <div class="qty-btn">+</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mrs. Meyer's — selected -->
+          <div class="product-card selected">
+            <div class="product-card-main">
+              <div class="product-img">🍋</div>
+              <div class="product-info">
+                <div class="product-name">Mrs. Meyer's Dish Soap</div>
+                <div class="product-desc">Lemon verbena · 16 oz</div>
+                <div class="product-cadence">Every 30 days · suggested</div>
+              </div>
+              <div class="product-select-btn checked">✓</div>
+            </div>
+            <div class="quantity-row">
+              <span class="qty-label">Quantity per delivery</span>
+              <div class="qty-stepper">
+                <div class="qty-btn">−</div>
+                <div class="qty-val">2</div>
+                <div class="qty-btn">+</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- STORAGE category -->
+          <div class="s-section-header">🗂 Storage & Organization</div>
+
+          <!-- Ziploc — unselected -->
+          <div class="product-card">
+            <div class="product-card-main">
+              <div class="product-img">🥡</div>
+              <div class="product-info">
+                <div class="product-name">Ziploc Gallon Bags</div>
+                <div class="product-desc">20 count</div>
+                <div class="product-cadence" style="color:var(--gray-300)">Every 60 days · suggested</div>
+              </div>
+              <div class="product-select-btn"></div>
+            </div>
+          </div>
+
+          <!-- MAINTENANCE category -->
+          <div class="s-section-header">🔧 Home Maintenance</div>
+
+          <!-- Drano — unselected -->
+          <div class="product-card">
+            <div class="product-card-main">
+              <div class="product-img">🚿</div>
+              <div class="product-info">
+                <div class="product-name">Drano Clog Remover</div>
+                <div class="product-desc">Max Gel · 32 oz</div>
+                <div class="product-cadence" style="color:var(--gray-300)">Every 90 days · suggested</div>
+              </div>
+              <div class="product-select-btn"></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- SUMMARY BAR + CTA -->
+        <div class="summary-bar">
+          <div>
+            <div class="summary-count">2 products selected</div>
+            <div class="summary-sub">Scrubbing Bubbles, Mrs. Meyer's</div>
+          </div>
+          <button style="background:white;color:var(--purple-700);border:none;border-radius:var(--r-lg);padding:9px 16px;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer">Continue →</button>
+        </div>
+      </div>
+
+      <!-- BREAKDOWN -->
+      <div class="breakdown">
+        <div class="breakdown-header">
+          <h3>Screen 1 — Choose Your Products</h3>
+          <p>Step 1 of 4 · Full product catalog with selection, quantity, and suggested cadence</p>
+        </div>
+        <div class="breakdown-body">
+          <div class="spec-section">
+            <div class="spec-section-title">Components Used</div>
+            <div>
+              <span class="component-tag tag-purple">Step Hero Banner + Progress 25%</span>
+              <span class="component-tag tag-purple">Select All Toggle</span>
+              <span class="component-tag tag-purple">Category Section Headers</span>
+              <span class="component-tag tag-purple">Product Card — Unselected</span>
+              <span class="component-tag tag-purple">Product Card — Selected (purple border + glow)</span>
+              <span class="component-tag tag-purple">Quantity Stepper Row (visible when selected)</span>
+              <span class="component-tag tag-gray">Summary Bar (sticky bottom)</span>
+            </div>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Product Card Specs</div>
+            <table class="spec-table">
+              <tr><td>Image cell</td><td>44×44px · <code>r-md</code> · <code>gray-50</code> bg · emoji or product photo</td></tr>
+              <tr><td>Unselected</td><td><code>gray-100</code> border · no glow · cadence text <code>gray-300</code></td></tr>
+              <tr><td>Selected</td><td><code>purple-500</code> border · <code>purple-50</code> glow ring · cadence <code>purple-500</code></td></tr>
+              <tr><td>Select button</td><td>24px circle · unchecked: <code>gray-200</code> border · checked: <code>purple-500</code> fill + white ✓</td></tr>
+              <tr><td>Tap to select</td><td>Full card is tappable · Not just the button</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Quantity Stepper Row</div>
+            <table class="spec-table">
+              <tr><td>Visibility</td><td>Only shown when product is selected · Slides in with 200ms ease</td></tr>
+              <tr><td>Background</td><td><code>purple-50</code> · <code>purple-100</code> top border</td></tr>
+              <tr><td>Min quantity</td><td>1 · − button disabled at 1</td></tr>
+              <tr><td>Max quantity</td><td>6 per delivery</td></tr>
+              <tr><td>Cadence preview</td><td>Shows suggested cadence inline on product card · Adjustable on next screen</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Categories</div>
+            <table class="spec-table">
+              <tr><td>Cleaning</td><td>Scrubbing Bubbles, Mrs. Meyer's Soap, Windex, Pledge</td></tr>
+              <tr><td>Storage</td><td>Ziploc Gallon Bags</td></tr>
+              <tr><td>Maintenance</td><td>Drano Clog Remover</td></tr>
+              <tr><td>Empty category</td><td>Hide section header if no products in that category</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Select All Toggle</div>
+            <table class="spec-table">
+              <tr><td>On state</td><td><code>purple-500</code> bg · All cards selected · All quantity rows visible</td></tr>
+              <tr><td>Off state</td><td><code>gray-200</code> bg · All cards deselected</td></tr>
+              <tr><td>Partial state</td><td>Toggle shows "on" if any selected · Tapping turns all on/off</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Summary Bar (Sticky Bottom)</div>
+            <table class="spec-table">
+              <tr><td>Background</td><td><code>purple-900</code> · Always visible above keyboard</td></tr>
+              <tr><td>Count text</td><td>Updates live as products selected</td></tr>
+              <tr><td>Product preview</td><td>First 2 selected product names · "+ N more" if over 2</td></tr>
+              <tr><td>Continue btn</td><td>White bg · Purple text · Disabled if 0 selected</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Navigation</div>
+            <div class="nav-flow">
+              <div class="nav-flow-item"><span class="nav-flow-screen">Choose Products</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Continue (≥1 selected)</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Set Cadence</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Choose Products</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Back arrow</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Home Pre-Subscription</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen-divider"><div class="screen-divider-line"></div><div class="screen-divider-dot"></div><div class="screen-divider-line"></div></div>
+
+  <!-- ══ SCREEN 2 — SET CADENCE ══ -->
+  <div class="screen-block" id="s2">
+    <div class="section-label">
+      <div class="section-number">2</div>
+      <div>
+        <div class="section-title">Set Up Recurring Delivery</div>
+        <div class="section-sub">Step 2 of 4 · Suggested cadence pre-filled · Slider + stepper to adjust per product</div>
+      </div>
+    </div>
+    <div class="screen-layout">
+
+      <div class="phone">
+        <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+        <div class="topbar">
+          <div class="topbar-back">← <span>Products</span></div>
+          <div class="topbar-title">Delivery Schedule</div>
+          <div class="icon-btn">☰</div>
+        </div>
+        <div class="step-hero">
+          <div class="step-eyebrow">Step 2 of 4</div>
+          <div class="step-title">How often do you need it?</div>
+          <div class="step-sub">We've pre-filled a suggested schedule — adjust as needed</div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:50%"></div></div>
+
+        <div class="s-body">
+
+          <!-- Scrubbing Bubbles cadence -->
+          <div class="cadence-card">
+            <div class="cadence-card-header">
+              <div class="cadence-product-icon">🫧</div>
+              <div style="flex:1">
+                <div class="cadence-product-name">Scrubbing Bubbles</div>
+                <div class="cadence-product-sub">Bathroom cleaner · Qty: 1</div>
+              </div>
+              <div class="suggested-badge">Suggested</div>
+            </div>
+            <div class="cadence-control">
+              <div class="cadence-stepper">
+                <div class="cadence-btn">−</div>
+                <div class="cadence-track"><div class="cadence-fill" style="width:33%"></div></div>
+                <div class="cadence-btn">+</div>
+              </div>
+              <div class="cadence-value-badge">30 days</div>
+            </div>
+          </div>
+
+          <!-- Mrs. Meyer's cadence -->
+          <div class="cadence-card">
+            <div class="cadence-card-header">
+              <div class="cadence-product-icon">🍋</div>
+              <div style="flex:1">
+                <div class="cadence-product-name">Mrs. Meyer's Dish Soap</div>
+                <div class="cadence-product-sub">Lemon verbena · Qty: 2</div>
+              </div>
+              <div class="suggested-badge">Suggested</div>
+            </div>
+            <div class="cadence-control">
+              <div class="cadence-stepper">
+                <div class="cadence-btn">−</div>
+                <div class="cadence-track"><div class="cadence-fill" style="width:33%"></div></div>
+                <div class="cadence-btn">+</div>
+              </div>
+              <div class="cadence-value-badge">30 days</div>
+            </div>
+          </div>
+
+          <!-- Info box -->
+          <div style="background:var(--blue-50);border:1.5px solid var(--blue-100);border-radius:var(--r-lg);padding:12px 14px;margin-bottom:14px;display:flex;gap:8px;align-items:flex-start">
+            <span style="font-size:16px;flex-shrink:0">💡</span>
+            <div>
+              <div style="font-size:12px;font-weight:700;color:var(--blue-500);margin-bottom:2px">You can change this anytime</div>
+              <div style="font-size:11px;color:var(--gray-500);line-height:1.5">Your delivery schedule can be adjusted from the Home screen at any time.</div>
+            </div>
+          </div>
+
+          <button class="m-btn m-btn-primary">Continue →</button>
+          <button class="m-btn m-btn-ghost">← Back to Products</button>
+        </div>
+      </div>
+
+      <!-- BREAKDOWN -->
+      <div class="breakdown">
+        <div class="breakdown-header">
+          <h3>Screen 2 — Set Up Recurring Delivery</h3>
+          <p>Step 2 of 4 · Per-product cadence with suggested pre-fills and adjustable controls</p>
+        </div>
+        <div class="breakdown-body">
+          <div class="spec-section">
+            <div class="spec-section-title">Components Used</div>
+            <div>
+              <span class="component-tag tag-purple">Step Hero + Progress 50%</span>
+              <span class="component-tag tag-purple">Cadence Card per selected product</span>
+              <span class="component-tag tag-gold">Suggested Badge</span>
+              <span class="component-tag tag-purple">Cadence Track (visual slider)</span>
+              <span class="component-tag tag-purple">− / + Stepper Buttons</span>
+              <span class="component-tag tag-purple">Days Value Badge</span>
+              <span class="component-tag tag-gray">Info Box — Can change anytime</span>
+              <span class="component-tag tag-purple">Button — Continue</span>
+              <span class="component-tag tag-gray">Button — Back (ghost)</span>
+            </div>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Cadence Card Specs</div>
+            <table class="spec-table">
+              <tr><td>Pre-filled value</td><td>Pulled from product catalog suggested cadence</td></tr>
+              <tr><td>Suggested badge</td><td><code>gold-100</code> bg · <code>gold-900</code> text · Shown on default value only</td></tr>
+              <tr><td>Badge disappears</td><td>When user adjusts away from suggested value</td></tr>
+              <tr><td>Track fill</td><td>Visual only · Proportional to days value · Not draggable</td></tr>
+              <tr><td>− / + buttons</td><td>Increments: 7 → 14 → 21 → 30 → 45 → 60 → 90 days</td></tr>
+              <tr><td>Min value</td><td>7 days · − disabled at minimum</td></tr>
+              <tr><td>Max value</td><td>90 days · + disabled at maximum</td></tr>
+              <tr><td>Value badge</td><td><code>purple-50</code> bg · <code>purple-700</code> text · Updates live</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Suggested Cadences (default)</div>
+            <table class="spec-table">
+              <tr><td>Scrubbing Bubbles</td><td>30 days</td></tr>
+              <tr><td>Mrs. Meyer's Soap</td><td>30 days</td></tr>
+              <tr><td>Windex</td><td>45 days</td></tr>
+              <tr><td>Pledge</td><td>60 days</td></tr>
+              <tr><td>Ziploc Bags</td><td>60 days</td></tr>
+              <tr><td>Drano</td><td>90 days</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Navigation</div>
+            <div class="nav-flow">
+              <div class="nav-flow-item"><span class="nav-flow-screen">Set Cadence</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Continue</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Delivery Method</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Set Cadence</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Back</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Choose Products</span></div>
+            </div>
+          </div>
+          <div class="note-box">💡 The "Suggested" badge is a subtle trust signal — it tells users the default isn't arbitrary. Remove it when they adjust so they know their custom value is saved.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen-divider"><div class="screen-divider-line"></div><div class="screen-divider-dot"></div><div class="screen-divider-line"></div></div>
+
+  <!-- ══ SCREEN 3 — DELIVERY METHOD ══ -->
+  <div class="screen-block" id="s3">
+    <div class="section-label">
+      <div class="section-number">3</div>
+      <div>
+        <div class="section-title">Delivery Method</div>
+        <div class="section-sub">Step 3 of 4 · Ship to address or pick up in store</div>
+      </div>
+    </div>
+    <div class="screen-layout">
+
+      <div class="phone">
+        <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+        <div class="topbar">
+          <div class="topbar-back">← <span>Schedule</span></div>
+          <div class="topbar-title">How to Receive</div>
+          <div class="icon-btn">☰</div>
+        </div>
+        <div class="step-hero">
+          <div class="step-eyebrow">Step 3 of 4</div>
+          <div class="step-title">How would you like to receive your products?</div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:75%"></div></div>
+
+        <div class="s-body">
+
+          <!-- Ship to home — selected -->
+          <div class="method-card selected">
+            <div class="method-card-row">
+              <div class="method-icon method-icon-purple">🏠</div>
+              <div style="flex:1">
+                <div class="method-title">Ship to My Address</div>
+                <div class="method-sub">Delivered directly to your door. Free shipping on all subscription orders.</div>
+                <div style="margin-top:8px;background:white;border-radius:var(--r-md);padding:8px 10px;border:1px solid var(--purple-100);">
+                  <div style="font-size:10px;font-weight:700;color:var(--purple-500);margin-bottom:2px;">Delivering to</div>
+                  <div style="font-size:12px;font-weight:600;color:var(--gray-900);">123 Main St, Apt 4B</div>
+                  <div style="font-size:11px;color:var(--gray-400);">Boston, MA 02101 · <span style="color:var(--purple-500);font-weight:600;">Change</span></div>
+                </div>
+              </div>
+              <div class="method-radio checked"></div>
+            </div>
+          </div>
+
+          <!-- Pick up in store — unselected -->
+          <div class="method-card">
+            <div class="method-card-row">
+              <div class="method-icon method-icon-gray">🏪</div>
+              <div style="flex:1">
+                <div class="method-title">Pick Up In Store</div>
+                <div class="method-sub">Collect at your selected store using your QR code. Available same-day.</div>
+                <div style="margin-top:6px;font-size:11px;font-weight:600;color:var(--gray-500);">Home Depot · Washington St</div>
+              </div>
+              <div class="method-radio"></div>
+            </div>
+          </div>
+
+          <div style="height:12px"></div>
+          <button class="m-btn m-btn-primary">Continue →</button>
+          <button class="m-btn m-btn-ghost">← Back</button>
+        </div>
+      </div>
+
+      <!-- BREAKDOWN -->
+      <div class="breakdown">
+        <div class="breakdown-header">
+          <h3>Screen 3 — Delivery Method</h3>
+          <p>Step 3 of 4 · Two options with contextual address/store info pre-filled</p>
+        </div>
+        <div class="breakdown-body">
+          <div class="spec-section">
+            <div class="spec-section-title">Components Used</div>
+            <div>
+              <span class="component-tag tag-purple">Step Hero + Progress 75%</span>
+              <span class="component-tag tag-purple">Method Card — Ship to Address (selected)</span>
+              <span class="component-tag tag-gray">Method Card — Pick Up In Store</span>
+              <span class="component-tag tag-purple">Inline Address Preview (from onboarding)</span>
+              <span class="component-tag tag-purple">Radio Button per card</span>
+              <span class="component-tag tag-purple">Button — Continue</span>
+              <span class="component-tag tag-gray">Button — Back (ghost)</span>
+            </div>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Method Card Specs</div>
+            <table class="spec-table">
+              <tr><td>Unselected</td><td>White bg · <code>gray-100</code> border · gray icon bg</td></tr>
+              <tr><td>Selected</td><td><code>purple-50</code> bg · <code>purple-500</code> border · purple icon · glow ring</td></tr>
+              <tr><td>Tap behavior</td><td>Full card tappable · Radio button updates · Other card deselects</td></tr>
+              <tr><td>Radio</td><td>20px circle · checked: <code>purple-500</code> fill + white dot</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Pre-filled Data</div>
+            <table class="spec-table">
+              <tr><td>Ship to address</td><td>Pre-filled from onboarding Address Entry · "Change" link → Address Management</td></tr>
+              <tr><td>Store name</td><td>Pre-filled from selected store in Map flow</td></tr>
+              <tr><td>Default selection</td><td>Ship to address selected by default</td></tr>
+              <tr><td>No address yet</td><td>Show "Add a delivery address" prompt inside card</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Navigation</div>
+            <div class="nav-flow">
+              <div class="nav-flow-item"><span class="nav-flow-screen">Delivery Method</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Continue</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Add Payment</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Delivery Method</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">"Change" address link</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Address Entry</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Delivery Method</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Back</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Set Cadence</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen-divider"><div class="screen-divider-line"></div><div class="screen-divider-dot"></div><div class="screen-divider-line"></div></div>
+
+  <!-- ══ SCREEN 4 — ADD PAYMENT ══ -->
+  <div class="screen-block" id="s4">
+    <div class="section-label">
+      <div class="section-number">4</div>
+      <div>
+        <div class="section-title">Add Payment Method</div>
+        <div class="section-sub">Step 4 of 4 · Order summary + card details + subscription terms</div>
+      </div>
+    </div>
+    <div class="screen-layout">
+
+      <div class="phone">
+        <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+        <div class="topbar">
+          <div class="topbar-back">← <span>Delivery</span></div>
+          <div class="topbar-title">Payment</div>
+          <div class="icon-btn">☰</div>
+        </div>
+        <div class="step-hero">
+          <div class="step-eyebrow">Step 4 of 4 · Almost done!</div>
+          <div class="step-title">Add a payment method</div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:90%"></div></div>
+
+        <div class="s-body">
+
+          <!-- ORDER SUMMARY -->
+          <div class="order-summary">
+            <div class="order-summary-title">Order Summary</div>
+            <div class="order-row">
+              <span class="order-row-label">Scrubbing Bubbles × 1</span>
+              <span class="order-row-val">Every 30 days</span>
+            </div>
+            <div class="order-row">
+              <span class="order-row-label">Mrs. Meyer's Soap × 2</span>
+              <span class="order-row-val">Every 30 days</span>
+            </div>
+            <div class="order-row">
+              <span class="order-row-label">Delivery method</span>
+              <span class="order-row-val">Ship to address</span>
+            </div>
+            <div class="order-row">
+              <span class="order-row-label">Shipping</span>
+              <span class="order-row-val" style="color:var(--success)">Free</span>
+            </div>
+            <div class="order-row">
+              <span>Total per cycle</span>
+              <span style="color:var(--purple-700)">Included with policy</span>
+            </div>
+          </div>
+
+          <!-- PAYMENT FORM -->
+          <div class="m-input-group">
+            <label class="m-label">Name on Card <span style="color:var(--error)">*</span></label>
+            <input class="m-input" placeholder="Jane Smith" readonly>
+          </div>
+          <div class="m-input-group">
+            <label class="m-label">Card Number <span style="color:var(--error)">*</span></label>
+            <input class="m-input" placeholder="•••• •••• •••• ••••" readonly>
+          </div>
+          <div class="two-col-inputs">
+            <div class="m-input-group">
+              <label class="m-label">Expiration <span style="color:var(--error)">*</span></label>
+              <input class="m-input" placeholder="MM / YY" readonly>
+            </div>
+            <div class="m-input-group">
+              <label class="m-label">CVC <span style="color:var(--error)">*</span></label>
+              <input class="m-input" placeholder="•••" readonly>
+            </div>
+          </div>
+
+          <!-- DELIVERY ADDRESS (pre-filled) -->
+          <div class="m-input-group">
+            <label class="m-label">Delivery Address</label>
+            <input class="m-input prefilled" value="123 Main St, Apt 4B, Boston MA 02101" readonly>
+          </div>
+
+          <!-- TERMS -->
+          <div class="terms-box">
+            By subscribing, you agree to the <span class="terms-link">MyPlace Subscription Terms</span>. Your subscription renews automatically each cycle. You can cancel anytime from the Home screen — no fees or penalties.
+          </div>
+
+          <button class="m-btn m-btn-primary">🔒 Start My Subscription</button>
+          <button class="m-btn m-btn-ghost">← Back</button>
+        </div>
+      </div>
+
+      <!-- BREAKDOWN -->
+      <div class="breakdown">
+        <div class="breakdown-header">
+          <h3>Screen 4 — Add Payment</h3>
+          <p>Step 4 of 4 · Order summary + card form + pre-filled address + terms</p>
+        </div>
+        <div class="breakdown-body">
+          <div class="spec-section">
+            <div class="spec-section-title">Components Used</div>
+            <div>
+              <span class="component-tag tag-purple">Step Hero + Progress 90%</span>
+              <span class="component-tag tag-purple">Order Summary Card</span>
+              <span class="component-tag tag-purple">Input — Name on Card</span>
+              <span class="component-tag tag-purple">Input — Card Number</span>
+              <span class="component-tag tag-purple">Input — Expiration (half)</span>
+              <span class="component-tag tag-purple">Input — CVC (half)</span>
+              <span class="component-tag tag-purple">Input — Delivery Address (pre-filled, purple)</span>
+              <span class="component-tag tag-gray">Terms Box</span>
+              <span class="component-tag tag-purple">Button — Start My Subscription (primary)</span>
+              <span class="component-tag tag-gray">Button — Back (ghost)</span>
+            </div>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Order Summary Specs</div>
+            <table class="spec-table">
+              <tr><td>Background</td><td><code>purple-50</code> · <code>purple-100</code> border · <code>r-lg</code></td></tr>
+              <tr><td>Products shown</td><td>All selected products with qty and cadence</td></tr>
+              <tr><td>Shipping row</td><td>"Free" in <code>success</code> green · Important trust signal</td></tr>
+              <tr><td>Total row</td><td>"Included with policy" · Reinforces no-cost framing</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Payment Input Specs</div>
+            <table class="spec-table">
+              <tr><td>Card number</td><td>Numeric keypad · Auto-formats with spaces every 4 digits</td></tr>
+              <tr><td>Expiration</td><td>MM/YY format · Auto-inserts "/" after 2 digits</td></tr>
+              <tr><td>CVC</td><td>3–4 digits · Numeric keypad · Masked</td></tr>
+              <tr><td>Address field</td><td>Pre-filled from onboarding · <code>purple-50</code> bg signals pre-filled state · Still editable</td></tr>
+              <tr><td>Security</td><td>Card data must go through PCI-compliant processor (Stripe recommended) · Never stored in MyPlace backend</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Terms Box Specs</div>
+            <table class="spec-table">
+              <tr><td>Background</td><td><code>gray-50</code> · 11px · <code>gray-500</code> · Readable but not distracting</td></tr>
+              <tr><td>Key messages</td><td>Auto-renews · Cancel anytime · No fees</td></tr>
+              <tr><td>Terms link</td><td><code>purple-500</code> · Opens modal or external page</td></tr>
+              <tr><td>No checkbox</td><td>Proceeding = consent · Clearly stated in copy</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">CTA Copy</div>
+            <table class="spec-table">
+              <tr><td>Lock icon</td><td>🔒 prefix on button · Visual security cue</td></tr>
+              <tr><td>"Start My Subscription"</td><td>Action-oriented · Matches the moment · Not "Submit" or "Pay"</td></tr>
+              <tr><td>Loading state</td><td>Button → spinner + "Setting up your subscription…" · Disable all inputs</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Navigation</div>
+            <div class="nav-flow">
+              <div class="nav-flow-item"><span class="nav-flow-screen">Add Payment</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Submit + success</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Subscription Confirmed</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Add Payment</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Submit + failure</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Inline error alert</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Add Payment</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Back</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Delivery Method</span></div>
+            </div>
+          </div>
+          <div class="note-box">💡 Never store raw card data in the MyPlace backend. Use Stripe Elements or a similar PCI-compliant tokenization solution so card details go directly to the payment processor — not your servers.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen-divider"><div class="screen-divider-line"></div><div class="screen-divider-dot"></div><div class="screen-divider-line"></div></div>
+
+  <!-- ══ SCREEN 5 — SUBSCRIPTION CONFIRMED ══ -->
+  <div class="screen-block" id="s5">
+    <div class="section-label">
+      <div class="section-number">5</div>
+      <div>
+        <div class="section-title">Subscription Confirmed</div>
+        <div class="section-sub">Payoff moment · Summary of what was set up · Path to Home</div>
+      </div>
+    </div>
+    <div class="screen-layout">
+
+      <div class="phone">
+        <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+        <div class="topbar">
+          <div class="topbar-logo">MyPlace</div>
+          <div style="display:flex;gap:4px">
+            <div class="icon-btn">🔔</div>
+            <div class="icon-btn">☰</div>
+          </div>
+        </div>
+
+        <!-- SUCCESS HERO -->
+        <div class="success-hero">
+          <div class="success-check">🎉</div>
+          <div class="success-title">You're all set!</div>
+          <div class="success-sub">Your subscription is active. Home essentials are on their way.</div>
+        </div>
+
+        <div class="success-body">
+
+          <!-- SUBSCRIPTION DETAILS -->
+          <div class="success-detail-card">
+            <div class="success-detail-header">Your Subscription</div>
+            <div class="success-detail-row">
+              <div class="success-detail-icon">🫧</div>
+              <div class="success-detail-text">Scrubbing Bubbles × 1</div>
+              <div class="success-detail-val">Every 30 days</div>
+            </div>
+            <div class="success-detail-row">
+              <div class="success-detail-icon">🍋</div>
+              <div class="success-detail-text">Mrs. Meyer's Soap × 2</div>
+              <div class="success-detail-val">Every 30 days</div>
+            </div>
+            <div class="success-detail-row">
+              <div class="success-detail-icon">🏠</div>
+              <div class="success-detail-text">Ships to 123 Main St</div>
+              <div class="success-detail-val">Free shipping</div>
+            </div>
+            <div class="success-detail-row">
+              <div class="success-detail-icon">📅</div>
+              <div class="success-detail-text">First delivery</div>
+              <div class="success-detail-val" style="color:var(--purple-500)">In 3–5 days</div>
+            </div>
+          </div>
+
+          <!-- QUICK ACTIONS TEASER -->
+          <div style="background:var(--gold-50);border:1.5px solid var(--gold-100);border-radius:var(--r-lg);padding:12px 14px;margin-bottom:14px;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--gold-700);margin-bottom:6px;">From your Home screen you can</div>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+              <div style="font-size:12px;color:var(--gold-900);">⚡ Order immediately with Need it Now</div>
+              <div style="font-size:12px;color:var(--gold-900);">🔄 Adjust your delivery schedule anytime</div>
+              <div style="font-size:12px;color:var(--gold-900);">➕ Add more products to your subscription</div>
+            </div>
+          </div>
+
+          <button class="m-btn m-btn-primary">🏠 Go to Home →</button>
+
+        </div>
+      </div>
+
+      <!-- BREAKDOWN -->
+      <div class="breakdown">
+        <div class="breakdown-header">
+          <h3>Screen 5 — Subscription Confirmed</h3>
+          <p>Payoff moment · Full subscription summary · Sets expectations for what's next</p>
+        </div>
+        <div class="breakdown-body">
+          <div class="spec-section">
+            <div class="spec-section-title">Components Used</div>
+            <div>
+              <span class="component-tag tag-purple">Top Bar — Logo + Bell + Menu (no back)</span>
+              <span class="component-tag tag-purple">Success Hero (grad-purple + 🎉)</span>
+              <span class="component-tag tag-purple">Subscription Detail Card</span>
+              <span class="component-tag tag-gold">Quick Actions Teaser Box</span>
+              <span class="component-tag tag-purple">Button — Go to Home</span>
+            </div>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Hero Specs</div>
+            <table class="spec-table">
+              <tr><td>Icon</td><td>🎉 instead of ✓ · This is a celebration, not just a confirmation</td></tr>
+              <tr><td>Animation</td><td>Icon bounces in · Hero fades up · 400ms spring</td></tr>
+              <tr><td>No back arrow</td><td>Flow is complete · Back would be confusing and unhelpful</td></tr>
+              <tr><td>Top bar</td><td>Returns to standard nav — signals new app state (now subscribed)</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Detail Card Specs</div>
+            <table class="spec-table">
+              <tr><td>Products</td><td>All selected products with qty and cadence</td></tr>
+              <tr><td>Delivery row</td><td>Address abbreviated · "Free shipping" label</td></tr>
+              <tr><td>First delivery</td><td>Estimated date in <code>purple-500</code> · Sets expectation immediately</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Quick Actions Teaser</div>
+            <table class="spec-table">
+              <tr><td>Purpose</td><td>Previews what the Home screen can do · Reduces "now what?" drop-off</td></tr>
+              <tr><td>Background</td><td><code>gold-50</code> · Warm tone · Not urgent, just helpful</td></tr>
+              <tr><td>Copy tone</td><td>Empowering · "You can" not "You must"</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Navigation</div>
+            <div class="nav-flow">
+              <div class="nav-flow-item"><span class="nav-flow-screen">Subscription Confirmed</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">"Go to Home"</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Home (Post-Subscription)</span></div>
+            </div>
+            <div class="note-box">💡 This screen transitions the user from the Registration flow into the Post-Subscription Home state. The app should update the user's subscription status in the background before navigating so Home loads in the correct state.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="page-footer">
+    <strong>MyPlace — Subscription Registration</strong> · Design System v1.2 · For Figma implementation<br>
+    <span style="margin-top:6px;display:block">Next: Profile & Account Flow →</span>
+  </div>
+
+</div>
+
+<script>
+  const links = document.querySelectorAll('.flow-step');
+  links.forEach(l => l.addEventListener('click', e => {
+    e.preventDefault();
+    const t = document.querySelector(l.getAttribute('href'));
+    if(t) t.scrollIntoView({behavior:'smooth',block:'start'});
+    links.forEach(x => x.classList.remove('active'));
+    l.classList.add('active');
+  }));
+</script>
+</body>
+</html>

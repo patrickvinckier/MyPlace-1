@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyPlace — Profile & Account</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple-900:#1F1B37;--purple-700:#362E5E;--purple-500:#5B4E9E;--purple-300:#A49DC9;--purple-100:#DEDBEB;--purple-50:#F1F0F7;
+    --gold-900:#7A4800;--gold-700:#B56A00;--gold-500:#E08C00;--gold-300:#FBCC4D;--gold-100:#FDF0C8;--gold-50:#FFFBEE;
+    --warm-white:#FAFAF8;--gray-50:#F5F4F1;--gray-100:#ECEAE5;--gray-200:#D9D6CF;--gray-300:#B8B4AB;
+    --gray-400:#918D84;--gray-500:#6B6760;--gray-700:#3D3A35;--gray-900:#1A1816;
+    --success:#1A8C5B;--success-bg:#E6F6EF;--error:#C62828;--error-bg:#FDEAEA;
+    --warning:#C97B00;--warning-bg:#FEF3D8;
+    --grad-purple:linear-gradient(135deg,#362E5E 0%,#5B4E9E 100%);
+    --grad-gold:linear-gradient(135deg,#B56A00 0%,#E08C00 100%);
+    --font:'Plus Jakarta Sans',system-ui,sans-serif;
+    --r-sm:8px;--r-md:12px;--r-lg:16px;--r-xl:24px;--r-full:9999px;
+    --shadow-sm:0 1px 3px rgba(26,24,22,0.08),0 1px 2px rgba(26,24,22,0.04);
+    --shadow-md:0 4px 12px rgba(26,24,22,0.10),0 2px 4px rgba(26,24,22,0.06);
+    --shadow-lg:0 8px 24px rgba(26,24,22,0.12),0 4px 8px rgba(26,24,22,0.06);
+    --shadow-xl:0 16px 40px rgba(26,24,22,0.14),0 6px 12px rgba(26,24,22,0.06);
+    --shadow-purple:0 8px 24px rgba(91,78,158,0.28);
+    --shadow-gold:0 8px 24px rgba(224,140,0,0.22);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--font);background:#EDECE9;color:var(--gray-900);line-height:1.5;}
+
+  .page-header{background:var(--grad-purple);padding:40px 60px;position:relative;overflow:hidden;}
+  .page-header::before{content:'';position:absolute;top:-80px;right:-80px;width:320px;height:320px;border-radius:50%;background:rgba(255,255,255,0.05);}
+  .page-header::after{content:'';position:absolute;bottom:-60px;left:20%;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,0.03);}
+  .page-header-inner{position:relative;z-index:1;}
+  .flow-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.15);color:white;font-size:12px;font-weight:600;padding:5px 14px;border-radius:var(--r-full);letter-spacing:0.5px;margin-bottom:16px;border:1px solid rgba(255,255,255,0.2);}
+  .page-header h1{font-size:40px;font-weight:800;color:white;margin-bottom:6px;letter-spacing:-0.5px;}
+  .page-header p{color:rgba(255,255,255,0.7);font-size:15px;}
+  .flow-steps{display:flex;gap:6px;flex-wrap:wrap;margin-top:20px;}
+  .flow-step{font-size:11px;font-weight:600;padding:4px 12px;border-radius:var(--r-full);background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.15);cursor:pointer;transition:all 0.2s;text-decoration:none;}
+  .flow-step:hover,.flow-step.active{background:rgba(255,255,255,0.25);color:white;border-color:rgba(255,255,255,0.35);}
+
+  .main{max-width:1300px;margin:0 auto;padding:48px 32px;}
+
+  .section-label{display:flex;align-items:center;gap:12px;margin-bottom:28px;}
+  .section-number{width:36px;height:36px;border-radius:var(--r-full);background:var(--grad-purple);color:white;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;box-shadow:var(--shadow-purple);}
+  .section-title{font-size:24px;font-weight:800;color:var(--gray-900);letter-spacing:-0.3px;}
+  .section-sub{font-size:13px;color:var(--gray-400);margin-top:2px;}
+
+  .screen-block{margin-bottom:72px;scroll-margin-top:32px;}
+  .screen-layout{display:grid;grid-template-columns:300px 1fr;gap:40px;align-items:start;}
+  @media(max-width:900px){.screen-layout{grid-template-columns:1fr;}}
+
+  /* PHONE */
+  .phone{width:300px;background:var(--warm-white);border-radius:40px;box-shadow:var(--shadow-xl),0 0 0 8px #D1CFC9,0 0 0 10px #C8C6C0;overflow:hidden;position:sticky;top:32px;}
+  .phone-notch{height:36px;background:white;display:flex;align-items:center;justify-content:space-between;padding:0 20px;font-size:11px;font-weight:600;color:var(--gray-700);}
+
+  /* TOPBAR */
+  .topbar{background:white;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid var(--gray-100);box-shadow:var(--shadow-sm);}
+  .topbar-logo{font-size:18px;font-weight:800;background:var(--grad-purple);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .topbar-back{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--purple-500);}
+  .topbar-title{font-size:14px;font-weight:700;color:var(--gray-900);}
+  .topbar-action{font-size:13px;font-weight:700;color:var(--purple-500);cursor:pointer;}
+  .icon-btn{width:32px;height:32px;border-radius:var(--r-md);background:var(--gray-50);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;}
+
+  /* PROFILE HERO */
+  .profile-hero{background:var(--grad-purple);padding:24px 18px 28px;position:relative;overflow:hidden;}
+  .profile-hero::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.07);}
+  .profile-avatar{width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:28px;border:2px solid rgba(255,255,255,0.3);margin-bottom:12px;position:relative;}
+  .profile-name{font-size:20px;font-weight:800;color:white;margin-bottom:2px;position:relative;}
+  .profile-email{font-size:12px;color:rgba(255,255,255,0.7);position:relative;}
+  .profile-since{font-size:10px;color:rgba(255,255,255,0.5);margin-top:4px;position:relative;}
+
+  /* SAVINGS CARD */
+  .savings-card{background:var(--gold-50);border:1.5px solid var(--gold-100);border-radius:var(--r-xl);padding:14px 16px;display:flex;align-items:center;gap:12px;margin:14px 16px 0;box-shadow:var(--shadow-sm);}
+  .savings-icon{width:40px;height:40px;background:var(--grad-gold);border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:var(--shadow-gold);flex-shrink:0;}
+  .savings-amount{font-size:20px;font-weight:800;color:var(--gold-900);letter-spacing:-0.5px;}
+  .savings-label{font-size:11px;color:var(--gold-700);font-weight:500;}
+
+  /* SUBSCRIPTION STATUS */
+  .sub-status-card{background:white;border-radius:var(--r-xl);border:1.5px solid var(--gray-100);margin:10px 16px 0;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow-sm);}
+  .sub-status-icon{width:40px;height:40px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+  .sub-status-active{background:var(--success-bg);}
+  .sub-status-none{background:var(--purple-50);}
+  .sub-status-title{font-size:13px;font-weight:700;color:var(--gray-900);}
+  .sub-status-sub{font-size:11px;color:var(--gray-400);margin-top:1px;}
+  .sub-status-link{font-size:11px;font-weight:700;color:var(--purple-500);margin-left:auto;flex-shrink:0;}
+
+  /* POLICY CARD */
+  .policy-card{background:white;border-radius:var(--r-xl);border:1.5px solid var(--gray-100);margin:10px 16px 0;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow-sm);}
+  .policy-icon{width:40px;height:40px;border-radius:var(--r-md);background:var(--purple-50);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+  .policy-title{font-size:13px;font-weight:700;color:var(--gray-900);}
+  .policy-number{font-size:11px;color:var(--gray-400);margin-top:1px;font-family:monospace;}
+
+  /* MENU LIST */
+  .s-body{padding:14px 16px;background:var(--warm-white);}
+  .menu-section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--gray-400);margin:14px 0 6px;}
+  .menu-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--gray-100);cursor:pointer;transition:all 0.15s;}
+  .menu-row:last-child{border-bottom:none;}
+  .menu-row:hover{padding-left:4px;}
+  .menu-icon{width:34px;height:34px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .menu-icon-purple{background:var(--purple-50);}
+  .menu-icon-gray{background:var(--gray-100);}
+  .menu-icon-red{background:var(--error-bg);}
+  .menu-label{font-size:13px;font-weight:600;color:var(--gray-900);}
+  .menu-sub{font-size:11px;color:var(--gray-400);margin-top:1px;}
+  .menu-arrow{color:var(--gray-300);font-size:16px;margin-left:auto;}
+  .menu-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:var(--r-full);margin-left:auto;margin-right:6px;}
+  .badge-green{background:var(--success-bg);color:var(--success);}
+  .badge-purple{background:var(--purple-100);color:var(--purple-700);}
+
+  /* SIGN OUT ROW */
+  .signout-row{display:flex;align-items:center;gap:12px;padding:12px 0;cursor:pointer;margin-top:4px;}
+  .signout-label{font-size:13px;font-weight:700;color:var(--error);}
+
+  /* INLINE EDIT FIELDS */
+  .edit-field-group{margin-bottom:16px;}
+  .edit-field-label{font-size:11px;font-weight:700;color:var(--gray-500);margin-bottom:4px;display:flex;justify-content:space-between;align-items:center;}
+  .edit-field-edit-btn{font-size:11px;font-weight:700;color:var(--purple-500);cursor:pointer;}
+  .edit-field-static{font-size:14px;font-weight:600;color:var(--gray-900);padding:10px 12px;background:white;border-radius:var(--r-md);border:1.5px solid var(--gray-100);}
+  .edit-field-input{width:100%;font-size:14px;font-weight:600;color:var(--gray-900);padding:10px 12px;background:white;border-radius:var(--r-md);border:1.5px solid var(--purple-500);box-shadow:0 0 0 3px var(--purple-50);font-family:var(--font);outline:none;}
+  .edit-actions{display:flex;gap:8px;margin-top:20px;}
+  .edit-save-btn{flex:1;padding:12px;background:var(--grad-purple);color:white;border:none;border-radius:var(--r-lg);font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;}
+  .edit-cancel-btn{padding:12px 20px;background:transparent;color:var(--gray-500);border:1.5px solid var(--gray-200);border-radius:var(--r-lg);font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;}
+
+  /* ADDRESS CARDS */
+  .address-card{background:white;border-radius:var(--r-lg);border:1.5px solid var(--gray-100);padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow-sm);}
+  .address-card.primary{border-color:var(--purple-500);background:var(--purple-50);}
+  .address-card-row{display:flex;align-items:flex-start;gap:10px;}
+  .address-card-icon{width:34px;height:34px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .address-primary-icon{background:var(--grad-purple);}
+  .address-other-icon{background:var(--gray-100);}
+  .address-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:2px;}
+  .address-primary-label{color:var(--purple-500);}
+  .address-other-label{color:var(--gray-400);}
+  .address-text{font-size:13px;font-weight:600;color:var(--gray-900);}
+  .address-sub{font-size:11px;color:var(--gray-400);margin-top:1px;}
+  .address-actions{display:flex;gap:10px;margin-top:10px;padding-top:8px;border-top:1px solid var(--gray-100);}
+  .address-action-btn{font-size:11px;font-weight:700;color:var(--purple-500);cursor:pointer;}
+  .address-action-delete{color:var(--error);}
+  .add-address-btn{display:flex;align-items:center;gap:10px;padding:12px 14px;background:white;border:1.5px dashed var(--gray-200);border-radius:var(--r-lg);cursor:pointer;transition:all 0.2s;}
+  .add-address-btn:hover{border-color:var(--purple-300);background:var(--purple-50);}
+
+  /* TOGGLE ROW */
+  .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--gray-100);}
+  .toggle-row:last-child{border-bottom:none;}
+  .toggle-info{}
+  .toggle-label{font-size:13px;font-weight:600;color:var(--gray-900);}
+  .toggle-sub{font-size:11px;color:var(--gray-400);margin-top:2px;}
+  .toggle{width:40px;height:22px;border-radius:var(--r-full);position:relative;cursor:pointer;flex-shrink:0;}
+  .toggle-on{background:var(--purple-500);}
+  .toggle-off{background:var(--gray-200);}
+  .toggle-dot{position:absolute;top:3px;width:16px;height:16px;border-radius:50%;background:white;box-shadow:var(--shadow-sm);transition:left 0.2s;}
+  .toggle-dot-on{right:3px;}
+  .toggle-dot-off{left:3px;}
+
+  /* ALLSTATE CARD */
+  .allstate-card{background:white;border-radius:var(--r-xl);border:1.5px solid var(--gray-100);overflow:hidden;margin-bottom:12px;box-shadow:var(--shadow-sm);}
+  .allstate-card-header{background:linear-gradient(135deg,#0A2D6E 0%,#1348A8 100%);padding:16px;display:flex;align-items:center;gap:12px;}
+  .allstate-logo-circle{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid rgba(255,255,255,0.3);}
+  .allstate-card-title{font-size:14px;font-weight:800;color:white;}
+  .allstate-card-sub{font-size:11px;color:rgba(255,255,255,0.7);}
+  .allstate-detail-row{display:flex;justify-content:space-between;align-items:center;padding:11px 16px;border-bottom:1px solid var(--gray-100);}
+  .allstate-detail-row:last-child{border-bottom:none;}
+  .allstate-detail-label{font-size:12px;color:var(--gray-500);}
+  .allstate-detail-val{font-size:12px;font-weight:700;color:var(--gray-900);}
+  .verified-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--r-full);background:var(--success-bg);color:var(--success);}
+
+  /* m-btn */
+  .m-btn{width:100%;padding:13px;border-radius:var(--r-lg);border:none;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;}
+  .m-btn-primary{background:var(--grad-purple);color:white;box-shadow:var(--shadow-purple);}
+  .m-btn-ghost{background:transparent;color:var(--gray-500);border:1.5px solid var(--gray-200);}
+  .m-btn-danger{background:var(--error-bg);color:var(--error);border:1.5px solid var(--error-bg);}
+
+  /* BREAKDOWN */
+  .breakdown{background:white;border-radius:var(--r-xl);box-shadow:var(--shadow-md);overflow:hidden;}
+  .breakdown-header{background:var(--gray-50);padding:18px 22px;border-bottom:1px solid var(--gray-100);}
+  .breakdown-header h3{font-size:15px;font-weight:800;color:var(--gray-900);}
+  .breakdown-header p{font-size:12px;color:var(--gray-400);margin-top:2px;}
+  .breakdown-body{padding:22px;}
+
+  .spec-section{margin-bottom:24px;}
+  .spec-section:last-child{margin-bottom:0;}
+  .spec-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray-400);margin-bottom:10px;padding-bottom:5px;border-bottom:1px solid var(--gray-100);}
+
+  .spec-table{width:100%;border-collapse:collapse;font-size:12px;}
+  .spec-table td{padding:7px 9px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+  .spec-table tr:last-child td{border-bottom:none;}
+  .spec-table td:first-child{font-weight:600;color:var(--gray-700);width:36%;white-space:nowrap;}
+  .spec-table td:last-child{color:var(--gray-500);}
+
+  code{font-family:monospace;font-size:11px;background:var(--gray-100);color:var(--purple-700);padding:2px 5px;border-radius:4px;}
+
+  .component-tag{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:var(--r-full);margin:2px;}
+  .tag-purple{background:var(--purple-50);color:var(--purple-700);border:1px solid var(--purple-100);}
+  .tag-gold{background:var(--gold-50);color:var(--gold-700);border:1px solid var(--gold-100);}
+  .tag-gray{background:var(--gray-50);color:var(--gray-500);border:1px solid var(--gray-100);}
+  .tag-green{background:var(--success-bg);color:var(--success);border:1px solid #B8E8D4;}
+  .tag-red{background:var(--error-bg);color:var(--error);border:1px solid #F5C0C0;}
+  .tag-blue{background:#EBF3FD;color:#1348A8;border:1px solid #D6E6FA;}
+
+  .nav-flow{background:var(--gray-50);border-radius:var(--r-lg);padding:12px 14px;display:flex;flex-direction:column;gap:6px;}
+  .nav-flow-item{display:flex;align-items:center;gap:6px;font-size:11px;flex-wrap:wrap;}
+  .nav-flow-screen{background:white;border:1px solid var(--gray-100);border-radius:var(--r-sm);padding:3px 8px;font-weight:600;color:var(--gray-700);font-size:11px;white-space:nowrap;}
+  .nav-flow-arrow{color:var(--gray-300);font-size:12px;}
+  .nav-flow-trigger{color:var(--purple-500);font-size:11px;font-style:italic;}
+
+  .note-box{background:var(--gold-50);border:1.5px solid var(--gold-100);border-radius:var(--r-md);padding:11px 13px;font-size:12px;color:var(--gold-900);margin-top:12px;display:flex;gap:8px;line-height:1.5;}
+
+  .screen-divider{display:flex;align-items:center;gap:16px;margin:56px 0;}
+  .screen-divider-line{flex:1;height:1px;background:var(--gray-200);}
+  .screen-divider-dot{width:8px;height:8px;border-radius:var(--r-full);background:var(--purple-300);}
+
+  /* SUB-SCREEN GRID */
+  .sub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:32px;margin-top:24px;}
+  .sub-card{background:white;border-radius:var(--r-xl);box-shadow:var(--shadow-md);overflow:hidden;}
+  .sub-card-label{padding:13px 16px;background:var(--gray-50);border-bottom:1px solid var(--gray-100);font-size:12px;font-weight:700;color:var(--gray-700);}
+  .sub-card-phone{padding:16px;display:flex;justify-content:center;}
+
+  .mini-phone{width:220px;background:var(--warm-white);border-radius:28px;box-shadow:var(--shadow-lg),0 0 0 5px #D1CFC9,0 0 0 7px #C8C6C0;overflow:hidden;}
+  .mini-notch{height:28px;background:white;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-size:9px;font-weight:600;color:var(--gray-700);}
+  .mini-topbar{background:white;height:40px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;border-bottom:1px solid var(--gray-100);}
+  .mini-back{font-size:11px;font-weight:600;color:var(--purple-500);}
+  .mini-title{font-size:12px;font-weight:700;color:var(--gray-900);}
+  .mini-action{font-size:11px;font-weight:700;color:var(--purple-500);}
+  .mini-body{padding:12px;}
+
+  .mini-field{margin-bottom:10px;}
+  .mini-field-label{font-size:9px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:3px;display:flex;justify-content:space-between;}
+  .mini-field-edit{color:var(--purple-500);}
+  .mini-field-val{font-size:12px;font-weight:600;color:var(--gray-900);padding:8px 10px;background:white;border-radius:var(--r-sm);border:1.5px solid var(--gray-100);}
+  .mini-field-active{border-color:var(--purple-500);box-shadow:0 0 0 2px var(--purple-50);}
+
+  .mini-toggle-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+  .mini-toggle-row:last-child{border-bottom:none;}
+  .mini-toggle-label{font-size:11px;font-weight:600;color:var(--gray-900);}
+  .mini-toggle-sub{font-size:9px;color:var(--gray-400);}
+  .mini-toggle{width:32px;height:18px;border-radius:var(--r-full);position:relative;flex-shrink:0;}
+  .mini-toggle-on{background:var(--purple-500);}
+  .mini-toggle-off{background:var(--gray-200);}
+  .mini-toggle-dot{position:absolute;top:2px;width:14px;height:14px;border-radius:50%;background:white;box-shadow:var(--shadow-sm);}
+  .mini-toggle-dot-on{right:2px;}
+  .mini-toggle-dot-off{left:2px;}
+
+  .mini-addr-card{background:var(--purple-50);border-radius:var(--r-md);padding:10px;margin-bottom:7px;border:1.5px solid var(--purple-100);}
+  .mini-addr-label{font-size:9px;font-weight:700;color:var(--purple-500);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;}
+  .mini-addr-text{font-size:11px;font-weight:600;color:var(--gray-900);}
+  .mini-addr-sub{font-size:10px;color:var(--gray-400);}
+  .mini-addr-actions{display:flex;gap:8px;margin-top:6px;}
+  .mini-addr-btn{font-size:10px;font-weight:700;color:var(--purple-500);}
+
+  .mini-allstate-header{background:linear-gradient(135deg,#0A2D6E,#1348A8);padding:12px;display:flex;gap:8px;align-items:center;}
+  .mini-allstate-title{font-size:12px;font-weight:800;color:white;}
+  .mini-allstate-sub{font-size:9px;color:rgba(255,255,255,0.7);}
+  .mini-detail-row{display:flex;justify-content:space-between;padding:7px 10px;border-bottom:1px solid var(--gray-100);font-size:10px;}
+  .mini-detail-row:last-child{border-bottom:none;}
+  .mini-detail-label{color:var(--gray-400);}
+  .mini-detail-val{font-weight:700;color:var(--gray-900);}
+
+  .mini-btn{width:100%;padding:9px;border-radius:var(--r-md);border:none;font-family:var(--font);font-size:11px;font-weight:700;cursor:pointer;background:var(--grad-purple);color:white;margin-top:8px;display:flex;align-items:center;justify-content:center;}
+  .mini-btn-ghost{background:transparent;color:var(--gray-500);border:1.5px solid var(--gray-200);}
+  .mini-btn-danger{background:var(--error-bg);color:var(--error);border:none;}
+
+  .page-footer{text-align:center;padding:48px 0 32px;border-top:1px solid var(--gray-200);margin-top:32px;color:var(--gray-400);font-size:13px;}
+  .page-footer strong{color:var(--gray-700);}
+
+  .complete-banner{background:white;border-radius:var(--r-xl);padding:28px 32px;margin-bottom:48px;border:1.5px solid var(--purple-100);box-shadow:var(--shadow-md);display:flex;gap:20px;align-items:center;}
+  .complete-icon{font-size:40px;flex-shrink:0;}
+  .complete-title{font-size:18px;font-weight:800;color:var(--gray-900);margin-bottom:4px;}
+  .complete-body{font-size:13px;color:var(--gray-500);line-height:1.6;}
+  .flow-pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:var(--r-full);margin:2px;}
+  .pill-done{background:var(--success-bg);color:var(--success);}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="flow-badge">FLOW 5 OF 5 — FINAL</div>
+    <h1>Profile & Account</h1>
+    <p>7 screens · Profile hub + Edit Profile · Address Management · Notifications · Privacy · Password · Allstate Account</p>
+    <div class="flow-steps">
+      <a href="#s1" class="flow-step active">1 Profile Hub</a>
+      <a href="#s2" class="flow-step">2 Edit Profile</a>
+      <a href="#s3" class="flow-step">3 Addresses</a>
+      <a href="#s4" class="flow-step">4 Notifications</a>
+      <a href="#s5" class="flow-step">5 Privacy</a>
+      <a href="#s6" class="flow-step">6 Password</a>
+      <a href="#s7" class="flow-step">7 Allstate Account</a>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- ══ SCREEN 1 — PROFILE HUB ══ -->
+  <div class="screen-block" id="s1">
+    <div class="section-label">
+      <div class="section-number">1</div>
+      <div>
+        <div class="section-title">Profile Page</div>
+        <div class="section-sub">Hub screen · Accessed from ☰ menu · Summary + navigation to all account sub-screens</div>
+      </div>
+    </div>
+    <div class="screen-layout">
+
+      <div class="phone">
+        <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+        <div class="topbar">
+          <div class="topbar-back">← <span>Back</span></div>
+          <div class="topbar-title">My Profile</div>
+          <div class="icon-btn">☰</div>
+        </div>
+
+        <!-- PROFILE HERO -->
+        <div class="profile-hero">
+          <div class="profile-avatar">👤</div>
+          <div class="profile-name">Jane Smith</div>
+          <div class="profile-email">jane@example.com</div>
+          <div class="profile-since">Member since March 2024</div>
+        </div>
+
+        <!-- SAVINGS -->
+        <div class="savings-card">
+          <div class="savings-icon">💰</div>
+          <div>
+            <div class="savings-amount">$47.50</div>
+            <div class="savings-label">Total saved with MyPlace</div>
+          </div>
+        </div>
+
+        <!-- SUBSCRIPTION STATUS -->
+        <div class="sub-status-card">
+          <div class="sub-status-icon sub-status-active">📦</div>
+          <div style="flex:1">
+            <div class="sub-status-title">Subscription Active</div>
+            <div class="sub-status-sub">Next delivery in 12 days</div>
+          </div>
+          <div class="sub-status-link">Manage →</div>
+        </div>
+
+        <!-- POLICY -->
+        <div class="policy-card">
+          <div class="policy-icon">🛡️</div>
+          <div style="flex:1">
+            <div class="policy-title">Allstate Renters Policy</div>
+            <div class="policy-number">#123 456 789</div>
+          </div>
+          <div style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:var(--r-full);background:var(--success-bg);color:var(--success);">✓ Verified</div>
+        </div>
+
+        <!-- MENU LIST -->
+        <div class="s-body">
+          <div class="menu-section-label">Account Settings</div>
+
+          <div class="menu-row">
+            <div class="menu-icon menu-icon-purple">✏️</div>
+            <div><div class="menu-label">Edit Profile</div><div class="menu-sub">Name, email, phone</div></div>
+            <div class="menu-arrow">›</div>
+          </div>
+          <div class="menu-row">
+            <div class="menu-icon menu-icon-purple">📍</div>
+            <div><div class="menu-label">Address Management</div><div class="menu-sub">Delivery addresses</div></div>
+            <div class="menu-arrow">›</div>
+          </div>
+          <div class="menu-row">
+            <div class="menu-icon menu-icon-purple">🔑</div>
+            <div><div class="menu-label">Change Password</div><div class="menu-sub">Update your password</div></div>
+            <div class="menu-arrow">›</div>
+          </div>
+          <div class="menu-row">
+            <div class="menu-icon menu-icon-purple">🛡️</div>
+            <div><div class="menu-label">Linked Allstate Account</div><div class="menu-sub">Policy details</div></div>
+            <div class="menu-badge badge-green">✓ Verified</div>
+            <div class="menu-arrow">›</div>
+          </div>
+
+          <div class="menu-section-label">Preferences</div>
+
+          <div class="menu-row">
+            <div class="menu-icon menu-icon-purple">🔔</div>
+            <div><div class="menu-label">Notification Preferences</div><div class="menu-sub">Delivery, offers, reminders</div></div>
+            <div class="menu-badge badge-purple">3 on</div>
+            <div class="menu-arrow">›</div>
+          </div>
+          <div class="menu-row">
+            <div class="menu-icon menu-icon-purple">🔒</div>
+            <div><div class="menu-label">Privacy Settings</div><div class="menu-sub">Data and marketing</div></div>
+            <div class="menu-arrow">›</div>
+          </div>
+
+          <div class="signout-row">
+            <div class="menu-icon menu-icon-red">↪</div>
+            <div class="signout-label">Sign Out</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BREAKDOWN -->
+      <div class="breakdown">
+        <div class="breakdown-header">
+          <h3>Screen 1 — Profile Hub</h3>
+          <p>Central account screen · Summary cards + navigation list to all sub-screens</p>
+        </div>
+        <div class="breakdown-body">
+          <div class="spec-section">
+            <div class="spec-section-title">Components Used</div>
+            <div>
+              <span class="component-tag tag-purple">Top Bar — Back + Title</span>
+              <span class="component-tag tag-purple">Profile Hero (grad-purple + avatar)</span>
+              <span class="component-tag tag-gold">Savings Card</span>
+              <span class="component-tag tag-green">Subscription Status Card</span>
+              <span class="component-tag tag-purple">Policy Card</span>
+              <span class="component-tag tag-purple">Menu Section Label × 2</span>
+              <span class="component-tag tag-purple">Menu Row × 6</span>
+              <span class="component-tag tag-red">Sign Out Row</span>
+            </div>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Profile Hero Specs</div>
+            <table class="spec-table">
+              <tr><td>Avatar</td><td>64px circle · <code>rgba(255,255,255,0.2)</code> bg · 👤 default · Photo if user uploads (v2)</td></tr>
+              <tr><td>Name</td><td>20px · 800 · White · First + Last from account</td></tr>
+              <tr><td>Email</td><td>12px · 70% white opacity</td></tr>
+              <tr><td>Member since</td><td>10px · 50% white opacity · Account creation date</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Summary Cards</div>
+            <table class="spec-table">
+              <tr><td>Savings card</td><td>Same as Home screen · Gold accent · Cumulative total</td></tr>
+              <tr><td>Sub status</td><td>Green icon when active · Purple icon when inactive · "Manage →" links to Home Post</td></tr>
+              <tr><td>Policy card</td><td>Shows policy type + number · "✓ Verified" badge · Taps to Allstate Account screen</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Menu Row Specs</div>
+            <table class="spec-table">
+              <tr><td>Icon</td><td>34px · <code>r-md</code> · Purple bg for all account items · Red for sign out</td></tr>
+              <tr><td>Label + sub</td><td>13px 600 label · 11px <code>gray-400</code> sub-label</td></tr>
+              <tr><td>Badges</td><td>Small pill right of label · Green for verified · Purple for counts</td></tr>
+              <tr><td>Hover</td><td>Row shifts right 4px · 150ms ease · Subtle direction cue</td></tr>
+              <tr><td>Sign out row</td><td>No arrow · Red label · No sub-label · Confirmation modal on tap</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Navigation</div>
+            <div class="nav-flow">
+              <div class="nav-flow-item"><span class="nav-flow-screen">Profile Hub</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Edit Profile</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Edit Profile</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Profile Hub</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Address Management</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Address Management</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Profile Hub</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Change Password</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Change Password</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Profile Hub</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Notifications</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Notification Preferences</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Profile Hub</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Privacy Settings</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Privacy Settings</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Profile Hub</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Allstate Account</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Linked Allstate Account</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Profile Hub</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Sign Out</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Sign Out Confirm modal → Sign In</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Profile Hub</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Back / ← Menu</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Previous screen</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen-divider"><div class="screen-divider-line"></div><div class="screen-divider-dot"></div><div class="screen-divider-line"></div></div>
+
+  <!-- ══ SCREENS 2–7 — SUB-SCREENS GRID ══ -->
+  <div id="s2">
+    <div class="section-label">
+      <div class="section-number">2–7</div>
+      <div>
+        <div class="section-title">Account Sub-Screens</div>
+        <div class="section-sub">All 6 sub-screens reached from Profile Hub · Each returns to Profile Hub on save or back</div>
+      </div>
+    </div>
+
+    <div class="sub-grid">
+
+      <!-- EDIT PROFILE -->
+      <div class="sub-card" id="s2-card">
+        <div class="sub-card-label">✏️ Edit Profile — Inline editing</div>
+        <div class="sub-card-phone">
+          <div class="mini-phone">
+            <div class="mini-notch"><span>9:41</span><span>●●●</span></div>
+            <div class="mini-topbar">
+              <div class="mini-back">← Profile</div>
+              <div class="mini-title">Edit Profile</div>
+              <div class="mini-action">Save</div>
+            </div>
+            <div class="mini-body">
+              <div class="mini-field">
+                <div class="mini-field-label">Full Name <span class="mini-field-edit">Edit</span></div>
+                <div class="mini-field-val">Jane Smith</div>
+              </div>
+              <div class="mini-field">
+                <div class="mini-field-label">Email Address <span class="mini-field-edit">Edit</span></div>
+                <div class="mini-field-val mini-field-active" style="font-size:12px;color:var(--gray-400)">jane.smith@example.com|</div>
+              </div>
+              <div class="mini-field">
+                <div class="mini-field-label">Phone Number <span class="mini-field-edit">Edit</span></div>
+                <div class="mini-field-val">(617) 555-0192</div>
+              </div>
+              <div style="background:var(--warning-bg);border-radius:var(--r-sm);padding:7px 9px;font-size:10px;color:var(--warning);margin-top:8px;line-height:1.4;">
+                ⚠️ Changing your email will require re-verification.
+              </div>
+              <div style="display:flex;gap:6px;margin-top:10px">
+                <button class="mini-btn" style="flex:1;padding:9px;font-size:11px;">Save Changes</button>
+                <button class="mini-btn mini-btn-ghost" style="padding:9px 12px;font-size:11px;">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADDRESS MANAGEMENT -->
+      <div class="sub-card" id="s3">
+        <div class="sub-card-label">📍 Address Management</div>
+        <div class="sub-card-phone">
+          <div class="mini-phone">
+            <div class="mini-notch"><span>9:41</span><span>●●●</span></div>
+            <div class="mini-topbar">
+              <div class="mini-back">← Profile</div>
+              <div class="mini-title">Addresses</div>
+              <div class="mini-action">+ Add</div>
+            </div>
+            <div class="mini-body">
+              <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--gray-400);margin-bottom:8px">Your Addresses</div>
+              <div class="mini-addr-card">
+                <div class="mini-addr-label">Primary Delivery</div>
+                <div class="mini-addr-text">123 Main St, Apt 4B</div>
+                <div class="mini-addr-sub">Boston, MA 02101</div>
+                <div class="mini-addr-actions">
+                  <span class="mini-addr-btn">Edit</span>
+                  <span class="mini-addr-btn" style="color:var(--gray-300);">Set as primary</span>
+                </div>
+              </div>
+              <div style="background:white;border-radius:var(--r-md);padding:10px;margin-bottom:7px;border:1.5px solid var(--gray-100);">
+                <div style="font-size:9px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px">Work</div>
+                <div class="mini-addr-text">456 Office Park, Suite 200</div>
+                <div class="mini-addr-sub">Cambridge, MA 02139</div>
+                <div class="mini-addr-actions">
+                  <span class="mini-addr-btn">Edit</span>
+                  <span class="mini-addr-btn">Set as primary</span>
+                  <span class="mini-addr-btn" style="color:var(--error);margin-left:auto">Delete</span>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;padding:10px;border:1.5px dashed var(--gray-200);border-radius:var(--r-md);cursor:pointer;">
+                <span style="font-size:16px">➕</span>
+                <span style="font-size:11px;font-weight:600;color:var(--gray-500)">Add new address</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOTIFICATION PREFERENCES -->
+      <div class="sub-card" id="s4">
+        <div class="sub-card-label">🔔 Notification Preferences</div>
+        <div class="sub-card-phone">
+          <div class="mini-phone">
+            <div class="mini-notch"><span>9:41</span><span>●●●</span></div>
+            <div class="mini-topbar">
+              <div class="mini-back">← Profile</div>
+              <div class="mini-title">Notifications</div>
+              <div style="width:40px"></div>
+            </div>
+            <div class="mini-body">
+              <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--gray-400);margin-bottom:8px">Delivery</div>
+              <div class="mini-toggle-row">
+                <div><div class="mini-toggle-label">Delivery Updates</div><div class="mini-toggle-sub">Shipping & arrival alerts</div></div>
+                <div class="mini-toggle mini-toggle-on"><div class="mini-toggle-dot mini-toggle-dot-on"></div></div>
+              </div>
+              <div class="mini-toggle-row">
+                <div><div class="mini-toggle-label">Order Confirmed</div><div class="mini-toggle-sub">When an order is placed</div></div>
+                <div class="mini-toggle mini-toggle-on"><div class="mini-toggle-dot mini-toggle-dot-on"></div></div>
+              </div>
+              <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--gray-400);margin:10px 0 6px">Offers & Reminders</div>
+              <div class="mini-toggle-row">
+                <div><div class="mini-toggle-label">Exclusive Offers</div><div class="mini-toggle-sub">Deals for Allstate customers</div></div>
+                <div class="mini-toggle mini-toggle-on"><div class="mini-toggle-dot mini-toggle-dot-on"></div></div>
+              </div>
+              <div class="mini-toggle-row">
+                <div><div class="mini-toggle-label">Renewal Reminders</div><div class="mini-toggle-sub">Before policy renewal</div></div>
+                <div class="mini-toggle mini-toggle-off"><div class="mini-toggle-dot mini-toggle-dot-off"></div></div>
+              </div>
+              <div class="mini-toggle-row">
+                <div><div class="mini-toggle-label">Marketing Emails</div><div class="mini-toggle-sub">Product news & updates</div></div>
+                <div class="mini-toggle mini-toggle-off"><div class="mini-toggle-dot mini-toggle-dot-off"></div></div>
+              </div>
+              <button class="mini-btn" style="margin-top:10px">Save Preferences</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRIVACY SETTINGS -->
+      <div class="sub-card" id="s5">
+        <div class="sub-card-label">🔒 Privacy Settings</div>
+        <div class="sub-card-phone">
+          <div class="mini-phone">
+            <div class="mini-notch"><span>9:41</span><span>●●●</span></div>
+            <div class="mini-topbar">
+              <div class="mini-back">← Profile</div>
+              <div class="mini-title">Privacy</div>
+              <div style="width:40px"></div>
+            </div>
+            <div class="mini-body">
+              <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--gray-400);margin-bottom:8px">Data Usage</div>
+              <div class="mini-toggle-row">
+                <div><div class="mini-toggle-label">Usage Analytics</div><div class="mini-toggle-sub">Help improve the app</div></div>
+                <div class="mini-toggle mini-toggle-on"><div class="mini-toggle-dot mini-toggle-dot-on"></div></div>
+              </div>
+              <div class="mini-toggle-row">
+                <div><div class="mini-toggle-label">Personalization</div><div class="mini-toggle-sub">Tailored product suggestions</div></div>
+                <div class="mini-toggle mini-toggle-on"><div class="mini-toggle-dot mini-toggle-dot-on"></div></div>
+              </div>
+              <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--gray-400);margin:10px 0 6px">Your Data</div>
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:white;border-radius:var(--r-sm);border:1px solid var(--gray-100);">
+                  <span style="font-size:11px;font-weight:600;color:var(--gray-900)">Download My Data</span>
+                  <span style="font-size:11px;font-weight:700;color:var(--purple-500)">Request →</span>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--error-bg);border-radius:var(--r-sm);border:1px solid #F5C0C0;">
+                  <span style="font-size:11px;font-weight:600;color:var(--error)">Delete My Account</span>
+                  <span style="font-size:11px;font-weight:700;color:var(--error)">→</span>
+                </div>
+              </div>
+              <button class="mini-btn" style="margin-top:10px">Save Settings</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHANGE PASSWORD -->
+      <div class="sub-card" id="s6">
+        <div class="sub-card-label">🔑 Change Password</div>
+        <div class="sub-card-phone">
+          <div class="mini-phone">
+            <div class="mini-notch"><span>9:41</span><span>●●●</span></div>
+            <div class="mini-topbar">
+              <div class="mini-back">← Profile</div>
+              <div class="mini-title">Change Password</div>
+              <div style="width:40px"></div>
+            </div>
+            <div class="mini-body">
+              <div style="font-size:11px;color:var(--gray-400);margin-bottom:12px;line-height:1.5;">Enter your current password, then choose a new one.</div>
+              <div class="mini-field">
+                <div class="mini-field-label" style="justify-content:flex-start">Current Password</div>
+                <div class="mini-field-val" style="color:var(--gray-300)">••••••••</div>
+              </div>
+              <div class="mini-field">
+                <div class="mini-field-label" style="justify-content:flex-start">New Password</div>
+                <div class="mini-field-val mini-field-active" style="color:var(--gray-300)">••••••••|</div>
+              </div>
+              <div class="mini-field">
+                <div class="mini-field-label" style="justify-content:flex-start">Confirm New Password</div>
+                <div class="mini-field-val" style="color:var(--gray-300)">••••••••</div>
+              </div>
+              <div style="display:flex;gap:4px;margin:8px 0;">
+                <div style="flex:1;height:4px;border-radius:2px;background:var(--success)"></div>
+                <div style="flex:1;height:4px;border-radius:2px;background:var(--success)"></div>
+                <div style="flex:1;height:4px;border-radius:2px;background:var(--success)"></div>
+                <div style="flex:1;height:4px;border-radius:2px;background:var(--gray-100)"></div>
+              </div>
+              <div style="font-size:10px;color:var(--success);margin-bottom:10px;font-weight:600;">Strong password</div>
+              <button class="mini-btn">Update Password</button>
+              <button class="mini-btn mini-btn-ghost" style="margin-top:6px">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ALLSTATE ACCOUNT -->
+      <div class="sub-card" id="s7">
+        <div class="sub-card-label">🛡️ Linked Allstate Account</div>
+        <div class="sub-card-phone">
+          <div class="mini-phone">
+            <div class="mini-notch"><span>9:41</span><span>●●●</span></div>
+            <div class="mini-topbar">
+              <div class="mini-back">← Profile</div>
+              <div class="mini-title">Allstate Account</div>
+              <div style="width:40px"></div>
+            </div>
+            <div class="mini-body" style="padding:0">
+              <div class="mini-allstate-header">
+                <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">🛡️</div>
+                <div>
+                  <div class="mini-allstate-title">Allstate Insurance</div>
+                  <div class="mini-allstate-sub">Linked & Verified</div>
+                </div>
+                <div style="margin-left:auto;font-size:9px;font-weight:700;padding:2px 7px;background:var(--success-bg);color:var(--success);border-radius:var(--r-full)">✓ Active</div>
+              </div>
+              <div style="padding:0 0 8px">
+                <div class="mini-detail-row"><span class="mini-detail-label">Policy Type</span><span class="mini-detail-val">Renters Insurance</span></div>
+                <div class="mini-detail-row"><span class="mini-detail-label">Policy Number</span><span class="mini-detail-val">#123 456 789</span></div>
+                <div class="mini-detail-row"><span class="mini-detail-label">Coverage Address</span><span class="mini-detail-val">123 Main St</span></div>
+                <div class="mini-detail-row"><span class="mini-detail-label">Renewal Date</span><span class="mini-detail-val">Jan 15, 2026</span></div>
+                <div class="mini-detail-row"><span class="mini-detail-label">Verified On</span><span class="mini-detail-val">Mar 12, 2024</span></div>
+              </div>
+              <div style="padding:0 12px 12px;display:flex;flex-direction:column;gap:6px">
+                <button class="mini-btn mini-btn-ghost" style="font-size:10px;padding:8px">Re-verify Policy</button>
+                <button class="mini-btn mini-btn-ghost" style="font-size:10px;padding:8px">Contact Allstate →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end sub-grid -->
+
+  </div>
+
+  <div class="screen-divider"><div class="screen-divider-line"></div><div class="screen-divider-dot"></div><div class="screen-divider-line"></div></div>
+
+  <!-- COMPONENT BREAKDOWN FOR SUB-SCREENS -->
+  <div>
+    <div class="section-label" style="margin-bottom:28px">
+      <div class="section-number" style="background:var(--grad-gold)">⚡</div>
+      <div>
+        <div class="section-title">Sub-Screen Specs</div>
+        <div class="section-sub">Key design decisions and component specs for all 6 sub-screens</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+
+      <div class="breakdown">
+        <div class="breakdown-header"><h3>Edit Profile</h3><p>Inline editing · Field-level edit/save</p></div>
+        <div class="breakdown-body">
+          <div class="spec-section">
+            <div class="spec-section-title">Components</div>
+            <div>
+              <span class="component-tag tag-purple">Top Bar — Save button (right)</span>
+              <span class="component-tag tag-purple">Inline Field — Static state</span>
+              <span class="component-tag tag-purple">Inline Field — Active/editing state</span>
+              <span class="component-tag tag-gold">Warning — Email re-verification notice</span>
+            </div>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Inline Edit Specs</div>
+            <table class="spec-table">
+              <tr><td>Static state</td><td>White bg · <code>gray-100</code> border · "Edit" link top-right of label</td></tr>
+              <tr><td>Active state</td><td><code>purple-500</code> border · <code>purple-50</code> glow ring · Cursor visible</td></tr>
+              <tr><td>Multiple edits</td><td>Multiple fields can be active simultaneously</td></tr>
+              <tr><td>Save button</td><td>In top bar (right) · Active when any field changed · "Saving…" on submit</td></tr>
+              <tr><td>Email change</td><td>Warning notice appears · Requires re-verification after save</td></tr>
+              <tr><td>Cancel</td><td>Reverts all unsaved changes · Confirms if changes pending</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Navigation</div>
+            <div class="nav-flow">
+              <div class="nav-flow-item"><span class="nav-flow-screen">Edit Profile</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Save</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Profile Hub (updated)</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Edit Profile</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Email changed + save</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Verify Contact</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="breakdown">
+        <div class="breakdown-header"><h3>Address Management</h3><p>View, add, edit, delete, set primary</p></div>
+        <div class="breakdown-body">
+          <div class="spec-section">
+            <div class="spec-section-title">Components</div>
+            <div>
+              <span class="component-tag tag-purple">Top Bar — "+ Add" button (right)</span>
+              <span class="component-tag tag-purple">Primary Address Card (purple tint)</span>
+              <span class="component-tag tag-gray">Secondary Address Card (white)</span>
+              <span class="component-tag tag-purple">Add New Address CTA (dashed border)</span>
+            </div>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Address Card Specs</div>
+            <table class="spec-table">
+              <tr><td>Primary</td><td><code>purple-50</code> bg · <code>purple-100</code> border · "Primary Delivery" label</td></tr>
+              <tr><td>Secondary</td><td>White bg · <code>gray-100</code> border · Custom label (Home, Work, etc.)</td></tr>
+              <tr><td>Actions row</td><td>Edit · Set as Primary · Delete — shown below address text</td></tr>
+              <tr><td>Delete</td><td>Confirmation modal before delete · Cannot delete primary if only 1 address</td></tr>
+              <tr><td>Set as primary</td><td>Swaps current primary · Updates subscription delivery address</td></tr>
+              <tr><td>Add new</td><td>Dashed border card → navigates to Address Entry form</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Navigation</div>
+            <div class="nav-flow">
+              <div class="nav-flow-item"><span class="nav-flow-screen">Addresses</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Edit address</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Address Entry (pre-filled)</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Addresses</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Add new</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Address Entry (blank)</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="breakdown">
+        <div class="breakdown-header"><h3>Notification Preferences</h3><p>Toggle-based · Auto-saves on toggle</p></div>
+        <div class="breakdown-body">
+          <div class="spec-section">
+            <div class="spec-section-title">Notification Types</div>
+            <table class="spec-table">
+              <tr><td>Delivery Updates</td><td>Default ON · Shipping + arrival alerts</td></tr>
+              <tr><td>Order Confirmed</td><td>Default ON · Sent when order placed</td></tr>
+              <tr><td>Exclusive Offers</td><td>Default ON · Allstate-exclusive deals</td></tr>
+              <tr><td>Renewal Reminders</td><td>Default OFF · Pre-policy renewal nudge</td></tr>
+              <tr><td>Marketing Emails</td><td>Default OFF · Inherits from T&C opt-in</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Toggle Specs</div>
+            <table class="spec-table">
+              <tr><td>On state</td><td><code>purple-500</code> bg · Dot right</td></tr>
+              <tr><td>Off state</td><td><code>gray-200</code> bg · Dot left</td></tr>
+              <tr><td>Save behavior</td><td>Explicit "Save Preferences" button · Prevents accidental changes</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="breakdown">
+        <div class="breakdown-header"><h3>Privacy Settings</h3><p>Data controls + account deletion</p></div>
+        <div class="breakdown-body">
+          <div class="spec-section">
+            <div class="spec-section-title">Settings</div>
+            <table class="spec-table">
+              <tr><td>Usage Analytics</td><td>Default ON · Anonymous app usage data</td></tr>
+              <tr><td>Personalization</td><td>Default ON · Product suggestions</td></tr>
+              <tr><td>Download Data</td><td>Sends data export to registered email · GDPR compliance</td></tr>
+              <tr><td>Delete Account</td><td>Red styling · Multi-step confirmation · Irreversible · 30-day grace period</td></tr>
+            </table>
+          </div>
+          <div class="note-box">💡 Delete Account must have a multi-step confirmation flow (at minimum: "Are you sure?" → "Type DELETE to confirm"). Add a 30-day recovery window before permanent deletion.</div>
+        </div>
+      </div>
+
+      <div class="breakdown">
+        <div class="breakdown-header"><h3>Change Password</h3><p>3-field form + strength indicator</p></div>
+        <div class="breakdown-body">
+          <div class="spec-section">
+            <div class="spec-section-title">Fields & Validation</div>
+            <table class="spec-table">
+              <tr><td>Current password</td><td>Required · Verified against backend before accepting new</td></tr>
+              <tr><td>New password</td><td>Min 8 chars · Strength indicator below field</td></tr>
+              <tr><td>Confirm</td><td>Must match new · Error shown inline on mismatch</td></tr>
+              <tr><td>Strength bar</td><td>4 segments · Colors: red / orange / gold / green · "Weak / Fair / Good / Strong" label</td></tr>
+              <tr><td>Show/hide</td><td>Eye icon on all 3 fields</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Navigation</div>
+            <div class="nav-flow">
+              <div class="nav-flow-item"><span class="nav-flow-screen">Change Password</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Success</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Profile Hub + success toast</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Change Password</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Wrong current pw</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Inline error on current field</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="breakdown">
+        <div class="breakdown-header"><h3>Linked Allstate Account</h3><p>Read-only policy details + re-verify option</p></div>
+        <div class="breakdown-body">
+          <div class="spec-section">
+            <div class="spec-section-title">Fields Shown</div>
+            <table class="spec-table">
+              <tr><td>Policy Type</td><td>Renters / Homeowners / Auto</td></tr>
+              <tr><td>Policy Number</td><td>Masked partially · Full number shown</td></tr>
+              <tr><td>Coverage Address</td><td>Address on file with Allstate</td></tr>
+              <tr><td>Renewal Date</td><td>From policy data · Highlights if within 60 days</td></tr>
+              <tr><td>Verified On</td><td>Date of last MyPlace verification</td></tr>
+            </table>
+          </div>
+          <div class="spec-section">
+            <div class="spec-section-title">Actions</div>
+            <table class="spec-table">
+              <tr><td>Re-verify</td><td>Triggers Policy Entry flow again · Useful after policy renewal</td></tr>
+              <tr><td>Contact Allstate</td><td>Opens Allstate support URL in browser</td></tr>
+              <tr><td>Header style</td><td>Allstate blue gradient header (not purple) · Brand differentiation</td></tr>
+            </table>
+          </div>
+          <div class="note-box">💡 The Allstate card header uses Allstate blue — not MyPlace purple. This is intentional. It visually signals "this is Allstate data, not MyPlace data" and reinforces the partnership without conflating the two brands.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="screen-divider"><div class="screen-divider-line"></div><div class="screen-divider-dot"></div><div class="screen-divider-line"></div></div>
+
+  <!-- ALL FLOWS COMPLETE -->
+  <div class="complete-banner">
+    <div class="complete-icon">🎉</div>
+    <div>
+      <div class="complete-title">All 5 Flows Complete</div>
+      <div class="complete-body">
+        The full MyPlace mobile web platform has been designed end-to-end. All screens, components, navigation paths, and specs are documented and ready for Figma implementation.
+        <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:4px;">
+          <span class="flow-pill pill-done">✓ Onboarding</span>
+          <span class="flow-pill pill-done">✓ Home Screens</span>
+          <span class="flow-pill pill-done">✓ Map & Store Selection</span>
+          <span class="flow-pill pill-done">✓ Subscription Registration</span>
+          <span class="flow-pill pill-done">✓ Profile & Account</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <strong>MyPlace — Profile & Account</strong> · Design System v1.2 · For Figma implementation<br>
+    <span style="margin-top:6px;display:block">MyPlace Mobile Web Platform · All flows complete ✓</span>
+  </div>
+
+</div>
+
+<script>
+  const links = document.querySelectorAll('.flow-step');
+  links.forEach(l => l.addEventListener('click', e => {
+    e.preventDefault();
+    const t = document.querySelector(l.getAttribute('href'));
+    if(t) t.scrollIntoView({behavior:'smooth',block:'start'});
+    links.forEach(x => x.classList.remove('active'));
+    l.classList.add('active');
+  }));
+</script>
+</body>
+</html>

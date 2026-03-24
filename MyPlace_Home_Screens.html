@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyPlace — Home Screens</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue-900:#0A2D6E;--blue-700:#1348A8;--blue-500:#1E63D0;--blue-300:#6B9FE8;--blue-100:#D6E6FA;--blue-50:#EBF3FD;
+    --purple-900:#1F1B37;--purple-700:#362E5E;--purple-500:#5B4E9E;--purple-300:#A49DC9;--purple-100:#DEDBEB;--purple-50:#F1F0F7;
+    --gold-900:#7A4800;--gold-700:#B56A00;--gold-500:#E08C00;--gold-300:#FBCC4D;--gold-100:#FDF0C8;--gold-50:#FFFBEE;
+    --warm-white:#FAFAF8;--gray-50:#F5F4F1;--gray-100:#ECEAE5;--gray-200:#D9D6CF;--gray-300:#B8B4AB;
+    --gray-400:#918D84;--gray-500:#6B6760;--gray-700:#3D3A35;--gray-900:#1A1816;
+    --success:#1A8C5B;--success-bg:#E6F6EF;--error:#C62828;--error-bg:#FDEAEA;
+    --warning:#C97B00;--warning-bg:#FEF3D8;
+    --grad-purple:linear-gradient(135deg,#362E5E 0%,#5B4E9E 100%);
+    --grad-gold:linear-gradient(135deg,#B56A00 0%,#E08C00 100%);
+    --grad-warm:linear-gradient(135deg,#F1F0F7 0%,#EBF3FD 100%);
+    --font:'Plus Jakarta Sans',system-ui,sans-serif;
+    --r-sm:8px;--r-md:12px;--r-lg:16px;--r-xl:24px;--r-full:9999px;
+    --shadow-sm:0 1px 3px rgba(26,24,22,0.08),0 1px 2px rgba(26,24,22,0.04);
+    --shadow-md:0 4px 12px rgba(26,24,22,0.10),0 2px 4px rgba(26,24,22,0.06);
+    --shadow-lg:0 8px 24px rgba(26,24,22,0.12),0 4px 8px rgba(26,24,22,0.06);
+    --shadow-xl:0 16px 40px rgba(26,24,22,0.14),0 6px 12px rgba(26,24,22,0.06);
+    --shadow-purple:0 8px 24px rgba(91,78,158,0.28);
+    --shadow-gold:0 8px 24px rgba(224,140,0,0.22);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--font);background:#EDECE9;color:var(--gray-900);line-height:1.5;}
+
+  /* PAGE HEADER */
+  .page-header{background:var(--grad-purple);padding:40px 60px;position:relative;overflow:hidden;}
+  .page-header::before{content:'';position:absolute;top:-80px;right:-80px;width:320px;height:320px;border-radius:50%;background:rgba(255,255,255,0.05);}
+  .page-header::after{content:'';position:absolute;bottom:-60px;left:20%;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,0.03);}
+  .page-header-inner{position:relative;z-index:1;}
+  .flow-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.15);color:white;font-size:12px;font-weight:600;padding:5px 14px;border-radius:var(--r-full);letter-spacing:0.5px;margin-bottom:16px;border:1px solid rgba(255,255,255,0.2);}
+  .page-header h1{font-size:40px;font-weight:800;color:white;margin-bottom:6px;letter-spacing:-0.5px;}
+  .page-header p{color:rgba(255,255,255,0.7);font-size:15px;}
+  .flow-steps{display:flex;gap:6px;flex-wrap:wrap;margin-top:20px;}
+  .flow-step{font-size:11px;font-weight:600;padding:4px 12px;border-radius:var(--r-full);background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.15);cursor:pointer;transition:all 0.2s;text-decoration:none;}
+  .flow-step:hover,.flow-step.active{background:rgba(255,255,255,0.25);color:white;border-color:rgba(255,255,255,0.35);}
+
+  .main{max-width:1300px;margin:0 auto;padding:48px 32px;}
+
+  /* SECTION HEADERS */
+  .section-label{display:flex;align-items:center;gap:12px;margin-bottom:28px;}
+  .section-number{width:36px;height:36px;border-radius:var(--r-full);background:var(--grad-purple);color:white;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;box-shadow:var(--shadow-purple);}
+  .section-title-group .section-title{font-size:24px;font-weight:800;color:var(--gray-900);letter-spacing:-0.3px;}
+  .section-title-group .section-sub{font-size:13px;color:var(--gray-400);margin-top:2px;}
+
+  /* SIDE BY SIDE LAYOUT */
+  .side-by-side{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:64px;}
+  @media(max-width:900px){.side-by-side{grid-template-columns:1fr;}}
+
+  .screen-col{}
+  .screen-col-header{margin-bottom:20px;}
+  .state-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:5px 12px;border-radius:var(--r-full);margin-bottom:12px;}
+  .state-badge-pre{background:var(--purple-100);color:var(--purple-700);}
+  .state-badge-post{background:var(--success-bg);color:var(--success);}
+  .screen-col-title{font-size:20px;font-weight:800;color:var(--gray-900);margin-bottom:4px;}
+  .screen-col-sub{font-size:13px;color:var(--gray-400);}
+
+  /* PHONE */
+  .phone{width:100%;max-width:300px;margin:0 auto;background:var(--warm-white);border-radius:40px;box-shadow:var(--shadow-xl),0 0 0 8px #D1CFC9,0 0 0 10px #C8C6C0;overflow:hidden;}
+  .phone-notch{height:36px;background:white;display:flex;align-items:center;justify-content:space-between;padding:0 20px;font-size:11px;font-weight:600;color:var(--gray-700);}
+
+  /* TOPBAR */
+  .topbar{background:white;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid var(--gray-100);box-shadow:var(--shadow-sm);}
+  .topbar-logo{font-size:18px;font-weight:800;background:var(--grad-purple);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-0.3px;}
+  .topbar-actions{display:flex;gap:4px;}
+  .icon-btn{width:32px;height:32px;border-radius:var(--r-md);background:var(--gray-50);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;position:relative;}
+  .notif-dot{position:absolute;top:5px;right:5px;width:7px;height:7px;background:var(--error);border-radius:50%;border:1.5px solid white;}
+
+  /* SCREEN BODY */
+  .s-body{padding:16px;background:var(--warm-white);}
+
+  /* GREETING BANNER */
+  .greeting-banner{background:var(--grad-purple);padding:20px 16px 24px;position:relative;overflow:hidden;}
+  .greeting-banner::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.07);}
+  .greeting-eyebrow{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:4px;}
+  .greeting-name{font-size:20px;font-weight:800;color:white;margin-bottom:2px;}
+  .greeting-sub{font-size:12px;color:rgba(255,255,255,0.7);}
+
+  /* SAVINGS CARD */
+  .savings-card{background:var(--gold-50);border:1.5px solid var(--gold-100);border-radius:var(--r-xl);padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:12px;box-shadow:var(--shadow-sm);}
+  .savings-icon{width:44px;height:44px;background:var(--grad-gold);border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:var(--shadow-gold);flex-shrink:0;}
+  .savings-amount{font-size:22px;font-weight:800;color:var(--gold-900);letter-spacing:-0.5px;}
+  .savings-label{font-size:11px;color:var(--gold-700);font-weight:500;}
+
+  /* ACTION CARD */
+  .action-card{background:white;border-radius:var(--r-lg);padding:12px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all 0.2s;margin-bottom:8px;box-shadow:var(--shadow-sm);border:1.5px solid var(--gray-100);}
+  .action-card:hover{box-shadow:var(--shadow-md);border-color:var(--purple-100);transform:translateX(2px);}
+  .action-icon{width:38px;height:38px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+  .action-icon-purple{background:var(--grad-purple);box-shadow:var(--shadow-purple);}
+  .action-icon-gold{background:var(--grad-gold);box-shadow:var(--shadow-gold);}
+  .action-icon-gray{background:var(--gray-100);}
+  .action-body{flex:1;}
+  .action-title{font-size:13px;font-weight:700;color:var(--gray-900);}
+  .action-sub{font-size:11px;color:var(--gray-400);margin-top:1px;}
+  .action-arrow{color:var(--gray-300);font-size:16px;font-weight:300;}
+  .action-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:var(--r-full);}
+
+  /* STORE CARD */
+  .store-card{background:var(--purple-50);border:1.5px solid var(--purple-100);border-radius:var(--r-lg);padding:12px 14px;display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+  .store-icon{width:36px;height:36px;border-radius:var(--r-md);background:var(--grad-purple);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .store-name{font-size:13px;font-weight:700;color:var(--purple-900);}
+  .store-detail{font-size:11px;color:var(--purple-500);margin-top:1px;}
+  .store-change{font-size:11px;font-weight:600;color:var(--purple-500);margin-left:auto;flex-shrink:0;}
+
+  /* UPSELL CARD */
+  .upsell-card{background:white;border:1.5px solid var(--purple-100);border-radius:var(--r-xl);padding:16px;margin-top:4px;text-align:center;}
+  .upsell-eyebrow{font-size:10px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--purple-500);margin-bottom:6px;}
+  .upsell-title{font-size:14px;font-weight:800;color:var(--gray-900);margin-bottom:4px;}
+  .upsell-sub{font-size:11px;color:var(--gray-400);margin-bottom:12px;line-height:1.5;}
+
+  /* QUICK ACTIONS GRID */
+  .quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+  .quick-btn{background:white;border-radius:var(--r-lg);padding:14px 10px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;border:1.5px solid var(--gray-100);box-shadow:var(--shadow-sm);transition:all 0.2s;}
+  .quick-btn:hover{border-color:var(--purple-300);background:var(--purple-50);}
+  .quick-btn-icon{font-size:22px;}
+  .quick-btn-label{font-size:12px;font-weight:700;color:var(--gray-900);text-align:center;}
+  .quick-btn-sub{font-size:10px;color:var(--gray-400);text-align:center;}
+  .quick-btn-primary{background:var(--grad-purple);border-color:transparent;box-shadow:var(--shadow-purple);}
+  .quick-btn-primary .quick-btn-label{color:white;}
+  .quick-btn-primary .quick-btn-sub{color:rgba(255,255,255,0.7);}
+
+  /* COUNTDOWN */
+  .countdown-card{background:var(--purple-900);border-radius:var(--r-xl);padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+  .countdown-icon{font-size:22px;flex-shrink:0;}
+  .countdown-label{font-size:11px;font-weight:600;color:var(--purple-300);margin-bottom:2px;}
+  .countdown-value{font-size:16px;font-weight:800;color:white;letter-spacing:-0.3px;}
+  .countdown-sub{font-size:10px;color:var(--purple-300);margin-top:1px;}
+
+  /* MANAGEMENT GRID */
+  .mgmt-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .mgmt-btn{background:white;border:1.5px solid var(--gray-100);border-radius:var(--r-lg);padding:12px 10px;display:flex;flex-direction:column;align-items:flex-start;gap:4px;cursor:pointer;box-shadow:var(--shadow-sm);transition:all 0.2s;}
+  .mgmt-btn:hover{border-color:var(--purple-200,#C4BAE0);background:var(--purple-50);}
+  .mgmt-btn-icon{font-size:18px;margin-bottom:2px;}
+  .mgmt-btn-label{font-size:12px;font-weight:700;color:var(--gray-900);}
+  .mgmt-btn-sub{font-size:10px;color:var(--gray-400);}
+
+  /* SECTION DIVIDER */
+  .section-header{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray-400);margin:14px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--gray-100);}
+
+  /* BUTTON */
+  .m-btn{width:100%;padding:12px;border-radius:var(--r-lg);border:none;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;margin-bottom:6px;}
+  .m-btn-primary{background:var(--grad-purple);color:white;box-shadow:var(--shadow-purple);}
+  .m-btn-ghost{background:transparent;color:var(--gray-500);border:1.5px solid var(--gray-200);}
+  .m-btn-gold{background:var(--grad-gold);color:white;box-shadow:var(--shadow-gold);}
+
+  /* ── BREAKDOWN PANEL ── */
+  .breakdown{background:white;border-radius:var(--r-xl);box-shadow:var(--shadow-md);overflow:hidden;margin-top:24px;}
+  .breakdown-header{background:var(--gray-50);padding:18px 22px;border-bottom:1px solid var(--gray-100);}
+  .breakdown-header h3{font-size:15px;font-weight:800;color:var(--gray-900);}
+  .breakdown-header p{font-size:12px;color:var(--gray-400);margin-top:2px;}
+  .breakdown-body{padding:22px;}
+
+  .spec-section{margin-bottom:24px;}
+  .spec-section:last-child{margin-bottom:0;}
+  .spec-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray-400);margin-bottom:10px;padding-bottom:5px;border-bottom:1px solid var(--gray-100);}
+
+  .spec-table{width:100%;border-collapse:collapse;font-size:12px;}
+  .spec-table td{padding:7px 9px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+  .spec-table tr:last-child td{border-bottom:none;}
+  .spec-table td:first-child{font-weight:600;color:var(--gray-700);width:38%;white-space:nowrap;}
+  .spec-table td:last-child{color:var(--gray-500);}
+
+  code{font-family:monospace;font-size:11px;background:var(--gray-100);color:var(--purple-700);padding:2px 5px;border-radius:4px;}
+
+  .component-tag{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:var(--r-full);margin:2px;}
+  .tag-purple{background:var(--purple-50);color:var(--purple-700);border:1px solid var(--purple-100);}
+  .tag-gold{background:var(--gold-50);color:var(--gold-700);border:1px solid var(--gold-100);}
+  .tag-gray{background:var(--gray-50);color:var(--gray-500);border:1px solid var(--gray-100);}
+  .tag-green{background:var(--success-bg);color:var(--success);border:1px solid #B8E8D4;}
+  .tag-dark{background:var(--purple-900);color:white;border:1px solid var(--purple-700);}
+
+  .nav-flow{background:var(--gray-50);border-radius:var(--r-lg);padding:12px 14px;display:flex;flex-direction:column;gap:6px;}
+  .nav-flow-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--gray-500);flex-wrap:wrap;}
+  .nav-flow-screen{background:white;border:1px solid var(--gray-100);border-radius:var(--r-sm);padding:3px 8px;font-weight:600;color:var(--gray-700);font-size:11px;white-space:nowrap;}
+  .nav-flow-arrow{color:var(--gray-300);font-size:12px;}
+  .nav-flow-trigger{color:var(--purple-500);font-size:11px;font-style:italic;}
+
+  .note-box{background:var(--gold-50);border:1.5px solid var(--gold-100);border-radius:var(--r-md);padding:11px 13px;font-size:12px;color:var(--gold-900);margin-top:12px;display:flex;gap:8px;line-height:1.5;}
+
+  /* SHARED BREAKDOWN */
+  .shared-breakdown{margin-top:40px;}
+  .two-col-breakdown{display:grid;grid-template-columns:1fr 1fr;gap:32px;}
+  @media(max-width:800px){.two-col-breakdown{grid-template-columns:1fr;}}
+
+  .divider{height:1px;background:var(--gray-100);margin:16px 0;}
+
+  .page-footer{text-align:center;padding:48px 0 32px;border-top:1px solid var(--gray-200);margin-top:32px;color:var(--gray-400);font-size:13px;}
+  .page-footer strong{color:var(--gray-700);}
+
+  /* SUB-SCREEN BLOCKS */
+  .sub-screens{margin-top:48px;}
+  .sub-screen-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:32px;margin-top:24px;}
+  .sub-screen-card{background:white;border-radius:var(--r-xl);box-shadow:var(--shadow-md);overflow:hidden;}
+  .sub-screen-label{padding:14px 16px;background:var(--gray-50);border-bottom:1px solid var(--gray-100);font-size:12px;font-weight:700;color:var(--gray-700);}
+  .sub-screen-phone{padding:16px;display:flex;justify-content:center;}
+
+  /* MINI PHONE for sub-screens */
+  .mini-phone{width:220px;background:var(--warm-white);border-radius:28px;box-shadow:var(--shadow-lg),0 0 0 5px #D1CFC9,0 0 0 7px #C8C6C0;overflow:hidden;}
+  .mini-notch{height:28px;background:white;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-size:9px;font-weight:600;color:var(--gray-700);}
+  .mini-topbar{background:white;height:40px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;border-bottom:1px solid var(--gray-100);}
+  .mini-topbar-logo{font-size:13px;font-weight:800;background:var(--grad-purple);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .mini-body{padding:12px;}
+  .mini-title{font-size:13px;font-weight:800;color:var(--gray-900);margin-bottom:4px;}
+  .mini-sub{font-size:10px;color:var(--gray-400);margin-bottom:10px;line-height:1.4;}
+  .mini-card{background:white;border-radius:var(--r-md);padding:10px;border:1px solid var(--gray-100);margin-bottom:6px;box-shadow:var(--shadow-sm);}
+  .mini-card-row{display:flex;align-items:center;gap:8px;}
+  .mini-icon{width:28px;height:28px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+  .mini-label{font-size:11px;font-weight:700;color:var(--gray-900);}
+  .mini-val{font-size:10px;color:var(--gray-400);}
+  .mini-btn{width:100%;padding:9px;border-radius:var(--r-md);border:none;font-family:var(--font);font-size:11px;font-weight:700;cursor:pointer;background:var(--grad-purple);color:white;margin-top:8px;}
+  .mini-btn-ghost{background:transparent;color:var(--gray-500);border:1px solid var(--gray-200);}
+  .mini-progress{height:3px;background:var(--gray-100);border-radius:var(--r-full);margin-bottom:10px;overflow:hidden;}
+  .mini-progress-fill{height:100%;border-radius:var(--r-full);background:var(--grad-purple);}
+
+  /* SCREEN DIVIDER */
+  .screen-divider{display:flex;align-items:center;gap:16px;margin:56px 0;}
+  .screen-divider-line{flex:1;height:1px;background:var(--gray-200);}
+  .screen-divider-dot{width:8px;height:8px;border-radius:var(--r-full);background:var(--purple-300);}
+</style>
+</head>
+<body>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="flow-badge">FLOW 2 OF 5</div>
+    <h1>Home Screens</h1>
+    <p>Pre-Subscription & Post-Subscription · Same shell, different content state</p>
+    <div class="flow-steps">
+      <a href="#home-screens" class="flow-step active">Home (both states)</a>
+      <a href="#sub-screens" class="flow-step">Sub-screens</a>
+      <a href="#breakdown" class="flow-step">Component Breakdown</a>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- ══════════════════════ MAIN HOME SCREENS ══════════════════════ -->
+  <div id="home-screens">
+
+    <div class="section-label" style="margin-bottom:32px">
+      <div class="section-number">1</div>
+      <div class="section-title-group">
+        <div class="section-title">Home Screen — Both States</div>
+        <div class="section-sub">Same top bar, greeting banner, and savings card · Content below adapts to subscription status</div>
+      </div>
+    </div>
+
+    <div class="side-by-side">
+
+      <!-- ── PRE-SUBSCRIPTION ── -->
+      <div class="screen-col">
+        <div class="screen-col-header">
+          <div class="state-badge state-badge-pre">● Pre-Subscription</div>
+          <div class="screen-col-title">Home — Bundle & Store Focus</div>
+          <div class="screen-col-sub">User has policy verified, store selected, tote bag on its way. Subscription upsell at bottom.</div>
+        </div>
+
+        <div class="phone">
+          <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+
+          <!-- TOP BAR -->
+          <div class="topbar">
+            <div class="topbar-logo">MyPlace</div>
+            <div class="topbar-actions">
+              <div class="icon-btn">🔔<div class="notif-dot"></div></div>
+              <div class="icon-btn">☰</div>
+            </div>
+          </div>
+
+          <!-- GREETING BANNER -->
+          <div class="greeting-banner">
+            <div class="greeting-eyebrow">Good morning</div>
+            <div class="greeting-name">Hi, Jane 👋</div>
+            <div class="greeting-sub">Your home essentials are on the way</div>
+          </div>
+
+          <div class="s-body">
+
+            <!-- SAVINGS CARD -->
+            <div class="savings-card">
+              <div class="savings-icon">💰</div>
+              <div>
+                <div class="savings-amount">$24.00</div>
+                <div class="savings-label">Saved with MyPlace this year</div>
+              </div>
+            </div>
+
+            <!-- STORE -->
+            <div class="section-header">Your Store</div>
+            <div class="store-card">
+              <div class="store-icon">🏪</div>
+              <div style="flex:1">
+                <div class="store-name">Home Depot</div>
+                <div class="store-detail">Washington St · 0.8 mi · Open now</div>
+              </div>
+              <div class="store-change">Change →</div>
+            </div>
+
+            <!-- BUNDLE ACTIONS -->
+            <div class="section-header">Your Bundle</div>
+            <div class="action-card">
+              <div class="action-icon action-icon-purple">🧺</div>
+              <div class="action-body">
+                <div class="action-title">What's Included</div>
+                <div class="action-sub">6 SC Johnson home essentials</div>
+              </div>
+              <div class="action-arrow">›</div>
+            </div>
+            <div class="action-card">
+              <div class="action-icon action-icon-gold">🎟</div>
+              <div class="action-body">
+                <div class="action-title">Your Discount Code</div>
+                <div class="action-sub">5% off at Home Depot · Tap to view</div>
+              </div>
+              <div class="action-arrow">›</div>
+            </div>
+
+            <!-- UPSELL -->
+            <div class="upsell-card">
+              <div class="upsell-eyebrow">Upgrade your experience</div>
+              <div class="upsell-title">Get recurring home essentials</div>
+              <div class="upsell-sub">Subscribe to get your SC Johnson products delivered automatically — no extra cost.</div>
+              <button class="m-btn m-btn-primary">Set Up Subscription →</button>
+              <button class="m-btn m-btn-ghost" style="font-size:12px;padding:8px">Learn more</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ── POST-SUBSCRIPTION ── -->
+      <div class="screen-col">
+        <div class="screen-col-header">
+          <div class="state-badge state-badge-post">✓ Post-Subscription</div>
+          <div class="screen-col-title">Home — Subscription Management</div>
+          <div class="screen-col-sub">Active subscriber. Delivery countdown, quick actions, and full management grid.</div>
+        </div>
+
+        <div class="phone">
+          <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+
+          <!-- TOP BAR -->
+          <div class="topbar">
+            <div class="topbar-logo">MyPlace</div>
+            <div class="topbar-actions">
+              <div class="icon-btn">🔔</div>
+              <div class="icon-btn">☰</div>
+            </div>
+          </div>
+
+          <!-- GREETING BANNER -->
+          <div class="greeting-banner">
+            <div class="greeting-eyebrow">Good morning</div>
+            <div class="greeting-name">Hi, Jane 👋</div>
+            <div class="greeting-sub">Everything is running smoothly</div>
+          </div>
+
+          <div class="s-body">
+
+            <!-- SAVINGS CARD -->
+            <div class="savings-card">
+              <div class="savings-icon">💰</div>
+              <div>
+                <div class="savings-amount">$47.50</div>
+                <div class="savings-label">Saved with MyPlace this year</div>
+              </div>
+            </div>
+
+            <!-- COUNTDOWN -->
+            <div class="countdown-card">
+              <div class="countdown-icon">📦</div>
+              <div style="flex:1">
+                <div class="countdown-label">Next Delivery</div>
+                <div class="countdown-value">In 12 days</div>
+                <div class="countdown-sub">Scrubbing Bubbles · Mrs. Meyer's · Ziploc</div>
+              </div>
+              <div style="font-size:11px;font-weight:600;color:var(--purple-300);cursor:pointer">Details ›</div>
+            </div>
+
+            <!-- QUICK ACTIONS -->
+            <div class="section-header">Quick Actions</div>
+            <div class="quick-actions">
+              <div class="quick-btn quick-btn-primary">
+                <div class="quick-btn-icon">⚡</div>
+                <div class="quick-btn-label">Need it Now</div>
+                <div class="quick-btn-sub">Order immediately</div>
+              </div>
+              <div class="quick-btn">
+                <div class="quick-btn-icon">🔄</div>
+                <div class="quick-btn-label">Change Timing</div>
+                <div class="quick-btn-sub">Adjust schedule</div>
+              </div>
+            </div>
+
+            <!-- MANAGEMENT GRID -->
+            <div class="section-header">Manage Subscription</div>
+            <div class="mgmt-grid">
+              <div class="mgmt-btn">
+                <div class="mgmt-btn-icon">➕</div>
+                <div class="mgmt-btn-label">Order More</div>
+                <div class="mgmt-btn-sub">Add products</div>
+              </div>
+              <div class="mgmt-btn">
+                <div class="mgmt-btn-icon">📋</div>
+                <div class="mgmt-btn-label">See Products</div>
+                <div class="mgmt-btn-sub">Your current list</div>
+              </div>
+              <div class="mgmt-btn">
+                <div class="mgmt-btn-icon">✏️</div>
+                <div class="mgmt-btn-label">Change Products</div>
+                <div class="mgmt-btn-sub">Edit selections</div>
+              </div>
+              <div class="mgmt-btn">
+                <div class="mgmt-btn-icon">🔬</div>
+                <div class="mgmt-btn-label">Product Facts</div>
+                <div class="mgmt-btn-sub">Ingredients & info</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end side-by-side -->
+
+  </div><!-- end home-screens -->
+
+  <div class="screen-divider"><div class="screen-divider-line"></div><div class="screen-divider-dot"></div><div class="screen-divider-line"></div></div>
+
+  <!-- ══════════════════════ SUB-SCREENS ══════════════════════ -->
+  <div class="sub-screens" id="sub-screens">
+
+    <div class="section-label" style="margin-bottom:32px">
+      <div class="section-number">2</div>
+      <div class="section-title-group">
+        <div class="section-title">Sub-Screens</div>
+        <div class="section-sub">Screens triggered by tapping action cards and management buttons from Home</div>
+      </div>
+    </div>
+
+    <!-- PRE-SUB SCREENS -->
+    <div style="margin-bottom:12px">
+      <div class="state-badge state-badge-pre" style="margin-bottom:16px">● Pre-Subscription Sub-Screens</div>
+    </div>
+    <div class="sub-screen-grid">
+
+      <!-- WHAT'S INCLUDED -->
+      <div class="sub-screen-card">
+        <div class="sub-screen-label">📋 What's Included</div>
+        <div class="sub-screen-phone">
+          <div class="mini-phone">
+            <div class="mini-notch"><span>9:41</span><span>●●●</span></div>
+            <div class="mini-topbar">
+              <div style="font-size:11px;font-weight:600;color:var(--purple-500)">← Back</div>
+              <div class="mini-topbar-logo">MyPlace</div>
+              <div style="width:36px"></div>
+            </div>
+            <div class="mini-body">
+              <div class="mini-title">Your Bundle</div>
+              <div class="mini-sub">SC Johnson home essentials — included with your Allstate policy</div>
+              <div class="mini-card">
+                <div class="mini-card-row"><div class="mini-icon" style="background:var(--purple-50)">🫧</div><div><div class="mini-label">Scrubbing Bubbles</div><div class="mini-val">Bathroom cleaner · 20 oz</div></div></div>
+              </div>
+              <div class="mini-card">
+                <div class="mini-card-row"><div class="mini-icon" style="background:var(--purple-50)">🍋</div><div><div class="mini-label">Mrs. Meyer's Dish Soap</div><div class="mini-val">Lemon verbena · 16 oz</div></div></div>
+              </div>
+              <div class="mini-card">
+                <div class="mini-card-row"><div class="mini-icon" style="background:var(--purple-50)">🪟</div><div><div class="mini-label">Windex Glass Cleaner</div><div class="mini-val">Original · 23 oz</div></div></div>
+              </div>
+              <div class="mini-card">
+                <div class="mini-card-row"><div class="mini-icon" style="background:var(--purple-50)">✨</div><div><div class="mini-label">Pledge Multi-Surface</div><div class="mini-val">Cleaner · 9.7 oz</div></div></div>
+              </div>
+              <div style="text-align:center;font-size:10px;color:var(--gray-400);margin-top:8px">+ 2 more items</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DISCOUNT CODE -->
+      <div class="sub-screen-card">
+        <div class="sub-screen-label">🎟 Discount Code / Coupon</div>
+        <div class="sub-screen-phone">
+          <div class="mini-phone">
+            <div class="mini-notch"><span>9:41</span><span>●●●</span></div>
+            <div class="mini-topbar">
+              <div style="font-size:11px;font-weight:600;color:var(--purple-500)">← Back</div>
+              <div class="mini-topbar-logo">MyPlace</div>
+              <div style="width:36px"></div>
+            </div>
+            <div class="mini-body">
+              <div class="mini-title">Your Discount</div>
+              <div class="mini-sub">Show this at checkout at Home Depot</div>
+              <div style="background:var(--gold-50);border:1.5px dashed var(--gold-300);border-radius:var(--r-lg);padding:16px;text-align:center;margin-bottom:10px">
+                <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--gold-700);margin-bottom:4px">Your Exclusive Code</div>
+                <div style="font-size:22px;font-weight:800;color:var(--gold-900);letter-spacing:3px;margin-bottom:4px">5% OFF</div>
+                <div style="background:var(--gray-900);border-radius:var(--r-md);padding:10px;margin-top:8px">
+                  <div style="font-size:9px;color:var(--gray-300);margin-bottom:4px">BARCODE</div>
+                  <div style="height:32px;background:repeating-linear-gradient(90deg,white 0px,white 2px,var(--gray-900) 2px,var(--gray-900) 4px);border-radius:3px;"></div>
+                  <div style="font-size:9px;color:var(--gray-300);margin-top:4px;letter-spacing:2px">ALS-24-7829-MP</div>
+                </div>
+              </div>
+              <div style="font-size:10px;color:var(--gray-400);text-align:center">Valid at Home Depot · Expires 12/31/2025</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end pre-sub sub-screens grid -->
+
+    <!-- POST-SUB SCREENS -->
+    <div style="margin-top:40px;margin-bottom:12px">
+      <div class="state-badge state-badge-post" style="margin-bottom:16px">✓ Post-Subscription Sub-Screens</div>
+    </div>
+    <div class="sub-screen-grid">
+
+      <!-- NEED IT NOW -->
+      <div class="sub-screen-card">
+        <div class="sub-screen-label">⚡ Need it Now</div>
+        <div class="sub-screen-phone">
+          <div class="mini-phone">
+            <div class="mini-notch"><span>9:41</span><span>●●●</span></div>
+            <div class="mini-topbar">
+              <div style="font-size:11px;font-weight:600;color:var(--purple-500)">← Back</div>
+              <div class="mini-topbar-logo">MyPlace</div>
+              <div style="width:36px"></div>
+            </div>
+            <div class="mini-body">
+              <div class="mini-title">Need it Now</div>
+              <div class="mini-sub">Order your full delivery immediately</div>
+              <div class="mini-card">
+                <div class="mini-card-row"><div class="mini-icon" style="background:var(--purple-50)">🫧</div><div><div class="mini-label">Scrubbing Bubbles</div><div class="mini-val">Monthly · In stock</div></div></div>
+              </div>
+              <div class="mini-card">
+                <div class="mini-card-row"><div class="mini-icon" style="background:var(--purple-50)">🍋</div><div><div class="mini-label">Mrs. Meyer's Soap</div><div class="mini-val">Monthly · In stock</div></div></div>
+              </div>
+              <div class="mini-card">
+                <div class="mini-card-row"><div class="mini-icon" style="background:var(--purple-50)">🥡</div><div><div class="mini-label">Ziploc Gallon Bags</div><div class="mini-val">Monthly · In stock</div></div></div>
+              </div>
+              <div style="background:var(--purple-50);border-radius:var(--r-md);padding:8px;margin:8px 0;font-size:10px;color:var(--purple-700);font-weight:600;text-align:center">3 products · Ships to your address</div>
+              <button class="mini-btn">Order Now →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHANGE TIMING -->
+      <div class="sub-screen-card">
+        <div class="sub-screen-label">🔄 Change Timing</div>
+        <div class="sub-screen-phone">
+          <div class="mini-phone">
+            <div class="mini-notch"><span>9:41</span><span>●●●</span></div>
+            <div class="mini-topbar">
+              <div style="font-size:11px;font-weight:600;color:var(--purple-500)">← Back</div>
+              <div class="mini-topbar-logo">MyPlace</div>
+              <div style="width:36px"></div>
+            </div>
+            <div class="mini-body">
+              <div class="mini-title">Adjust Timing</div>
+              <div class="mini-sub">Change how often each product is delivered</div>
+              <div class="mini-card" style="margin-bottom:6px">
+                <div class="mini-label" style="margin-bottom:6px">Scrubbing Bubbles</div>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <div style="width:24px;height:24px;border-radius:var(--r-sm);background:var(--gray-100);display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer">−</div>
+                  <div style="flex:1;text-align:center;font-size:13px;font-weight:700;color:var(--purple-700)">Every 30 days</div>
+                  <div style="width:24px;height:24px;border-radius:var(--r-sm);background:var(--purple-100);display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;color:var(--purple-700)">+</div>
+                </div>
+              </div>
+              <div class="mini-card" style="margin-bottom:6px">
+                <div class="mini-label" style="margin-bottom:6px">Mrs. Meyer's Soap</div>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <div style="width:24px;height:24px;border-radius:var(--r-sm);background:var(--gray-100);display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer">−</div>
+                  <div style="flex:1;text-align:center;font-size:13px;font-weight:700;color:var(--purple-700)">Every 45 days</div>
+                  <div style="width:24px;height:24px;border-radius:var(--r-sm);background:var(--purple-100);display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;color:var(--purple-700)">+</div>
+                </div>
+              </div>
+              <button class="mini-btn" style="margin-top:8px">Save Changes</button>
+              <button class="mini-btn mini-btn-ghost">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEE PRODUCTS -->
+      <div class="sub-screen-card">
+        <div class="sub-screen-label">📋 See Products</div>
+        <div class="sub-screen-phone">
+          <div class="mini-phone">
+            <div class="mini-notch"><span>9:41</span><span>●●●</span></div>
+            <div class="mini-topbar">
+              <div style="font-size:11px;font-weight:600;color:var(--purple-500)">← Back</div>
+              <div class="mini-topbar-logo">MyPlace</div>
+              <div style="width:36px"></div>
+            </div>
+            <div class="mini-body">
+              <div class="mini-title">Your Products</div>
+              <div class="mini-sub">Current subscription · 4 items</div>
+              <div class="mini-progress"><div class="mini-progress-fill" style="width:100%"></div></div>
+              <div class="mini-card"><div class="mini-card-row"><div class="mini-icon" style="background:var(--purple-50)">🫧</div><div style="flex:1"><div class="mini-label">Scrubbing Bubbles</div><div class="mini-val">Every 30 days</div></div><div style="font-size:10px;font-weight:600;padding:2px 6px;background:var(--success-bg);color:var(--success);border-radius:var(--r-full)">Active</div></div></div>
+              <div class="mini-card"><div class="mini-card-row"><div class="mini-icon" style="background:var(--purple-50)">🍋</div><div style="flex:1"><div class="mini-label">Mrs. Meyer's Soap</div><div class="mini-val">Every 45 days</div></div><div style="font-size:10px;font-weight:600;padding:2px 6px;background:var(--success-bg);color:var(--success);border-radius:var(--r-full)">Active</div></div></div>
+              <div class="mini-card"><div class="mini-card-row"><div class="mini-icon" style="background:var(--purple-50)">🥡</div><div style="flex:1"><div class="mini-label">Ziploc Bags</div><div class="mini-val">Every 60 days</div></div><div style="font-size:10px;font-weight:600;padding:2px 6px;background:var(--success-bg);color:var(--success);border-radius:var(--r-full)">Active</div></div></div>
+              <button class="mini-btn" style="margin-top:8px;background:transparent;color:var(--purple-500);border:1.5px solid var(--purple-200,#C4BAE0);font-size:11px">✏️ Change Products</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ORDER CONFIRMED -->
+      <div class="sub-screen-card">
+        <div class="sub-screen-label">✓ Order Confirmed</div>
+        <div class="sub-screen-phone">
+          <div class="mini-phone">
+            <div class="mini-notch"><span>9:41</span><span>●●●</span></div>
+            <div class="mini-topbar">
+              <div class="mini-topbar-logo">MyPlace</div>
+              <div></div>
+            </div>
+            <div class="mini-body" style="text-align:center;padding-top:24px">
+              <div style="width:60px;height:60px;border-radius:50%;background:var(--success-bg);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px">✓</div>
+              <div style="font-size:15px;font-weight:800;color:var(--gray-900);margin-bottom:4px">Order Confirmed!</div>
+              <div style="font-size:11px;color:var(--gray-400);line-height:1.5;margin-bottom:16px">Your products are on their way. Expected in 3–5 business days.</div>
+              <div style="background:var(--purple-50);border-radius:var(--r-lg);padding:10px;margin-bottom:12px;text-align:left">
+                <div style="font-size:10px;font-weight:700;color:var(--purple-700);margin-bottom:2px">Delivering to</div>
+                <div style="font-size:11px;color:var(--gray-700)">123 Main St, Apt 4B<br>Boston, MA 02101</div>
+              </div>
+              <button class="mini-btn">Back to Home</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end post-sub sub-screens grid -->
+
+  </div><!-- end sub-screens -->
+
+  <div class="screen-divider"><div class="screen-divider-line"></div><div class="screen-divider-dot"></div><div class="screen-divider-line"></div></div>
+
+  <!-- ══════════════════════ COMPONENT BREAKDOWN ══════════════════════ -->
+  <div id="breakdown">
+
+    <div class="section-label" style="margin-bottom:32px">
+      <div class="section-number">3</div>
+      <div class="section-title-group">
+        <div class="section-title">Component Breakdown</div>
+        <div class="section-sub">Specs for every component used across both Home states</div>
+      </div>
+    </div>
+
+    <div class="two-col-breakdown">
+
+      <!-- PRE-SUB BREAKDOWN -->
+      <div>
+        <div class="breakdown">
+          <div class="breakdown-header">
+            <h3>Home — Pre-Subscription</h3>
+            <p>Components, specs & navigation paths</p>
+          </div>
+          <div class="breakdown-body">
+
+            <div class="spec-section">
+              <div class="spec-section-title">Components Used</div>
+              <div>
+                <span class="component-tag tag-purple">Top Bar (persistent)</span>
+                <span class="component-tag tag-purple">Greeting Banner (brand gradient)</span>
+                <span class="component-tag tag-gold">Savings Card</span>
+                <span class="component-tag tag-purple">Store Card</span>
+                <span class="component-tag tag-purple">Action Card — What's Included</span>
+                <span class="component-tag tag-gold">Action Card — Discount Code</span>
+                <span class="component-tag tag-purple">Upsell Card</span>
+                <span class="component-tag tag-purple">Section Headers</span>
+              </div>
+            </div>
+
+            <div class="spec-section">
+              <div class="spec-section-title">Layout Specs</div>
+              <table class="spec-table">
+                <tr><td>Greeting banner</td><td>Brand gradient · 80px · Name + contextual sub-copy</td></tr>
+                <tr><td>Greeting copy</td><td>Sub-line changes based on tote status: "on the way" / "ready for pickup" / "delivered"</td></tr>
+                <tr><td>Savings card</td><td><code>gold-50</code> bg · Gold icon · Amount in <code>DM Serif</code> 22px bold</td></tr>
+                <tr><td>Store card</td><td><code>purple-50</code> bg · Inline "Change →" link · Distance + hours</td></tr>
+                <tr><td>Section headers</td><td>11px · 700 · uppercase · <code>gray-400</code> · bottom border</td></tr>
+                <tr><td>Upsell card</td><td>White bg · <code>purple-100</code> border · <code>r-xl</code> · Centered text · Two buttons</td></tr>
+                <tr><td>Scroll</td><td>Full page scroll · Top bar fixed · No bottom tab bar</td></tr>
+              </table>
+            </div>
+
+            <div class="spec-section">
+              <div class="spec-section-title">Dynamic Content Rules</div>
+              <table class="spec-table">
+                <tr><td>Savings amount</td><td>Pulled from user account · $0.00 if new</td></tr>
+                <tr><td>Store name</td><td>Selected store from onboarding / last changed</td></tr>
+                <tr><td>Discount code</td><td>Tied to selected store · Updates if store changes</td></tr>
+                <tr><td>Greeting time</td><td>"Good morning / afternoon / evening" based on local time</td></tr>
+              </table>
+            </div>
+
+            <div class="spec-section">
+              <div class="spec-section-title">Navigation</div>
+              <div class="nav-flow">
+                <div class="nav-flow-item"><span class="nav-flow-screen">Home Pre</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Store "Change →"</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Map Flow</span></div>
+                <div class="nav-flow-item"><span class="nav-flow-screen">Home Pre</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">What's Included</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">What's Included</span></div>
+                <div class="nav-flow-item"><span class="nav-flow-screen">Home Pre</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Discount Code</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Coupon / Barcode</span></div>
+                <div class="nav-flow-item"><span class="nav-flow-screen">Home Pre</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Set Up Subscription</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Subscription Flow</span></div>
+                <div class="nav-flow-item"><span class="nav-flow-screen">Home Pre</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">🔔 Bell</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Notification Settings</span></div>
+                <div class="nav-flow-item"><span class="nav-flow-screen">Home Pre</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">☰ Menu</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Dropdown Menu</span></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- POST-SUB BREAKDOWN -->
+      <div>
+        <div class="breakdown">
+          <div class="breakdown-header">
+            <h3>Home — Post-Subscription</h3>
+            <p>Components, specs & navigation paths</p>
+          </div>
+          <div class="breakdown-body">
+
+            <div class="spec-section">
+              <div class="spec-section-title">Components Used</div>
+              <div>
+                <span class="component-tag tag-purple">Top Bar (persistent)</span>
+                <span class="component-tag tag-purple">Greeting Banner (brand gradient)</span>
+                <span class="component-tag tag-gold">Savings Card</span>
+                <span class="component-tag tag-dark">Countdown Card (dark)</span>
+                <span class="component-tag tag-purple">Quick Action — Need it Now (primary)</span>
+                <span class="component-tag tag-gray">Quick Action — Change Timing</span>
+                <span class="component-tag tag-gray">Management Grid (4 buttons)</span>
+                <span class="component-tag tag-purple">Section Headers</span>
+              </div>
+            </div>
+
+            <div class="spec-section">
+              <div class="spec-section-title">Layout Specs</div>
+              <table class="spec-table">
+                <tr><td>Countdown card</td><td><code>purple-900</code> dark bg · White text · Purple-300 accents · Product preview list</td></tr>
+                <tr><td>Quick actions</td><td>2-col grid · 50/50 · Need it Now = purple primary · Change Timing = white</td></tr>
+                <tr><td>Mgmt grid</td><td>2-col · 4 buttons · White bg · Left-aligned icon + label + sub</td></tr>
+                <tr><td>Mgmt btn hover</td><td>Border → <code>purple-200</code> · bg → <code>purple-50</code></td></tr>
+                <tr><td>No upsell card</td><td>Removed once subscribed · Screen is shorter and cleaner</td></tr>
+              </table>
+            </div>
+
+            <div class="spec-section">
+              <div class="spec-section-title">Dynamic Content Rules</div>
+              <table class="spec-table">
+                <tr><td>Countdown</td><td>Days until next scheduled delivery · Updates daily · "Tomorrow" when 1 day</td></tr>
+                <tr><td>Product preview</td><td>First 3 products in next delivery · "+ N more" if over 3</td></tr>
+                <tr><td>Greeting sub</td><td>Changes: "on track" / "delivery soon" / "arriving today"</td></tr>
+                <tr><td>Savings amount</td><td>Cumulative value since account creation</td></tr>
+              </table>
+            </div>
+
+            <div class="spec-section">
+              <div class="spec-section-title">Navigation</div>
+              <div class="nav-flow">
+                <div class="nav-flow-item"><span class="nav-flow-screen">Home Post</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Need it Now</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Need it Now screen</span></div>
+                <div class="nav-flow-item"><span class="nav-flow-screen">Home Post</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Change Timing</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Change Timing screen</span></div>
+                <div class="nav-flow-item"><span class="nav-flow-screen">Home Post</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Order More</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Choose Products</span></div>
+                <div class="nav-flow-item"><span class="nav-flow-screen">Home Post</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">See Products</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Review Products</span></div>
+                <div class="nav-flow-item"><span class="nav-flow-screen">Home Post</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Change Products</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Choose Products (edit)</span></div>
+                <div class="nav-flow-item"><span class="nav-flow-screen">Home Post</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Product Facts</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Product Facts screen</span></div>
+                <div class="nav-flow-item"><span class="nav-flow-screen">Home Post</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Countdown "Details"</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Review Products</span></div>
+              </div>
+            </div>
+
+            <div class="note-box">💡 The greeting sub-line is a small but high-impact detail — dynamically updating it ("delivery arriving tomorrow!") makes the app feel alive between sessions and reduces "why am I here?" drop-off.</div>
+
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end two-col-breakdown -->
+
+    <!-- SHARED COMPONENTS NOTE -->
+    <div class="breakdown" style="margin-top:32px">
+      <div class="breakdown-header">
+        <h3>Shared Components — Both States</h3>
+        <p>These appear identically across Pre and Post Subscription · Build once, reuse</p>
+      </div>
+      <div class="breakdown-body">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:24px;">
+          <div>
+            <div class="spec-section-title">Top Bar</div>
+            <table class="spec-table">
+              <tr><td>Height</td><td>52px · White bg · <code>shadow-sm</code></td></tr>
+              <tr><td>Logo</td><td>18px · 800 weight · Purple gradient text</td></tr>
+              <tr><td>Bell icon</td><td>32px btn · Red dot when unread notifs</td></tr>
+              <tr><td>Menu icon</td><td>☰ · Opens profile/support dropdown</td></tr>
+            </table>
+          </div>
+          <div>
+            <div class="spec-section-title">Greeting Banner</div>
+            <table class="spec-table">
+              <tr><td>Background</td><td><code>grad-purple</code> · 80px tall</td></tr>
+              <tr><td>Eyebrow</td><td>Time-based greeting · 10px · uppercase</td></tr>
+              <tr><td>Name</td><td>First name from account · 20px · 800</td></tr>
+              <tr><td>Sub-line</td><td>Context-aware · 12px · 70% white opacity</td></tr>
+            </table>
+          </div>
+          <div>
+            <div class="spec-section-title">Savings Card</div>
+            <table class="spec-table">
+              <tr><td>Background</td><td><code>gold-50</code> · <code>gold-100</code> border</td></tr>
+              <tr><td>Icon</td><td>44px · <code>grad-gold</code> · <code>r-md</code></td></tr>
+              <tr><td>Amount</td><td>22px · 800 weight · <code>gold-900</code></td></tr>
+              <tr><td>Label</td><td>11px · 500 · <code>gold-700</code></td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end breakdown -->
+
+  <!-- FOOTER -->
+  <div class="page-footer">
+    <strong>MyPlace — Home Screens</strong> · Design System v1.2 · For Figma implementation<br>
+    <span style="margin-top:6px;display:block">Next: Map & Store Selection Flow →</span>
+  </div>
+
+</div>
+
+<script>
+  const links = document.querySelectorAll('.flow-step');
+  links.forEach(l => l.addEventListener('click', e => {
+    e.preventDefault();
+    const t = document.querySelector(l.getAttribute('href'));
+    if(t) t.scrollIntoView({behavior:'smooth',block:'start'});
+    links.forEach(x => x.classList.remove('active'));
+    l.classList.add('active');
+  }));
+</script>
+</body>
+</html>

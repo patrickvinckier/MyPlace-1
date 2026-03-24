@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyPlace — Map & Store Selection</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple-900:#1F1B37;--purple-700:#362E5E;--purple-500:#5B4E9E;--purple-300:#A49DC9;--purple-100:#DEDBEB;--purple-50:#F1F0F7;
+    --blue-500:#1E63D0;--blue-100:#D6E6FA;--blue-50:#EBF3FD;
+    --gold-900:#7A4800;--gold-700:#B56A00;--gold-500:#E08C00;--gold-300:#FBCC4D;--gold-100:#FDF0C8;--gold-50:#FFFBEE;
+    --warm-white:#FAFAF8;--gray-50:#F5F4F1;--gray-100:#ECEAE5;--gray-200:#D9D6CF;--gray-300:#B8B4AB;
+    --gray-400:#918D84;--gray-500:#6B6760;--gray-700:#3D3A35;--gray-900:#1A1816;
+    --success:#1A8C5B;--success-bg:#E6F6EF;--error:#C62828;--error-bg:#FDEAEA;
+    --grad-purple:linear-gradient(135deg,#362E5E 0%,#5B4E9E 100%);
+    --grad-gold:linear-gradient(135deg,#B56A00 0%,#E08C00 100%);
+    --font:'Plus Jakarta Sans',system-ui,sans-serif;
+    --r-sm:8px;--r-md:12px;--r-lg:16px;--r-xl:24px;--r-full:9999px;
+    --shadow-sm:0 1px 3px rgba(26,24,22,0.08),0 1px 2px rgba(26,24,22,0.04);
+    --shadow-md:0 4px 12px rgba(26,24,22,0.10),0 2px 4px rgba(26,24,22,0.06);
+    --shadow-lg:0 8px 24px rgba(26,24,22,0.12),0 4px 8px rgba(26,24,22,0.06);
+    --shadow-xl:0 16px 40px rgba(26,24,22,0.14),0 6px 12px rgba(26,24,22,0.06);
+    --shadow-purple:0 8px 24px rgba(91,78,158,0.28);
+    --shadow-gold:0 8px 24px rgba(224,140,0,0.22);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--font);background:#EDECE9;color:var(--gray-900);line-height:1.5;}
+
+  /* PAGE HEADER */
+  .page-header{background:var(--grad-purple);padding:40px 60px;position:relative;overflow:hidden;}
+  .page-header::before{content:'';position:absolute;top:-80px;right:-80px;width:320px;height:320px;border-radius:50%;background:rgba(255,255,255,0.05);}
+  .page-header::after{content:'';position:absolute;bottom:-60px;left:20%;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,0.03);}
+  .page-header-inner{position:relative;z-index:1;}
+  .flow-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.15);color:white;font-size:12px;font-weight:600;padding:5px 14px;border-radius:var(--r-full);letter-spacing:0.5px;margin-bottom:16px;border:1px solid rgba(255,255,255,0.2);}
+  .page-header h1{font-size:40px;font-weight:800;color:white;margin-bottom:6px;letter-spacing:-0.5px;}
+  .page-header p{color:rgba(255,255,255,0.7);font-size:15px;}
+  .flow-steps{display:flex;gap:6px;flex-wrap:wrap;margin-top:20px;}
+  .flow-step{font-size:11px;font-weight:600;padding:4px 12px;border-radius:var(--r-full);background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.15);cursor:pointer;transition:all 0.2s;text-decoration:none;}
+  .flow-step:hover,.flow-step.active{background:rgba(255,255,255,0.25);color:white;border-color:rgba(255,255,255,0.35);}
+
+  .main{max-width:1300px;margin:0 auto;padding:48px 32px;}
+
+  /* CONTEXT BANNER */
+  .context-banner{background:white;border-radius:var(--r-xl);padding:20px 24px;margin-bottom:48px;border-left:4px solid var(--purple-500);box-shadow:var(--shadow-sm);display:flex;gap:16px;align-items:flex-start;}
+  .context-banner-icon{font-size:24px;flex-shrink:0;}
+  .context-banner-title{font-size:14px;font-weight:800;color:var(--gray-900);margin-bottom:4px;}
+  .context-banner-body{font-size:13px;color:var(--gray-500);line-height:1.6;}
+  .context-trigger{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:var(--r-full);margin:2px;}
+  .trigger-purple{background:var(--purple-50);color:var(--purple-700);border:1px solid var(--purple-100);}
+  .trigger-gray{background:var(--gray-100);color:var(--gray-500);border:1px solid var(--gray-200);}
+
+  /* SECTION LABEL */
+  .section-label{display:flex;align-items:center;gap:12px;margin-bottom:28px;}
+  .section-number{width:36px;height:36px;border-radius:var(--r-full);background:var(--grad-purple);color:white;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;box-shadow:var(--shadow-purple);}
+  .section-title{font-size:24px;font-weight:800;color:var(--gray-900);letter-spacing:-0.3px;}
+  .section-sub{font-size:13px;color:var(--gray-400);margin-top:2px;}
+
+  /* SCREEN BLOCK */
+  .screen-block{margin-bottom:72px;scroll-margin-top:32px;}
+  .screen-layout{display:grid;grid-template-columns:320px 1fr;gap:40px;align-items:start;}
+  @media(max-width:900px){.screen-layout{grid-template-columns:1fr;}}
+
+  /* PHONE */
+  .phone{width:300px;background:var(--warm-white);border-radius:40px;box-shadow:var(--shadow-xl),0 0 0 8px #D1CFC9,0 0 0 10px #C8C6C0;overflow:hidden;position:sticky;top:32px;}
+  .phone-notch{height:36px;background:white;display:flex;align-items:center;justify-content:space-between;padding:0 20px;font-size:11px;font-weight:600;color:var(--gray-700);}
+
+  /* TOPBAR */
+  .topbar{background:white;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid var(--gray-100);box-shadow:var(--shadow-sm);}
+  .topbar-logo{font-size:18px;font-weight:800;background:var(--grad-purple);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .topbar-back{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--purple-500);}
+  .topbar-title{font-size:15px;font-weight:700;color:var(--gray-900);}
+  .topbar-actions{display:flex;gap:4px;}
+  .icon-btn{width:32px;height:32px;border-radius:var(--r-md);background:var(--gray-50);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;}
+
+  /* ── MAP SCREEN COMPONENTS ── */
+
+  /* Full-screen map */
+  .map-full{position:relative;height:340px;background:linear-gradient(180deg,#C8DFC8 0%,#B8D4B8 40%,#A8C8A8 100%);overflow:hidden;}
+  .map-grid-overlay{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.15) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.15) 1px,transparent 1px);background-size:28px 28px;}
+  .map-roads{position:absolute;inset:0;}
+  .map-road-h{position:absolute;background:white;opacity:0.6;}
+  .map-road-v{position:absolute;background:white;opacity:0.6;}
+
+  /* Map top overlay controls */
+  .map-controls-top{position:absolute;top:12px;left:12px;right:12px;z-index:10;display:flex;flex-direction:column;gap:8px;}
+  .map-search-bar{background:white;border-radius:var(--r-lg);padding:10px 14px;display:flex;align-items:center;gap:8px;box-shadow:var(--shadow-lg);}
+  .map-search-icon{font-size:14px;color:var(--gray-400);}
+  .map-search-text{flex:1;font-size:13px;color:var(--gray-400);font-family:var(--font);}
+  .map-search-clear{font-size:12px;color:var(--gray-300);}
+
+  .filter-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;}
+  .filter-chip{background:white;border-radius:var(--r-full);padding:6px 12px;font-size:11px;font-weight:600;color:var(--gray-700);box-shadow:var(--shadow-md);white-space:nowrap;border:1.5px solid transparent;cursor:pointer;flex-shrink:0;}
+  .filter-chip.active{background:var(--purple-700);color:white;border-color:var(--purple-700);}
+  .filter-chip:not(.active):hover{border-color:var(--purple-200,#C4BAE0);}
+
+  /* Location button */
+  .map-location-btn{position:absolute;top:12px;right:12px;width:40px;height:40px;background:white;border-radius:var(--r-full);display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:var(--shadow-lg);cursor:pointer;z-index:10;}
+
+  /* Map pins */
+  .map-pin{position:absolute;z-index:5;transform:translate(-50%,-100%);}
+  .pin-dot{width:36px;height:36px;border-radius:var(--r-full);display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:var(--shadow-md);border:2px solid white;}
+  .pin-purple{background:var(--grad-purple);}
+  .pin-gray{background:white;border-color:var(--gray-200);}
+  .pin-label{background:white;border-radius:var(--r-sm);padding:2px 6px;font-size:9px;font-weight:700;color:var(--gray-700);box-shadow:var(--shadow-sm);text-align:center;margin-top:2px;white-space:nowrap;}
+  .pin-label.selected{background:var(--purple-700);color:white;}
+
+  /* Bottom sheet / store list */
+  .bottom-sheet{background:white;border-radius:24px 24px 0 0;box-shadow:0 -4px 20px rgba(26,24,22,0.12);}
+  .bottom-sheet-handle{width:36px;height:4px;background:var(--gray-200);border-radius:var(--r-full);margin:10px auto 0;}
+  .bottom-sheet-header{padding:12px 16px 8px;display:flex;align-items:center;justify-content:space-between;}
+  .bottom-sheet-title{font-size:13px;font-weight:700;color:var(--gray-900);}
+  .bottom-sheet-count{font-size:11px;color:var(--gray-400);}
+
+  /* Store list cards */
+  .store-list-card{display:flex;align-items:center;gap:10px;padding:10px 16px;border-top:1px solid var(--gray-100);cursor:pointer;transition:background 0.15s;}
+  .store-list-card:hover{background:var(--purple-50);}
+  .store-list-card.selected{background:var(--purple-50);border-left:3px solid var(--purple-500);}
+  .store-list-icon{width:36px;height:36px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .store-list-icon-purple{background:var(--grad-purple);}
+  .store-list-icon-gray{background:var(--gray-100);}
+  .store-list-name{font-size:13px;font-weight:700;color:var(--gray-900);}
+  .store-list-detail{font-size:11px;color:var(--gray-400);margin-top:1px;}
+  .store-list-right{margin-left:auto;text-align:right;flex-shrink:0;}
+  .store-list-dist{font-size:12px;font-weight:700;color:var(--purple-500);}
+  .store-list-status{font-size:10px;font-weight:600;margin-top:1px;}
+  .status-open{color:var(--success);}
+  .status-closed{color:var(--error);}
+
+  /* STORE DETAIL */
+  .store-hero{background:var(--grad-purple);padding:24px 18px 28px;position:relative;overflow:hidden;}
+  .store-hero::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.07);}
+  .store-hero-name{font-size:22px;font-weight:800;color:white;margin-bottom:4px;position:relative;}
+  .store-hero-addr{font-size:13px;color:rgba(255,255,255,0.75);position:relative;}
+  .store-hero-dist{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,0.15);color:white;font-size:11px;font-weight:600;padding:3px 10px;border-radius:var(--r-full);margin-top:8px;position:relative;}
+
+  .detail-body{padding:16px;}
+  .detail-row{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--gray-100);}
+  .detail-row:last-child{border-bottom:none;}
+  .detail-icon{width:32px;height:32px;border-radius:var(--r-md);background:var(--purple-50);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+  .detail-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--gray-400);margin-bottom:2px;}
+  .detail-value{font-size:13px;font-weight:600;color:var(--gray-900);}
+  .detail-sub{font-size:11px;color:var(--gray-400);margin-top:1px;}
+
+  /* Availability pills */
+  .avail-row{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;}
+  .avail-pill{font-size:10px;font-weight:600;padding:3px 8px;border-radius:var(--r-full);}
+  .avail-yes{background:var(--success-bg);color:var(--success);}
+  .avail-no{background:var(--error-bg);color:var(--error);}
+
+  /* Pickup instructions */
+  .pickup-box{background:var(--purple-50);border-radius:var(--r-lg);padding:12px 14px;margin:0 16px 14px;}
+  .pickup-box-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--purple-700);margin-bottom:6px;}
+  .pickup-step{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;}
+  .pickup-step:last-child{margin-bottom:0;}
+  .pickup-step-num{width:18px;height:18px;border-radius:50%;background:var(--purple-500);color:white;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+  .pickup-step-text{font-size:11px;color:var(--purple-900);line-height:1.4;}
+
+  /* Action buttons */
+  .action-buttons{padding:0 16px 16px;display:flex;flex-direction:column;gap:8px;}
+  .m-btn{width:100%;padding:13px;border-radius:var(--r-lg);border:none;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;}
+  .m-btn-primary{background:var(--grad-purple);color:white;box-shadow:var(--shadow-purple);}
+  .m-btn-ghost{background:transparent;color:var(--gray-500);border:1.5px solid var(--gray-200);}
+  .m-btn-directions{background:var(--blue-50);color:var(--blue-500);border:1.5px solid var(--blue-100);}
+
+  /* CONFIRMATION SCREEN */
+  .confirm-hero{background:var(--grad-purple);padding:32px 20px;text-align:center;color:white;position:relative;overflow:hidden;}
+  .confirm-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.06);}
+  .confirm-check{width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px;position:relative;}
+  .confirm-title{font-size:22px;font-weight:800;margin-bottom:4px;position:relative;}
+  .confirm-sub{font-size:13px;opacity:0.8;position:relative;}
+
+  .confirm-body{padding:16px;}
+  .confirm-card{background:var(--purple-50);border:1.5px solid var(--purple-100);border-radius:var(--r-xl);padding:16px;margin-bottom:14px;}
+  .confirm-card-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--purple-500);margin-bottom:8px;}
+  .confirm-detail-row{display:flex;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--purple-100);}
+  .confirm-detail-row:last-child{border-bottom:none;}
+  .confirm-detail-icon{font-size:14px;width:20px;text-align:center;flex-shrink:0;}
+  .confirm-detail-label{font-size:12px;color:var(--gray-500);}
+  .confirm-detail-value{font-size:12px;font-weight:700;color:var(--gray-900);margin-left:auto;}
+
+  .next-steps-box{background:var(--gold-50);border:1.5px solid var(--gold-100);border-radius:var(--r-lg);padding:12px 14px;margin-bottom:14px;}
+  .next-steps-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--gold-700);margin-bottom:6px;}
+  .next-step-row{display:flex;align-items:flex-start;gap:8px;margin-bottom:4px;}
+  .next-step-row:last-child{margin-bottom:0;}
+  .next-step-icon{font-size:12px;flex-shrink:0;margin-top:1px;}
+  .next-step-text{font-size:11px;color:var(--gold-900);line-height:1.4;}
+
+  /* BREAKDOWN */
+  .breakdown{background:white;border-radius:var(--r-xl);box-shadow:var(--shadow-md);overflow:hidden;}
+  .breakdown-header{background:var(--gray-50);padding:18px 22px;border-bottom:1px solid var(--gray-100);}
+  .breakdown-header h3{font-size:15px;font-weight:800;color:var(--gray-900);}
+  .breakdown-header p{font-size:12px;color:var(--gray-400);margin-top:2px;}
+  .breakdown-body{padding:22px;}
+
+  .spec-section{margin-bottom:24px;}
+  .spec-section:last-child{margin-bottom:0;}
+  .spec-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray-400);margin-bottom:10px;padding-bottom:5px;border-bottom:1px solid var(--gray-100);}
+
+  .spec-table{width:100%;border-collapse:collapse;font-size:12px;}
+  .spec-table td{padding:7px 9px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+  .spec-table tr:last-child td{border-bottom:none;}
+  .spec-table td:first-child{font-weight:600;color:var(--gray-700);width:36%;white-space:nowrap;}
+  .spec-table td:last-child{color:var(--gray-500);}
+
+  code{font-family:monospace;font-size:11px;background:var(--gray-100);color:var(--purple-700);padding:2px 5px;border-radius:4px;}
+
+  .component-tag{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:var(--r-full);margin:2px;}
+  .tag-purple{background:var(--purple-50);color:var(--purple-700);border:1px solid var(--purple-100);}
+  .tag-gold{background:var(--gold-50);color:var(--gold-700);border:1px solid var(--gold-100);}
+  .tag-gray{background:var(--gray-50);color:var(--gray-500);border:1px solid var(--gray-100);}
+  .tag-green{background:var(--success-bg);color:var(--success);border:1px solid #B8E8D4;}
+  .tag-blue{background:var(--blue-50);color:var(--blue-500);border:1px solid var(--blue-100);}
+
+  .nav-flow{background:var(--gray-50);border-radius:var(--r-lg);padding:12px 14px;display:flex;flex-direction:column;gap:6px;}
+  .nav-flow-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--gray-500);flex-wrap:wrap;}
+  .nav-flow-screen{background:white;border:1px solid var(--gray-100);border-radius:var(--r-sm);padding:3px 8px;font-weight:600;color:var(--gray-700);font-size:11px;white-space:nowrap;}
+  .nav-flow-arrow{color:var(--gray-300);font-size:12px;}
+  .nav-flow-trigger{color:var(--purple-500);font-size:11px;font-style:italic;}
+
+  .note-box{background:var(--gold-50);border:1.5px solid var(--gold-100);border-radius:var(--r-md);padding:11px 13px;font-size:12px;color:var(--gold-900);margin-top:12px;display:flex;gap:8px;line-height:1.5;}
+
+  /* SCREEN DIVIDER */
+  .screen-divider{display:flex;align-items:center;gap:16px;margin:56px 0;}
+  .screen-divider-line{flex:1;height:1px;background:var(--gray-200);}
+  .screen-divider-dot{width:8px;height:8px;border-radius:var(--r-full);background:var(--purple-300);}
+
+  /* FLOW DIAGRAM */
+  .flow-diagram{background:white;border-radius:var(--r-xl);padding:28px;box-shadow:var(--shadow-md);margin-bottom:48px;}
+  .flow-diagram-title{font-size:13px;font-weight:800;color:var(--gray-900);margin-bottom:20px;}
+  .flow-row{display:flex;align-items:center;gap:0;flex-wrap:wrap;}
+  .flow-node{background:var(--purple-50);border:1.5px solid var(--purple-100);border-radius:var(--r-lg);padding:10px 14px;font-size:12px;font-weight:700;color:var(--purple-700);white-space:nowrap;}
+  .flow-node-trigger{background:var(--gray-50);border:1.5px solid var(--gray-100);border-radius:var(--r-lg);padding:6px 10px;font-size:10px;font-weight:600;color:var(--gray-500);white-space:nowrap;}
+  .flow-node-origin{background:var(--purple-900);border-color:var(--purple-700);color:white;}
+  .flow-node-end{background:var(--success-bg);border-color:var(--success);color:var(--success);}
+  .flow-arrow{padding:0 8px;color:var(--gray-300);font-size:16px;font-weight:300;}
+  .flow-divider{width:100%;height:1px;background:var(--gray-100);margin:12px 0;}
+
+  .page-footer{text-align:center;padding:48px 0 32px;border-top:1px solid var(--gray-200);margin-top:32px;color:var(--gray-400);font-size:13px;}
+  .page-footer strong{color:var(--gray-700);}
+</style>
+</head>
+<body>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="flow-badge">FLOW 3 OF 5</div>
+    <h1>Map & Store Selection</h1>
+    <p>Contextual flow · 4 screens · Triggered from multiple entry points · Always returns to origin</p>
+    <div class="flow-steps">
+      <a href="#triggers" class="flow-step active">Entry Points</a>
+      <a href="#s1" class="flow-step">1 Map View</a>
+      <a href="#s2" class="flow-step">2 Store Detail</a>
+      <a href="#s3" class="flow-step">3 Bundle Availability</a>
+      <a href="#s4" class="flow-step">4 Store Confirmed</a>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- CONTEXT BANNER -->
+  <div class="context-banner" id="triggers">
+    <div class="context-banner-icon">📍</div>
+    <div>
+      <div class="context-banner-title">Contextual Flow — Not a standalone section</div>
+      <div class="context-banner-body">
+        The Map flow is triggered from multiple points in the app and always returns the user to their origin screen after confirming a store. It is designed once and reused across all entry points.<br><br>
+        <strong>Entry points:</strong>
+        <span class="context-trigger trigger-purple">Onboarding → Location Permissions</span>
+        <span class="context-trigger trigger-purple">Home Pre → "Change Store"</span>
+        <span class="context-trigger trigger-purple">Subscription Registration → Store step</span>
+        <span class="context-trigger trigger-gray">Profile → Address Management (future)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW DIAGRAM -->
+  <div class="flow-diagram">
+    <div class="flow-diagram-title">Complete Map Flow — Entry to Return</div>
+    <div class="flow-row">
+      <div class="flow-node flow-node-origin">Entry Point</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">Map View</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node-trigger">tap store pin or list card</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">Store Detail</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node-trigger">tap availability</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">Bundle Availability</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node-trigger">back</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">Store Detail</div>
+    </div>
+    <div class="flow-divider"></div>
+    <div class="flow-row">
+      <div class="flow-node">Store Detail</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node-trigger">tap "Confirm This Location"</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">Store Confirmed</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node-trigger">tap "Continue"</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node flow-node-end">Returns to Origin</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════ SCREEN 1 — MAP VIEW ══════════════════════ -->
+  <div class="screen-block" id="s1">
+    <div class="section-label">
+      <div class="section-number">1</div>
+      <div>
+        <div class="section-title">Map View</div>
+        <div class="section-sub">Full-screen map with overlay controls · Scrollable store list anchored to bottom</div>
+      </div>
+    </div>
+
+    <div class="screen-layout">
+      <!-- PHONE MOCKUP -->
+      <div class="phone">
+        <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+
+        <!-- TOPBAR -->
+        <div class="topbar">
+          <div class="topbar-back">← <span>Back</span></div>
+          <div class="topbar-title">Find a Store</div>
+          <div class="topbar-actions">
+            <div class="icon-btn">☰</div>
+          </div>
+        </div>
+
+        <!-- FULL SCREEN MAP -->
+        <div class="map-full">
+          <div class="map-grid-overlay"></div>
+
+          <!-- Simulated roads -->
+          <div class="map-road-h" style="top:45%;left:0;right:0;height:10px;opacity:0.5"></div>
+          <div class="map-road-h" style="top:65%;left:0;right:0;height:6px;opacity:0.35"></div>
+          <div class="map-road-v" style="left:30%;top:0;bottom:0;width:8px;opacity:0.4"></div>
+          <div class="map-road-v" style="left:65%;top:0;bottom:0;width:6px;opacity:0.3"></div>
+
+          <!-- Search bar + filters overlay -->
+          <div class="map-controls-top">
+            <div class="map-search-bar">
+              <div class="map-search-icon">🔍</div>
+              <div class="map-search-text">Search by address or ZIP...</div>
+              <div class="map-search-clear">✕</div>
+            </div>
+            <div class="filter-row">
+              <div class="filter-chip active">All Stores</div>
+              <div class="filter-chip">🟠 Home Depot</div>
+              <div class="filter-chip">🔵 Lowe's</div>
+              <div class="filter-chip">🔴 Target</div>
+              <div class="filter-chip">🟡 Walmart</div>
+            </div>
+          </div>
+
+          <!-- Location button -->
+          <div class="map-location-btn">📍</div>
+
+          <!-- Map Pins -->
+          <div class="map-pin" style="left:42%;top:48%">
+            <div class="pin-dot pin-purple">🏪</div>
+            <div class="pin-label selected">Home Depot</div>
+          </div>
+          <div class="map-pin" style="left:68%;top:55%">
+            <div class="pin-dot pin-gray">🏬</div>
+            <div class="pin-label">Target</div>
+          </div>
+          <div class="map-pin" style="left:25%;top:62%">
+            <div class="pin-dot pin-gray">🏪</div>
+            <div class="pin-label">Lowe's</div>
+          </div>
+          <div class="map-pin" style="left:72%;top:35%">
+            <div class="pin-dot pin-gray">🏬</div>
+            <div class="pin-label">Walmart</div>
+          </div>
+
+          <!-- User location dot -->
+          <div style="position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);z-index:6">
+            <div style="width:14px;height:14px;border-radius:50%;background:var(--blue-500);border:2px solid white;box-shadow:0 0 0 6px rgba(30,99,208,0.2)"></div>
+          </div>
+        </div>
+
+        <!-- BOTTOM SHEET - store list -->
+        <div class="bottom-sheet">
+          <div class="bottom-sheet-handle"></div>
+          <div class="bottom-sheet-header">
+            <div class="bottom-sheet-title">Nearby Stores</div>
+            <div class="bottom-sheet-count">4 locations</div>
+          </div>
+
+          <div class="store-list-card selected">
+            <div class="store-list-icon store-list-icon-purple">🏪</div>
+            <div style="flex:1">
+              <div class="store-list-name">Home Depot</div>
+              <div class="store-list-detail">Washington St, Boston</div>
+            </div>
+            <div class="store-list-right">
+              <div class="store-list-dist">0.8 mi</div>
+              <div class="store-list-status status-open">Open · until 9pm</div>
+            </div>
+          </div>
+          <div class="store-list-card">
+            <div class="store-list-icon store-list-icon-gray">🏬</div>
+            <div style="flex:1">
+              <div class="store-list-name">Target</div>
+              <div class="store-list-detail">Commonwealth Ave</div>
+            </div>
+            <div class="store-list-right">
+              <div class="store-list-dist">1.4 mi</div>
+              <div class="store-list-status status-open">Open · until 10pm</div>
+            </div>
+          </div>
+          <div class="store-list-card">
+            <div class="store-list-icon store-list-icon-gray">🏪</div>
+            <div style="flex:1">
+              <div class="store-list-name">Lowe's</div>
+              <div class="store-list-detail">Brighton Ave</div>
+            </div>
+            <div class="store-list-right">
+              <div class="store-list-dist">2.1 mi</div>
+              <div class="store-list-status status-closed">Closed · opens 8am</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- BREAKDOWN -->
+      <div class="breakdown">
+        <div class="breakdown-header">
+          <h3>Screen 1 — Map View</h3>
+          <p>Full-screen map with overlay controls · Bottom sheet store list</p>
+        </div>
+        <div class="breakdown-body">
+
+          <div class="spec-section">
+            <div class="spec-section-title">Components Used</div>
+            <div>
+              <span class="component-tag tag-purple">Top Bar — Back + Title + Menu</span>
+              <span class="component-tag tag-purple">Search Bar Overlay</span>
+              <span class="component-tag tag-purple">Filter Chips Row (5 options)</span>
+              <span class="component-tag tag-purple">Location Refresh Button</span>
+              <span class="component-tag tag-purple">Map — Full Screen (Google Maps embed)</span>
+              <span class="component-tag tag-purple">Map Pins — Selected (purple) + Unselected (white)</span>
+              <span class="component-tag tag-purple">User Location Dot</span>
+              <span class="component-tag tag-gray">Bottom Sheet — Store List</span>
+              <span class="component-tag tag-gray">Store List Cards (scrollable)</span>
+            </div>
+          </div>
+
+          <div class="spec-section">
+            <div class="spec-section-title">Map Layout Specs</div>
+            <table class="spec-table">
+              <tr><td>Map height</td><td>Full screen minus top bar · ~340px on standard mobile</td></tr>
+              <tr><td>Map library</td><td>Google Maps JS API · or Mapbox as alternative</td></tr>
+              <tr><td>Search bar</td><td>Floating overlay · top 12px · white bg · <code>shadow-lg</code></td></tr>
+              <tr><td>Filter row</td><td>Horizontal scroll · Below search bar · <code>shadow-md</code> chips</td></tr>
+              <tr><td>Active filter</td><td><code>purple-700</code> bg · white text · Filters map pins in real time</td></tr>
+              <tr><td>Location btn</td><td>Top-right · 40px circle · White · Recenters map on user</td></tr>
+            </table>
+          </div>
+
+          <div class="spec-section">
+            <div class="spec-section-title">Map Pin Specs</div>
+            <table class="spec-table">
+              <tr><td>Selected pin</td><td>36px circle · <code>grad-purple</code> · white border · Label below with <code>purple-700</code> bg</td></tr>
+              <tr><td>Unselected pin</td><td>36px circle · white bg · <code>gray-200</code> border · Gray label</td></tr>
+              <tr><td>User dot</td><td>14px · <code>blue-500</code> · White border · Pulsing blue glow ring</td></tr>
+              <tr><td>Pin tap</td><td>Pin → selected state · Bottom sheet scrolls to that store card</td></tr>
+              <tr><td>Store card tap</td><td>Map pans + zooms to pin · Pin → selected state</td></tr>
+            </table>
+          </div>
+
+          <div class="spec-section">
+            <div class="spec-section-title">Bottom Sheet Specs</div>
+            <table class="spec-table">
+              <tr><td>Default state</td><td>Peek height ~200px · Shows 2–3 cards · Drag handle visible</td></tr>
+              <tr><td>Expanded state</td><td>Full height · All stores visible · Map shrinks behind</td></tr>
+              <tr><td>Handle</td><td>36px × 4px · <code>gray-200</code> · Centered · Drag to expand</td></tr>
+              <tr><td>Selected card</td><td><code>purple-50</code> bg · Left border 3px <code>purple-500</code></td></tr>
+              <tr><td>Open/closed</td><td>Status color: <code>success</code> green / <code>error</code> red</td></tr>
+              <tr><td>Closed store</td><td>Still shown · Opening time displayed · Can still be selected</td></tr>
+            </table>
+          </div>
+
+          <div class="spec-section">
+            <div class="spec-section-title">Search Bar Behavior</div>
+            <table class="spec-table">
+              <tr><td>Input type</td><td>Address or ZIP code · Geocodes and recenters map</td></tr>
+              <tr><td>Autocomplete</td><td>Google Places autocomplete · Filters to US addresses</td></tr>
+              <tr><td>Clear button</td><td>✕ · Visible when text entered · Clears and recenters on user</td></tr>
+              <tr><td>No results</td><td>Bottom sheet shows "No stores found in this area"</td></tr>
+            </table>
+          </div>
+
+          <div class="spec-section">
+            <div class="spec-section-title">Navigation</div>
+            <div class="nav-flow">
+              <div class="nav-flow-item"><span class="nav-flow-screen">Map View</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Tap pin or store card</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Store Detail</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Map View</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Back arrow</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Origin screen</span></div>
+            </div>
+          </div>
+
+          <div class="note-box">💡 The bottom sheet default "peek" state is important — users should immediately see 2–3 store cards without having to interact with it. Don't hide the list entirely behind the map on load.</div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen-divider"><div class="screen-divider-line"></div><div class="screen-divider-dot"></div><div class="screen-divider-line"></div></div>
+
+  <!-- ══════════════════════ SCREEN 2 — STORE DETAIL ══════════════════════ -->
+  <div class="screen-block" id="s2">
+    <div class="section-label">
+      <div class="section-number">2</div>
+      <div>
+        <div class="section-title">Store Detail</div>
+        <div class="section-sub">Full store info · Bundle availability · Confirm or get directions</div>
+      </div>
+    </div>
+
+    <div class="screen-layout">
+      <div class="phone">
+        <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+
+        <div class="topbar">
+          <div class="topbar-back">← <span>Map</span></div>
+          <div class="topbar-title">Store Details</div>
+          <div class="topbar-actions"><div class="icon-btn">☰</div></div>
+        </div>
+
+        <!-- STORE HERO -->
+        <div class="store-hero">
+          <div class="store-hero-name">Home Depot</div>
+          <div class="store-hero-addr">75 Washington St, Boston, MA 02111</div>
+          <div class="store-hero-dist">📍 0.8 miles away</div>
+        </div>
+
+        <!-- DETAIL ROWS -->
+        <div class="detail-body">
+          <div class="detail-row">
+            <div class="detail-icon">🕐</div>
+            <div>
+              <div class="detail-label">Hours</div>
+              <div class="detail-value">Open · Closes at 9:00 PM</div>
+              <div class="detail-sub">Mon–Sat 6am–9pm · Sun 7am–8pm</div>
+            </div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-icon">📞</div>
+            <div>
+              <div class="detail-label">Phone</div>
+              <div class="detail-value" style="color:var(--purple-500)">(617) 556-0001</div>
+            </div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-icon">🧺</div>
+            <div style="flex:1">
+              <div class="detail-label">Bundle Availability</div>
+              <div class="avail-row">
+                <span class="avail-pill avail-yes">✓ Scrubbing Bubbles</span>
+                <span class="avail-pill avail-yes">✓ Mrs. Meyer's</span>
+                <span class="avail-pill avail-yes">✓ Windex</span>
+                <span class="avail-pill avail-no">✕ Pledge</span>
+                <span class="avail-pill avail-yes">✓ Ziploc</span>
+                <span class="avail-pill avail-yes">✓ Drano</span>
+              </div>
+              <div style="font-size:10px;color:var(--gray-400);margin-top:4px;cursor:pointer;color:var(--purple-500);font-weight:600">See full availability →</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PICKUP INSTRUCTIONS -->
+        <div class="pickup-box">
+          <div class="pickup-box-title">📋 Pickup Instructions</div>
+          <div class="pickup-step">
+            <div class="pickup-step-num">1</div>
+            <div class="pickup-step-text">Show your MyPlace QR code at the customer service desk</div>
+          </div>
+          <div class="pickup-step">
+            <div class="pickup-step-num">2</div>
+            <div class="pickup-step-text">A team member will retrieve your bundle from the back</div>
+          </div>
+          <div class="pickup-step">
+            <div class="pickup-step-num">3</div>
+            <div class="pickup-step-text">Verify your items and enjoy your new home essentials!</div>
+          </div>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="action-buttons">
+          <button class="m-btn m-btn-primary">✓ Confirm This Location</button>
+          <button class="m-btn m-btn-directions">🗺 Get Directions</button>
+          <button class="m-btn m-btn-ghost" style="font-size:13px">← Choose a Different Store</button>
+        </div>
+
+      </div>
+
+      <!-- BREAKDOWN -->
+      <div class="breakdown">
+        <div class="breakdown-header">
+          <h3>Screen 2 — Store Detail</h3>
+          <p>All key store info on one screen · Three action paths</p>
+        </div>
+        <div class="breakdown-body">
+
+          <div class="spec-section">
+            <div class="spec-section-title">Components Used</div>
+            <div>
+              <span class="component-tag tag-purple">Top Bar — Back to Map</span>
+              <span class="component-tag tag-purple">Store Hero Banner (grad-purple)</span>
+              <span class="component-tag tag-purple">Detail Row — Hours</span>
+              <span class="component-tag tag-purple">Detail Row — Phone (tappable)</span>
+              <span class="component-tag tag-purple">Detail Row — Bundle Availability Pills</span>
+              <span class="component-tag tag-purple">Pickup Instructions Box</span>
+              <span class="component-tag tag-purple">Button — Confirm This Location (primary)</span>
+              <span class="component-tag tag-blue">Button — Get Directions (blue)</span>
+              <span class="component-tag tag-gray">Button — Choose Different Store (ghost)</span>
+            </div>
+          </div>
+
+          <div class="spec-section">
+            <div class="spec-section-title">Hero Specs</div>
+            <table class="spec-table">
+              <tr><td>Background</td><td><code>grad-purple</code> · Decorative circle overlay</td></tr>
+              <tr><td>Store name</td><td>22px · 800 weight · White</td></tr>
+              <tr><td>Address</td><td>13px · 75% white opacity</td></tr>
+              <tr><td>Distance pill</td><td><code>rgba(255,255,255,0.15)</code> bg · White text · <code>r-full</code></td></tr>
+            </table>
+          </div>
+
+          <div class="spec-section">
+            <div class="spec-section-title">Detail Row Specs</div>
+            <table class="spec-table">
+              <tr><td>Icon cell</td><td>32px · <code>r-md</code> · <code>purple-50</code> bg</td></tr>
+              <tr><td>Label</td><td>11px · 700 · uppercase · <code>gray-400</code></td></tr>
+              <tr><td>Value</td><td>13px · 600 · <code>gray-900</code></td></tr>
+              <tr><td>Phone tap</td><td>Opens native phone dialer · <code>purple-500</code> color</td></tr>
+              <tr><td>Row divider</td><td>1px · <code>gray-100</code> · Bottom border</td></tr>
+            </table>
+          </div>
+
+          <div class="spec-section">
+            <div class="spec-section-title">Bundle Availability Pills</div>
+            <table class="spec-table">
+              <tr><td>Available</td><td><code>success-bg</code> · <code>success</code> text · ✓ prefix</td></tr>
+              <tr><td>Unavailable</td><td><code>error-bg</code> · <code>error</code> text · ✕ prefix</td></tr>
+              <tr><td>"See full" link</td><td>Navigates to Bundle Availability screen</td></tr>
+              <tr><td>Data source</td><td>Real-time inventory via retailer API or static SKU map</td></tr>
+            </table>
+          </div>
+
+          <div class="spec-section">
+            <div class="spec-section-title">Button Specs</div>
+            <table class="spec-table">
+              <tr><td>Confirm</td><td>Full-width · <code>grad-purple</code> · Primary action · Saves store to account</td></tr>
+              <tr><td>Get Directions</td><td>Full-width · <code>blue-50</code> bg · Opens Apple/Google Maps with address</td></tr>
+              <tr><td>Different Store</td><td>Full-width · Ghost · Returns to Map View</td></tr>
+              <tr><td>Button order</td><td>Confirm first (primary goal) · Directions second · Back last</td></tr>
+            </table>
+          </div>
+
+          <div class="spec-section">
+            <div class="spec-section-title">Navigation</div>
+            <div class="nav-flow">
+              <div class="nav-flow-item"><span class="nav-flow-screen">Store Detail</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">"See full availability"</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Bundle Availability</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Store Detail</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">"Confirm This Location"</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Store Confirmed</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Store Detail</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">"Get Directions"</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">External maps app</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Store Detail</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">"Choose Different Store"</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Map View</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Store Detail</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Back arrow</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Map View</span></div>
+            </div>
+          </div>
+
+          <div class="note-box">💡 "Get Directions" should use the <code>maps://</code> deep link on iOS and <code>geo:</code> on Android to open the native maps app. Always use the store's full address as the destination, not coordinates.</div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen-divider"><div class="screen-divider-line"></div><div class="screen-divider-dot"></div><div class="screen-divider-line"></div></div>
+
+  <!-- ══════════════════════ SCREEN 3 — BUNDLE AVAILABILITY ══════════════════════ -->
+  <div class="screen-block" id="s3">
+    <div class="section-label">
+      <div class="section-number">3</div>
+      <div>
+        <div class="section-title">Bundle / Product Availability</div>
+        <div class="section-sub">Full product list for selected store · In-stock vs out-of-stock</div>
+      </div>
+    </div>
+
+    <div class="screen-layout">
+      <div class="phone">
+        <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+
+        <div class="topbar">
+          <div class="topbar-back">← <span>Store Details</span></div>
+          <div class="topbar-title">Bundle Items</div>
+          <div class="topbar-actions"><div class="icon-btn">☰</div></div>
+        </div>
+
+        <div style="padding:14px 16px;background:var(--purple-50);border-bottom:1px solid var(--purple-100);display:flex;align-items:center;gap:10px;">
+          <div style="font-size:13px;font-weight:700;color:var(--purple-900);">Home Depot · Washington St</div>
+          <div style="margin-left:auto;font-size:11px;font-weight:600;padding:3px 8px;background:var(--success-bg);color:var(--success);border-radius:var(--r-full)">5 of 6 available</div>
+        </div>
+
+        <div style="padding:14px 16px;overflow-y:auto;background:var(--warm-white);">
+
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--success);margin-bottom:8px">✓ Available at this store</div>
+
+          <div style="background:white;border-radius:var(--r-lg);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:14px;">
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--gray-100);">
+              <div style="width:32px;height:32px;border-radius:var(--r-sm);background:var(--success-bg);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🫧</div>
+              <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--gray-900);">Scrubbing Bubbles</div><div style="font-size:11px;color:var(--gray-400);">Bathroom cleaner · 20 oz</div></div>
+              <div style="font-size:11px;font-weight:600;color:var(--success);">✓ In stock</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--gray-100);">
+              <div style="width:32px;height:32px;border-radius:var(--r-sm);background:var(--success-bg);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🍋</div>
+              <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--gray-900);">Mrs. Meyer's Dish Soap</div><div style="font-size:11px;color:var(--gray-400);">Lemon verbena · 16 oz</div></div>
+              <div style="font-size:11px;font-weight:600;color:var(--success);">✓ In stock</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--gray-100);">
+              <div style="width:32px;height:32px;border-radius:var(--r-sm);background:var(--success-bg);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🪟</div>
+              <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--gray-900);">Windex Glass Cleaner</div><div style="font-size:11px;color:var(--gray-400);">Original · 23 oz</div></div>
+              <div style="font-size:11px;font-weight:600;color:var(--success);">✓ In stock</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--gray-100);">
+              <div style="width:32px;height:32px;border-radius:var(--r-sm);background:var(--success-bg);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🥡</div>
+              <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--gray-900);">Ziploc Gallon Bags</div><div style="font-size:11px;color:var(--gray-400);">20 count</div></div>
+              <div style="font-size:11px;font-weight:600;color:var(--success);">✓ In stock</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;">
+              <div style="width:32px;height:32px;border-radius:var(--r-sm);background:var(--success-bg);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🚿</div>
+              <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--gray-900);">Drano Clog Remover</div><div style="font-size:11px;color:var(--gray-400);">Max Gel · 32 oz</div></div>
+              <div style="font-size:11px;font-weight:600;color:var(--success);">✓ In stock</div>
+            </div>
+          </div>
+
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--error);margin-bottom:8px">✕ Not available at this store</div>
+
+          <div style="background:white;border-radius:var(--r-lg);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:14px;opacity:0.7">
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;">
+              <div style="width:32px;height:32px;border-radius:var(--r-sm);background:var(--error-bg);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">✨</div>
+              <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--gray-900);">Pledge Multi-Surface</div><div style="font-size:11px;color:var(--gray-400);">Cleaner · 9.7 oz</div></div>
+              <div style="font-size:11px;font-weight:600;color:var(--error);">✕ Out of stock</div>
+            </div>
+          </div>
+
+          <div style="background:var(--gold-50);border:1.5px solid var(--gold-100);border-radius:var(--r-lg);padding:12px;margin-bottom:14px;font-size:11px;color:var(--gold-900);line-height:1.5;">
+            💡 <strong>Missing an item?</strong> You'll still receive your full bundle value. Out-of-stock items may be substituted or fulfilled at a later date.
+          </div>
+
+          <button class="m-btn m-btn-primary">← Back to Store Details</button>
+        </div>
+      </div>
+
+      <!-- BREAKDOWN -->
+      <div class="breakdown">
+        <div class="breakdown-header">
+          <h3>Screen 3 — Bundle Availability</h3>
+          <p>Full product list grouped by availability status</p>
+        </div>
+        <div class="breakdown-body">
+
+          <div class="spec-section">
+            <div class="spec-section-title">Components Used</div>
+            <div>
+              <span class="component-tag tag-purple">Top Bar — Back to Store Detail</span>
+              <span class="component-tag tag-purple">Store Context Bar (store name + summary pill)</span>
+              <span class="component-tag tag-green">Section Header — Available</span>
+              <span class="component-tag tag-green">Product List Cards — In Stock</span>
+              <span class="component-tag tag-gray">Section Header — Unavailable</span>
+              <span class="component-tag tag-gray">Product List Cards — Out of Stock (dimmed)</span>
+              <span class="component-tag tag-gold">Missing Item Notice</span>
+              <span class="component-tag tag-purple">Button — Back to Store Details</span>
+            </div>
+          </div>
+
+          <div class="spec-section">
+            <div class="spec-section-title">Layout Specs</div>
+            <table class="spec-table">
+              <tr><td>Context bar</td><td>Store name left · Availability summary pill right · <code>purple-50</code> bg</td></tr>
+              <tr><td>Available section</td><td>Grouped card · Full opacity · <code>success-bg</code> icon bg</td></tr>
+              <tr><td>Unavailable section</td><td>Grouped card · 70% opacity · <code>error-bg</code> icon bg</td></tr>
+              <tr><td>Product row height</td><td>~52px · Icon + name + size + status</td></tr>
+              <tr><td>Missing item notice</td><td><code>gold-50</code> bg · Reassuring copy · Always shown if any out of stock</td></tr>
+            </table>
+          </div>
+
+          <div class="spec-section">
+            <div class="spec-section-title">Data & Edge Cases</div>
+            <table class="spec-table">
+              <tr><td>All in stock</td><td>Hide "Not available" section entirely</td></tr>
+              <tr><td>All out of stock</td><td>Show full error state with "Try a different store" CTA</td></tr>
+              <tr><td>Data freshness</td><td>Show "Updated X mins ago" timestamp below context bar</td></tr>
+              <tr><td>No API data</td><td>Show "Availability data unavailable · Call store to confirm" state</td></tr>
+            </table>
+          </div>
+
+          <div class="spec-section">
+            <div class="spec-section-title">Navigation</div>
+            <div class="nav-flow">
+              <div class="nav-flow-item"><span class="nav-flow-screen">Bundle Availability</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Back button or back arrow</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Store Detail</span></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen-divider"><div class="screen-divider-line"></div><div class="screen-divider-dot"></div><div class="screen-divider-line"></div></div>
+
+  <!-- ══════════════════════ SCREEN 4 — STORE CONFIRMED ══════════════════════ -->
+  <div class="screen-block" id="s4">
+    <div class="section-label">
+      <div class="section-number">4</div>
+      <div>
+        <div class="section-title">Store Confirmed</div>
+        <div class="section-sub">Success state · Summary of selection · Returns user to origin</div>
+      </div>
+    </div>
+
+    <div class="screen-layout">
+      <div class="phone">
+        <div class="phone-notch"><span>9:41</span><span>●●●</span></div>
+
+        <div class="topbar">
+          <div class="topbar-logo">MyPlace</div>
+          <div class="topbar-actions">
+            <div class="icon-btn">🔔</div>
+            <div class="icon-btn">☰</div>
+          </div>
+        </div>
+
+        <!-- CONFIRM HERO -->
+        <div class="confirm-hero">
+          <div class="confirm-check">✓</div>
+          <div class="confirm-title">Store Selected!</div>
+          <div class="confirm-sub">Your pickup location has been saved</div>
+        </div>
+
+        <div class="confirm-body">
+          <!-- STORE SUMMARY CARD -->
+          <div class="confirm-card">
+            <div class="confirm-card-title">Your Pickup Store</div>
+            <div class="confirm-detail-row">
+              <div class="confirm-detail-icon">🏪</div>
+              <div class="confirm-detail-label">Store</div>
+              <div class="confirm-detail-value">Home Depot</div>
+            </div>
+            <div class="confirm-detail-row">
+              <div class="confirm-detail-icon">📍</div>
+              <div class="confirm-detail-label">Address</div>
+              <div class="confirm-detail-value">75 Washington St</div>
+            </div>
+            <div class="confirm-detail-row">
+              <div class="confirm-detail-icon">📏</div>
+              <div class="confirm-detail-label">Distance</div>
+              <div class="confirm-detail-value">0.8 miles</div>
+            </div>
+            <div class="confirm-detail-row">
+              <div class="confirm-detail-icon">🕐</div>
+              <div class="confirm-detail-label">Hours today</div>
+              <div class="confirm-detail-value">Open until 9pm</div>
+            </div>
+          </div>
+
+          <!-- NEXT STEPS -->
+          <div class="next-steps-box">
+            <div class="next-steps-title">What happens next</div>
+            <div class="next-step-row">
+              <div class="next-step-icon">🎟</div>
+              <div class="next-step-text">Your 5% discount code for Home Depot is now active in your app</div>
+            </div>
+            <div class="next-step-row">
+              <div class="next-step-icon">🧺</div>
+              <div class="next-step-text">Head to the customer service desk and show your QR code</div>
+            </div>
+            <div class="next-step-row">
+              <div class="next-step-icon">🔄</div>
+              <div class="next-step-text">You can change your store any time from the Home screen</div>
+            </div>
+          </div>
+
+          <button class="m-btn m-btn-primary">Continue →</button>
+          <button class="m-btn m-btn-ghost" style="font-size:13px">🗺 Get Directions</button>
+        </div>
+      </div>
+
+      <!-- BREAKDOWN -->
+      <div class="breakdown">
+        <div class="breakdown-header">
+          <h3>Screen 4 — Store Confirmed</h3>
+          <p>Success state · Payoff moment · Bridges back to origin screen</p>
+        </div>
+        <div class="breakdown-body">
+
+          <div class="spec-section">
+            <div class="spec-section-title">Components Used</div>
+            <div>
+              <span class="component-tag tag-purple">Top Bar — Logo + Bell + Menu (no back)</span>
+              <span class="component-tag tag-purple">Confirm Hero (grad-purple + check circle)</span>
+              <span class="component-tag tag-purple">Store Summary Card</span>
+              <span class="component-tag tag-gold">Next Steps Box</span>
+              <span class="component-tag tag-purple">Button — Continue (primary)</span>
+              <span class="component-tag tag-gray">Button — Get Directions (ghost)</span>
+            </div>
+          </div>
+
+          <div class="spec-section">
+            <div class="spec-section-title">Hero Specs</div>
+            <table class="spec-table">
+              <tr><td>Check circle</td><td>64px · <code>rgba(255,255,255,0.2)</code> bg · 28px ✓ · Scales in on load</td></tr>
+              <tr><td>Animation</td><td>Check scales 0→1.1→1 at 400ms spring · Hero fades up</td></tr>
+              <tr><td>No back arrow</td><td>Intentional — user should not go back to Store Detail from here</td></tr>
+              <tr><td>Top bar</td><td>Returns to standard logo + icons (signals flow is complete)</td></tr>
+            </table>
+          </div>
+
+          <div class="spec-section">
+            <div class="spec-section-title">Store Summary Card Specs</div>
+            <table class="spec-table">
+              <tr><td>Background</td><td><code>purple-50</code> · <code>purple-100</code> border · <code>r-xl</code></td></tr>
+              <tr><td>Section title</td><td>11px · 700 · uppercase · <code>purple-500</code></td></tr>
+              <tr><td>Detail rows</td><td>Icon + label + value · Right-aligned value · <code>purple-100</code> divider</td></tr>
+              <tr><td>Data shown</td><td>Store name · Address · Distance · Hours today</td></tr>
+            </table>
+          </div>
+
+          <div class="spec-section">
+            <div class="spec-section-title">Next Steps Box Specs</div>
+            <table class="spec-table">
+              <tr><td>Background</td><td><code>gold-50</code> · <code>gold-100</code> border</td></tr>
+              <tr><td>Purpose</td><td>Tells user what to do next — reduces "now what?" confusion</td></tr>
+              <tr><td>Content</td><td>Coupon activated · How to pickup · Can change store later</td></tr>
+            </table>
+          </div>
+
+          <div class="spec-section">
+            <div class="spec-section-title">Navigation — Context-Dependent "Continue"</div>
+            <div class="nav-flow">
+              <div class="nav-flow-item"><span class="nav-flow-screen">Store Confirmed</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Continue (from Onboarding)</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Address Entry</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Store Confirmed</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Continue (from Home Pre)</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Home Pre-Subscription</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Store Confirmed</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Continue (from Sub Registration)</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">Subscription Registration</span></div>
+              <div class="nav-flow-item"><span class="nav-flow-screen">Store Confirmed</span><span class="nav-flow-arrow">→</span><span class="nav-flow-trigger">Get Directions</span><span class="nav-flow-arrow">→</span><span class="nav-flow-screen">External maps app</span></div>
+            </div>
+            <div class="note-box">💡 "Continue" destination is determined by the entry point that triggered the Map flow. The origin must be passed as a parameter when the Map flow is launched so this screen knows where to return.</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="page-footer">
+    <strong>MyPlace — Map & Store Selection</strong> · Design System v1.2 · For Figma implementation<br>
+    <span style="margin-top:6px;display:block">Next: Subscription Registration Flow →</span>
+  </div>
+
+</div>
+
+<script>
+  const links = document.querySelectorAll('.flow-step');
+  links.forEach(l => l.addEventListener('click', e => {
+    e.preventDefault();
+    const t = document.querySelector(l.getAttribute('href'));
+    if(t) t.scrollIntoView({behavior:'smooth',block:'start'});
+    links.forEach(x => x.classList.remove('active'));
+    l.classList.add('active');
+  }));
+</script>
+</body>
+</html>
