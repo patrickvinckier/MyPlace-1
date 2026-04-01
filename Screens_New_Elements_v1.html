@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyPlace — New Screens & Elements v1</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --p9:#1F1B37;--p7:#362E5E;--p5:#5B4E9E;--p3:#A49DC9;--p1:#DEDBEB;--p0:#F1F0F7;
+    --g9:#7A4800;--g7:#B56A00;--g1:#FDF0C8;--g0:#FFFBEE;
+    --b5:#1E63D0;--b1:#D6E6FA;--b0:#EBF3FD;
+    --gd:#1A8C5B;--gl:#E6F6EF;--gbg:#E7FFE7;
+    --ww:#FAFAF8;--n50:#F5F4F1;--n100:#ECEAE5;--n200:#D9D6CF;--n300:#B8B4AB;
+    --n400:#918D84;--n500:#6B6760;--n700:#3D3A35;--n900:#1A1816;
+    --err:#C62828;--errbg:#FDEAEA;
+    --gp:linear-gradient(135deg,#5B4E9E 70.71%,#362E5E 0%);
+    --gpr:linear-gradient(90deg,#362E5E 0%,#7160C4 100%);
+    --gt:linear-gradient(90deg,#3C3368 0%,#7765CE 100%);
+    --f:'Inter',-apple-system,Roboto,Helvetica,sans-serif;
+    --sh:0 1px 3px rgba(26,24,22,0.08);
+    --shp:0 8px 24px rgba(91,78,158,0.28);
+    --shf:0 16px 40px rgba(26,24,22,0.14);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--f);background:#EDECE9;padding:40px;}
+  .sec{margin-bottom:60px;}
+  .sec-hdr{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--n400);margin-bottom:6px;}
+  .sec-desc{font-size:13px;color:var(--n500);margin-bottom:24px;line-height:1.5;max-width:720px;}
+  .row{display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start;}
+  .sw{display:flex;flex-direction:column;align-items:center;gap:12px;}
+  .sl{font-size:11px;font-weight:700;color:var(--n500);text-transform:uppercase;letter-spacing:0.8px;}
+  .ew{display:flex;flex-direction:column;gap:8px;}
+  .el{font-size:11px;font-weight:700;color:var(--n400);text-transform:uppercase;letter-spacing:0.8px;}
+
+  /* Phone */
+  .phone{width:320px;background:var(--ww);border-radius:44px;box-shadow:0 8px 24px rgba(26,24,22,0.12),0 0 0 8px #D1CFC9,0 0 0 10px #C8C6C0;overflow:hidden;}
+  .sb{height:38px;background:white;display:flex;align-items:center;justify-content:space-between;padding:0 20px;font-size:11px;font-weight:600;color:var(--n900);}
+  .tb{background:white;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;box-shadow:var(--sh);}
+  .tb-bb{border-bottom:1px solid black;}
+  .bk{font-size:14px;font-weight:600;color:var(--p5);}
+  .tt{font-size:15px;font-weight:700;color:var(--n900);}
+  .ib{width:36px;height:36px;border-radius:12px;background:#F5F4F1;display:flex;align-items:center;justify-content:center;font-size:16px;}
+  .bd{background:var(--ww);padding:14px 16px;}
+
+  /* Buttons */
+  .bp{width:100%;padding:14px;border-radius:16px;background:var(--gp);color:white;border:none;font-family:var(--f);font-size:15px;font-weight:700;cursor:pointer;box-shadow:var(--shp);display:block;text-align:center;margin-bottom:8px;}
+  .bg{width:100%;padding:13px;border-radius:16px;background:transparent;color:var(--n500);border:1px solid var(--n200);font-family:var(--f);font-size:14px;font-weight:600;cursor:pointer;display:block;text-align:center;margin-bottom:8px;}
+
+  /* Steps */
+  .steps{display:flex;flex-direction:column;padding:4px 0;}
+  .step{display:flex;gap:14px;padding:12px 0;position:relative;}
+  .step:not(:last-child)::after{content:'';position:absolute;left:16px;top:46px;bottom:0;width:2px;background:var(--p1);}
+  .sn{width:32px;height:32px;border-radius:16px;background:var(--gp);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:white;flex-shrink:0;box-shadow:0 4px 10px rgba(91,78,158,0.28);}
+  .sc{flex:1;padding-top:3px;}
+  .sti{font-size:14px;font-weight:700;color:var(--n900);margin-bottom:3px;}
+  .std{font-size:12px;color:var(--n500);line-height:1.5;}
+  .stn{font-size:11px;font-weight:600;color:var(--p5);margin-top:3px;}
+
+  /* Hero */
+  .hero{background:var(--gp);padding:24px 20px 22px;}
+  .hpill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);border-radius:9999px;padding:4px 10px;font-size:11px;font-weight:600;color:white;margin-bottom:10px;}
+  .htitle{font-size:21px;font-weight:800;color:white;line-height:1.3;margin-bottom:5px;}
+  .hsub{font-size:13px;color:rgba(255,255,255,0.80);line-height:1.5;}
+
+  /* Highlight box */
+  .hbox{background:var(--p0);border-radius:12px;padding:12px 14px;margin-bottom:12px;}
+  .hbt{font-size:13px;font-weight:700;color:var(--p7);margin-bottom:3px;}
+  .hbb{font-size:12px;color:var(--n500);line-height:1.5;}
+
+  /* Detail cards */
+  .slbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--n400);padding-bottom:6px;border-bottom:1px solid var(--n400);margin-bottom:10px;}
+  .dc{background:white;border-radius:14px;border:1px solid var(--n100);overflow:hidden;margin-bottom:12px;box-shadow:var(--sh);}
+  .dr{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border-bottom:1px solid var(--n100);font-size:13px;}
+  .dr:last-child{border-bottom:none;}
+  .dl{color:var(--n500);}
+  .dv{font-weight:700;color:var(--n900);}
+  .dvp{color:var(--p5);}
+  .dvg{color:var(--gd);}
+
+  /* Savings */
+  .shc{background:var(--gbg);border:1px solid var(--gd);border-radius:20px;padding:16px;display:flex;align-items:center;gap:14px;margin-bottom:14px;box-shadow:var(--sh);}
+  .si{width:50px;height:50px;background:var(--gd);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .sa{font-size:26px;font-weight:800;color:var(--n700);letter-spacing:-0.5px;line-height:1;}
+  .sl2{font-size:11px;color:var(--gd);font-weight:500;margin-top:2px;}
+  .str{display:flex;gap:8px;margin-bottom:14px;}
+  .stb{flex:1;background:white;border-radius:12px;padding:11px;text-align:center;border:1px solid var(--n100);box-shadow:var(--sh);}
+  .stn2{font-size:18px;font-weight:800;color:var(--n900);}
+  .stl{font-size:10px;color:var(--n400);margin-top:2px;font-weight:500;}
+  .mh{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--n400);padding:8px 0 6px;border-bottom:1px solid var(--n400);margin-bottom:6px;}
+  .pr{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid black;}
+  .pr:last-child{border-bottom:none;}
+  .pi{width:34px;height:34px;border-radius:10px;background:var(--n50);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+  .pn{font-size:13px;font-weight:700;color:var(--n900);}
+  .pd{font-size:11px;color:var(--n400);margin-top:1px;}
+  .ps{font-size:12px;font-weight:700;color:var(--gd);text-align:right;}
+  .pt{font-size:10px;color:var(--n400);text-align:right;margin-top:1px;}
+
+  /* Help screen */
+  .hcat{background:white;border-radius:16px;border:1px solid var(--n100);overflow:hidden;margin-bottom:12px;box-shadow:var(--sh);}
+  .hch{background:var(--p0);padding:11px 14px;display:flex;align-items:center;gap:8px;}
+  .hci{font-size:16px;}
+  .hct{font-size:13px;font-weight:700;color:var(--p7);}
+  .hci2{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-top:1px solid var(--n100);}
+  .hn{width:20px;height:20px;border-radius:10px;background:var(--p5);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;flex-shrink:0;margin-top:1px;}
+  .ht{font-size:12px;color:var(--n700);line-height:1.5;flex:1;}
+  .hnt{font-size:10px;font-weight:600;color:var(--p5);margin-top:2px;}
+
+  /* Dropdown */
+  .ddm{width:200px;background:white;border-radius:16px;box-shadow:var(--shf);border:1px solid var(--n100);overflow:hidden;}
+  .ddi{display:flex;align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid var(--n100);cursor:pointer;}
+  .ddi:last-child{border-bottom:none;}
+  .ddic{font-size:16px;width:20px;text-align:center;flex-shrink:0;}
+  .ddil{font-size:14px;font-weight:600;color:var(--n900);}
+  .dddiv{height:1px;background:var(--n100);}
+</style>
+</head>
+<body>
+
+<!-- SECTION 1: DROPDOWN + HELP -->
+<div class="sec">
+<div class="sec-hdr">☰ Dropdown Menu + Help & Directions Screen</div>
+<div class="sec-desc">All directions content lives in Help & Directions, accessible from the ☰ dropdown on every screen. No separate top-level "Directions" entry needed.</div>
+<div class="row">
+
+  <!-- Dropdown -->
+  <div class="sw">
+    <div class="sl">☰ Dropdown Menu</div>
+    <div style="background:#EDECE9;padding:20px;border-radius:20px">
+      <div style="font-size:11px;color:var(--n400);font-weight:600;margin-bottom:10px;text-align:right">Appears top-right on every screen</div>
+      <div class="ddm">
+        <div class="ddi"><div class="ddic">🏠</div><div class="ddil">Home</div></div>
+        <div class="ddi"><div class="ddic">📦</div><div class="ddil">My Subscription</div></div>
+        <div class="ddi"><div class="ddic">🗺</div><div class="ddil">Find a Store</div></div>
+        <div class="ddi"><div class="ddic">👤</div><div class="ddil">My Profile</div></div>
+        <div class="dddiv"></div>
+        <div class="ddi" style="background:var(--p0)">
+          <div class="ddic">❓</div>
+          <div class="ddil" style="color:var(--p5)">Help &amp; Directions</div>
+        </div>
+        <div class="dddiv"></div>
+        <div class="ddi"><div class="ddic">↪</div><div class="ddil" style="color:var(--err)">Sign Out</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Help Screen -->
+  <div class="sw">
+    <div class="sl">Help &amp; Directions</div>
+    <div class="phone">
+      <div class="sb"><span>9:41</span><span>●●●</span></div>
+      <div class="tb tb-bb">
+        <div class="bk">← Back</div>
+        <div class="tt">Help &amp; Directions</div>
+        <div class="ib">☰</div>
+      </div>
+      <div class="bd" style="padding-top:16px">
+
+        <div class="hcat">
+          <div class="hch"><div class="hci">🛍️</div><div class="hct">Getting Your Tote Bundle</div></div>
+          <div class="hci2"><div class="hn">1</div><div class="ht">Enter your delivery address — your tote bag ships here.</div></div>
+          <div class="hci2"><div class="hn">2</div><div class="ht">Confirm a nearby store where you'll pick up your products.<div class="hnt">You can change your store anytime</div></div></div>
+          <div class="hci2"><div class="hn">3</div><div class="ht">Bring your tote to the customer service desk and show your QR code to collect your bundle.</div></div>
+        </div>
+
+        <div class="hcat">
+          <div class="hch"><div class="hci">🔄</div><div class="hct">Setting Up a Subscription</div></div>
+          <div class="hci2"><div class="hn">1</div><div class="ht">Choose products and quantity.<div class="hnt">You can change this later</div></div></div>
+          <div class="hci2"><div class="hn">2</div><div class="ht">Set delivery timing — 30, 60, or 90 days.<div class="hnt">You can change this later</div></div></div>
+          <div class="hci2"><div class="hn">3</div><div class="ht">Choose delivery method — ship to home or pick up in store.</div></div>
+          <div class="hci2"><div class="hn">4</div><div class="ht">Add a payment method. Shipping is always free.</div></div>
+          <div class="hci2"><div class="hn">5</div><div class="ht">You're set! Manage anytime from your Home screen.</div></div>
+        </div>
+
+        <div class="hcat">
+          <div class="hch"><div class="hci">🏪</div><div class="hct">Picking Up In Store</div></div>
+          <div class="hci2"><div class="hn">1</div><div class="ht">Go to the customer service desk at your selected store.</div></div>
+          <div class="hci2"><div class="hn">2</div><div class="ht">Show your MyPlace QR code to a team member.</div></div>
+          <div class="hci2"><div class="hn">3</div><div class="ht">They'll retrieve your bundle and verify the items with you.</div></div>
+        </div>
+
+        <div class="hcat">
+          <div class="hch"><div class="hci">🎟</div><div class="hct">Using Your Store Discounts</div></div>
+          <div class="hci2"><div class="hn">1</div><div class="ht">Select your preferred store from the Map screen.</div></div>
+          <div class="hci2"><div class="hn">2</div><div class="ht">Your 5% discount code activates automatically for that store.</div></div>
+          <div class="hci2"><div class="hn">3</div><div class="ht">Show the promo code at checkout or enter it online.</div></div>
+        </div>
+
+        <div style="height:8px"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- SECTION 2: DIRECTION INTRO SCREENS -->
+<div class="sec">
+<div class="sec-hdr">Direction Intro Screens</div>
+<div class="sec-desc">Shown before each major flow. Tote Directions appears after policy verification. Subscription Directions appears after tapping "Set Up Subscription" on the home screen.</div>
+<div class="row">
+
+  <!-- Tote Bag Directions -->
+  <div class="sw">
+    <div class="sl">Tote Bag Directions</div>
+    <div class="phone">
+      <div class="sb"><span>9:41</span><span>●●●</span></div>
+      <div class="tb">
+        <div class="bk">← Back</div>
+        <div class="tt">How It Works</div>
+        <div style="width:36px"></div>
+      </div>
+      <div class="hero">
+        <div class="hpill">🛍️ One-time bundle</div>
+        <div class="htitle">Get your home essentials tote</div>
+        <div class="hsub">An SC Johnson starter kit — included with your Allstate policy.</div>
+      </div>
+      <div class="bd">
+        <div class="steps">
+          <div class="step">
+            <div class="sn">1</div>
+            <div class="sc">
+              <div class="sti">Enter your delivery address</div>
+              <div class="std">Tell us where to send your tote bag — this is the address it ships to.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="sn">2</div>
+            <div class="sc">
+              <div class="sti">Confirm a store near you</div>
+              <div class="std">Pick your preferred pickup location — Home Depot, Target, Lowe's, Walmart, or Ace Hardware.</div>
+              <div class="stn">You can change your store anytime</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="sn">3</div>
+            <div class="sc">
+              <div class="sti">Bring your tote to pick up products</div>
+              <div class="std">When it arrives, head to the customer service desk and show your QR code to collect your bundle.</div>
+            </div>
+          </div>
+        </div>
+        <div class="hbox" style="margin-top:6px">
+          <div class="hbt">📦 What's in the bundle?</div>
+          <div class="hbb">SC Johnson cleaning, storage, and home essentials — a $50+ value, included with your policy.</div>
+        </div>
+        <div class="bp">Get Started →</div>
+        <div class="bg">Maybe Later</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subscription Directions -->
+  <div class="sw">
+    <div class="sl">Subscription Directions</div>
+    <div class="phone">
+      <div class="sb"><span>9:41</span><span>●●●</span></div>
+      <div class="tb">
+        <div class="bk">← Back</div>
+        <div class="tt">How It Works</div>
+        <div style="width:36px"></div>
+      </div>
+      <div class="hero">
+        <div class="hpill">🔄 Recurring delivery</div>
+        <div class="htitle">Set up recurring delivery</div>
+        <div class="hsub">Home essentials on autopilot — takes about 2 minutes to set up.</div>
+      </div>
+      <div class="bd">
+        <div class="steps">
+          <div class="step">
+            <div class="sn">1</div>
+            <div class="sc">
+              <div class="sti">Choose products and quantity</div>
+              <div class="std">Pick from cleaning, storage, and home maintenance essentials.</div>
+              <div class="stn">You can change this later</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="sn">2</div>
+            <div class="sc">
+              <div class="sti">Determine delivery timing</div>
+              <div class="std">Set how often each product ships — 30, 60, or 90 days.</div>
+              <div class="stn">You can change this later</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="sn">3</div>
+            <div class="sc">
+              <div class="sti">Choose delivery method</div>
+              <div class="std">Ship to your home or pick up at your selected store.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="sn">4</div>
+            <div class="sc">
+              <div class="sti">Add a payment method</div>
+              <div class="std">Shipping is always free — your bundle is included with your Allstate policy.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="sn">5</div>
+            <div class="sc">
+              <div class="sti">And you're ready to go!</div>
+              <div class="std">First delivery in 3–5 days. Manage anytime from Home.</div>
+            </div>
+          </div>
+        </div>
+        <div class="bp" style="margin-top:6px">Start Setup →</div>
+        <div class="bg">Not right now</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- SECTION 3: SUBSCRIPTION DETAILS + SAVINGS PAGE -->
+<div class="sec">
+<div class="sec-hdr">Subscription Details &amp; Savings Page</div>
+<div class="sec-desc">Subscription Details is reached via the "Learn More" button. Savings Page is reached via the → arrow on the green savings card on Home.</div>
+<div class="row">
+
+  <!-- Subscription Details -->
+  <div class="sw">
+    <div class="sl">Subscription Details</div>
+    <div class="phone">
+      <div class="sb"><span>9:41</span><span>●●●</span></div>
+      <div class="tb tb-bb">
+        <div class="bk">← Back</div>
+        <div class="tt">Subscription Details</div>
+        <div class="ib">☰</div>
+      </div>
+      <div class="bd" style="padding-top:16px">
+        <div style="margin-bottom:14px">
+          <div class="slbl">What's included</div>
+          <div class="dc">
+            <div class="dr"><span class="dl">Products</span><span class="dv">SC Johnson essentials</span></div>
+            <div class="dr"><span class="dl">Cost per cycle</span><span class="dv dvp">Included with policy</span></div>
+            <div class="dr"><span class="dl">Shipping</span><span class="dv dvg">Always free</span></div>
+            <div class="dr"><span class="dl">Delivery frequency</span><span class="dv">30–90 days</span></div>
+            <div class="dr"><span class="dl">Cancel anytime</span><span class="dv dvg">✓ Yes</span></div>
+          </div>
+        </div>
+        <div style="margin-bottom:14px">
+          <div class="slbl">How billing works</div>
+          <div class="hbox">
+            <div class="hbt">🛡️ Covered by your Allstate policy</div>
+            <div class="hbb">Your subscription cost is included as part of your Allstate benefit. Your card on file is for add-on purchases only. Shipping is always free.</div>
+          </div>
+        </div>
+        <div style="margin-bottom:14px">
+          <div class="slbl">Products available</div>
+          <div class="dc">
+            <div class="dr"><span class="dl">🧹 Cleaning</span><span class="dv" style="font-size:11px;text-align:right;max-width:155px">Scrubbing Bubbles, Windex, Mrs. Meyer's</span></div>
+            <div class="dr"><span class="dl">🗂 Storage</span><span class="dv" style="font-size:12px">Ziploc bags</span></div>
+            <div class="dr"><span class="dl">🔧 Maintenance</span><span class="dv" style="font-size:12px">Drano, Pledge</span></div>
+          </div>
+        </div>
+        <div style="margin-bottom:16px">
+          <div class="slbl">Managing your subscription</div>
+          <div class="dc">
+            <div class="dr"><span class="dl">Change products</span><span class="dv dvp">Anytime</span></div>
+            <div class="dr"><span class="dl">Change timing</span><span class="dv dvp">Anytime</span></div>
+            <div class="dr"><span class="dl">Skip a delivery</span><span class="dv dvp">Anytime</span></div>
+            <div class="dr"><span class="dl">Pause or cancel</span><span class="dv dvp">Anytime</span></div>
+          </div>
+        </div>
+        <div class="bp">Set Up Subscription →</div>
+        <div class="bg">Back</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Savings Page -->
+  <div class="sw">
+    <div class="sl">Savings Page</div>
+    <div class="phone">
+      <div class="sb"><span>9:41</span><span>●●●</span></div>
+      <div class="tb tb-bb">
+        <div class="bk">← Home</div>
+        <div class="tt">My Savings</div>
+        <div class="ib">☰</div>
+      </div>
+      <div class="bd" style="padding-top:16px">
+        <div class="shc">
+          <div class="si">
+            <svg width="22" height="22" viewBox="0 0 25 25" fill="none"><path d="M12.5 2.08V22.92" stroke="white" stroke-width="2.33" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.71 5.21H9.9C8.93 5.21 8 5.59 7.32 6.28C6.63 6.96 6.25 7.89 6.25 8.85C6.25 9.82 6.63 10.75 7.32 11.43C8 12.12 8.93 12.5 9.9 12.5H15.1C16.07 12.5 17 12.88 17.68 13.57C18.37 14.25 18.75 15.18 18.75 16.15C18.75 17.11 18.37 18.04 17.68 18.72C17 19.41 16.07 19.79 15.1 19.79H6.25" stroke="white" stroke-width="2.33" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div>
+            <div class="sa">$24.00</div>
+            <div class="sl2">Total saved with MyPlace</div>
+            <div style="font-size:11px;color:var(--n400);margin-top:1px">Since March 2024</div>
+          </div>
+        </div>
+        <div class="str">
+          <div class="stb"><div class="stn2">3</div><div class="stl">Deliveries</div></div>
+          <div class="stb"><div class="stn2">$8</div><div class="stl">Avg/month</div></div>
+          <div class="stb"><div class="stn2" style="color:var(--p5)">$50+</div><div class="stl">Bundle value</div></div>
+        </div>
+        <div class="mh">March 2024</div>
+        <div style="background:white;border-radius:14px;border:1px solid var(--n100);padding:0 14px;box-shadow:var(--sh);margin-bottom:12px">
+          <div class="pr">
+            <div class="pi">🛍️</div>
+            <div style="flex:1"><div class="pn">SC Johnson Starter Bundle</div><div class="pd">Mar 14 · Home Depot Washington St</div></div>
+            <div><div class="ps">$14.00 saved</div><div class="pt">Tote pickup</div></div>
+          </div>
+        </div>
+        <div class="mh">April 2024</div>
+        <div style="background:white;border-radius:14px;border:1px solid var(--n100);padding:0 14px;box-shadow:var(--sh);margin-bottom:12px">
+          <div class="pr">
+            <div class="pi">📦</div>
+            <div style="flex:1"><div class="pn">Scrubbing Bubbles × 1</div><div class="pd">Apr 13 · Subscription</div></div>
+            <div><div class="ps">$4.50 saved</div><div class="pt">Subscription</div></div>
+          </div>
+          <div class="pr">
+            <div class="pi">📦</div>
+            <div style="flex:1"><div class="pn">Mrs. Meyer's × 2</div><div class="pd">Apr 13 · Subscription</div></div>
+            <div><div class="ps">$5.50 saved</div><div class="pt">Subscription</div></div>
+          </div>
+        </div>
+        <div class="mh">Coming up</div>
+        <div style="background:var(--p0);border-radius:14px;border:1px solid var(--p1);padding:12px 14px;margin-bottom:14px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div class="pi" style="background:var(--p1)">📅</div>
+            <div style="flex:1"><div class="pn">Next delivery in 12 days</div><div class="pd">Scrubbing Bubbles · Mrs. Meyer's</div></div>
+            <div style="font-size:12px;font-weight:700;color:var(--p5)">May 13</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- SECTION 4: UI ELEMENTS -->
+<div class="sec">
+<div class="sec-hdr">New UI Elements</div>
+<div class="sec-desc">"Learn More" button for subscription cards. Savings card arrow (→) for the Home screen green savings card.</div>
+<div style="display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start">
+
+  <div class="ew">
+    <div class="el">Learn More Button</div>
+    <div style="background:var(--ww);padding:16px 20px;border-radius:16px;border:1px solid var(--n100)">
+      <div style="font-size:12px;color:var(--n400);margin-bottom:10px">Placed on subscription-related cards</div>
+      <button style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:var(--p5);padding:7px 14px;border-radius:9999px;border:1px solid var(--p1);background:var(--p0);cursor:pointer;font-family:var(--f)">Learn More →</button>
+    </div>
+  </div>
+
+  <div class="ew">
+    <div class="el">Savings Card with Arrow (Home)</div>
+    <div style="background:var(--ww);padding:16px;border-radius:16px;border:1px solid var(--n100);width:296px">
+      <div style="font-size:12px;color:var(--n400);margin-bottom:10px">Arrow → navigates to Savings Page</div>
+      <div style="background:var(--gbg);border:1px solid var(--gd);border-radius:20px;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:var(--sh)">
+        <div style="width:44px;height:44px;background:var(--gd);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="22" height="22" viewBox="0 0 25 25" fill="none"><path d="M12.5 2.08V22.92" stroke="white" stroke-width="2.33" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.71 5.21H9.9C8.93 5.21 8 5.59 7.32 6.28C6.63 6.96 6.25 7.89 6.25 8.85C6.25 9.82 6.63 10.75 7.32 11.43C8 12.12 8.93 12.5 9.9 12.5H15.1C16.07 12.5 17 12.88 17.68 13.57C18.37 14.25 18.75 15.18 18.75 16.15C18.75 17.11 18.37 18.04 17.68 18.72C17 19.41 16.07 19.79 15.1 19.79H6.25" stroke="white" stroke-width="2.33" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:20px;font-weight:800;color:var(--n700);letter-spacing:-0.5px">$24.00</div>
+          <div style="font-size:11px;color:var(--gd);font-weight:500">Total saved with MyPlace</div>
+        </div>
+        <div style="width:28px;height:28px;border-radius:14px;background:rgba(26,140,91,0.15);border:1px solid rgba(26,140,91,0.25);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--gd);flex-shrink:0;cursor:pointer">→</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+</body>
+</html>
