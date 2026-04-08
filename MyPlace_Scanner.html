@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>MyPlace — Barcode Scanner</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/zxing-js/0.21.3/umd/index.min.js"></script>
+<style>
+:root {
+  --p9:#1F1B37;--p7:#362E5E;--p5:#5B4E9E;--p3:#A49DC9;--p1:#DEDBEB;--p0:#F1F0F7;
+  --gd:#1A8C5B;--gl:#E6F6EF;--gbg:#E7FFE7;
+  --g9:#7A4800;--g7:#B56A00;--g1:#FDF0C8;--g0:#FFFBEE;
+  --ww:#FAFAF8;--n50:#F5F4F1;--n100:#ECEAE5;--n200:#D9D6CF;--n300:#B8B4AB;
+  --n400:#918D84;--n500:#6B6760;--n700:#3D3A35;--n900:#1A1816;
+  --err:#C62828;--errbg:#FDEAEA;
+  --gp:linear-gradient(135deg,#5B4E9E 70.71%,#362E5E 0%);
+  --gpr:linear-gradient(90deg,#362E5E 0%,#7160C4 100%);
+  --sh:0 1px 3px rgba(26,24,22,0.08);
+  --shm:0 4px 12px rgba(26,24,22,0.10);
+  --shl:0 8px 24px rgba(26,24,22,0.12);
+  --shp:0 8px 24px rgba(91,78,158,0.28);
+  --f:'Inter',-apple-system,Roboto,Helvetica,sans-serif;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+
+html,body{
+  font-family:var(--f);
+  background:var(--ww);
+  height:100%;
+  overflow:hidden;
+}
+
+/* ── PHONE WRAPPER — centers on desktop, full screen on mobile ── */
+.phone{
+  width:100%;
+  max-width:390px;
+  height:100vh;
+  margin:0 auto;
+  background:var(--ww);
+  display:flex;
+  flex-direction:column;
+  position:relative;
+  overflow:hidden;
+}
+
+@media(min-width:420px){
+  body{ background:#1A1816; display:flex; align-items:center; justify-content:center; }
+  .phone{
+    height:844px;
+    border-radius:50px;
+    box-shadow:0 0 0 10px #2A2622,0 0 0 12px #3A3632,0 40px 80px rgba(0,0,0,0.6);
+    overflow:hidden;
+  }
+}
+
+/* ── STATUS BAR ── */
+.sbar{
+  height:44px;
+  background:white;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 24px;
+  font-size:12px;
+  font-weight:600;
+  color:var(--n900);
+  flex-shrink:0;
+}
+
+/* ── TOP BAR ── */
+.topbar{
+  background:white;
+  height:58px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 20px;
+  box-shadow:var(--sh);
+  flex-shrink:0;
+  position:relative;
+  z-index:10;
+}
+
+.tb-logo{
+  font-size:20px;
+  font-weight:800;
+  background:linear-gradient(135deg,#362E5E 0%,#5B4E9E 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+.tb-title{font-size:15px;font-weight:700;color:var(--n900);}
+
+.beta-pill{
+  font-size:10px;
+  font-weight:700;
+  color:var(--p5);
+  background:var(--p0);
+  padding:3px 10px;
+  border-radius:9999px;
+  border:1px solid var(--p1);
+}
+
+/* ── SCROLL BODY ── */
+.scroll{
+  flex:1;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
+.scroll::-webkit-scrollbar{display:none;}
+.scroll-pad{height:24px;flex-shrink:0;}
+
+/* ── SCREENS ── */
+.screen{display:none;flex-direction:column;height:100%;}
+.screen.active{display:flex;}
+
+/* ── CAMERA AREA ── */
+.camera-area{
+  position:relative;
+  background:#0A0A0A;
+  flex-shrink:0;
+  overflow:hidden;
+}
+
+#preview{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.camera-overlay{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to bottom,rgba(0,0,0,0.5) 0%,transparent 30%,transparent 70%,rgba(0,0,0,0.5) 100%);
+  pointer-events:none;
+}
+
+/* Scan frame corners */
+.scan-frame{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-55%);
+  width:220px;height:130px;
+}
+
+.corner{
+  position:absolute;
+  width:24px;height:24px;
+  border-color:white;
+  border-style:solid;
+}
+.corner-tl{top:0;left:0;border-width:3px 0 0 3px;border-radius:3px 0 0 0;}
+.corner-tr{top:0;right:0;border-width:3px 3px 0 0;border-radius:0 3px 0 0;}
+.corner-bl{bottom:0;left:0;border-width:0 0 3px 3px;border-radius:0 0 0 3px;}
+.corner-br{bottom:0;right:0;border-width:0 3px 3px 0;border-radius:0 0 3px 0;}
+
+/* Scan line animation */
+.scan-line{
+  position:absolute;
+  left:10%;right:10%;
+  height:2px;
+  background:linear-gradient(90deg,transparent,rgba(91,78,158,0.8),var(--p5),rgba(91,78,158,0.8),transparent);
+  border-radius:2px;
+  box-shadow:0 0 8px rgba(91,78,158,0.6);
+  animation:scanline 2s ease-in-out infinite;
+  display:none;
+}
+
+@keyframes scanline{
+  0%{top:5%;opacity:0;}
+  10%{opacity:1;}
+  90%{opacity:1;}
+  100%{top:95%;opacity:0;}
+}
+
+.scan-line.active{display:block;}
+
+.camera-hint{
+  position:absolute;
+  bottom:14px;left:0;right:0;
+  text-align:center;
+  color:rgba(255,255,255,0.75);
+  font-size:13px;
+  font-weight:500;
+}
+
+/* Camera status message */
+.camera-status{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  text-align:center;
+  color:rgba(255,255,255,0.7);
+  font-size:13px;
+  padding:0 30px;
+  line-height:1.5;
+}
+
+/* ── SCAN BODY ── */
+.scan-body{
+  padding:16px;
+  background:var(--ww);
+}
+
+/* Buttons */
+.btn{
+  width:100%;
+  padding:14px;
+  border-radius:16px;
+  border:none;
+  font-family:var(--f);
+  font-size:15px;
+  font-weight:700;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  margin-bottom:10px;
+  line-height:1;
+  transition:transform 0.1s,opacity 0.1s;
+}
+.btn:active{transform:scale(0.98);opacity:0.9;}
+.btn-p{background:var(--gp);color:white;box-shadow:var(--shp);}
+.btn-green{background:linear-gradient(135deg,#1A8C5B 0%,#0D6644 100%);color:white;box-shadow:0 8px 24px rgba(26,140,91,0.3);}
+.btn-g{background:transparent;color:var(--n500);border:1px solid var(--n200);}
+.btn-sm{font-size:13px;padding:11px 14px;}
+
+/* Section label */
+.sec-lbl{
+  font-size:11px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.8px;
+  color:var(--n400);
+  padding:4px 0 8px;
+  border-bottom:1px solid var(--n400);
+  margin-bottom:12px;
+}
+
+/* SKU list rows */
+.sku-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 0;
+  border-bottom:1px solid var(--n100);
+  cursor:pointer;
+}
+.sku-row:active{opacity:0.7;}
+.sku-row:last-child{border-bottom:none;}
+
+.sku-icon{
+  width:36px;height:36px;
+  border-radius:10px;
+  background:var(--p0);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+
+.sku-name{font-size:13px;font-weight:600;color:var(--n900);}
+.sku-num{font-size:11px;color:var(--n400);margin-top:1px;}
+
+.store-badge{
+  font-size:10px;
+  font-weight:700;
+  padding:2px 7px;
+  border-radius:9999px;
+  white-space:nowrap;
+}
+
+/* ── RESULT SCREEN ── */
+.result-hero{
+  padding:28px 20px 24px;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  flex-shrink:0;
+}
+
+.result-hero-bundle{background:linear-gradient(135deg,#5B4E9E 70.71%,#362E5E 0%);}
+.result-hero-nobundle{background:linear-gradient(135deg,#B56A00 0%,#7A4800 100%);}
+
+.result-circle{
+  width:56px;height:56px;
+  border-radius:28px;
+  background:rgba(255,255,255,0.20);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+
+.result-eyebrow{
+  font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:1px;
+  color:rgba(255,255,255,0.65);
+  margin-bottom:3px;
+}
+
+.result-name{
+  font-size:20px;font-weight:800;
+  color:white;line-height:1.2;
+}
+
+/* Cards */
+.card{
+  background:white;
+  border-radius:16px;
+  border:1px solid var(--n100);
+  overflow:hidden;
+  margin-bottom:12px;
+  box-shadow:var(--sh);
+}
+
+.bundle-card{
+  background:var(--gbg);
+  border:1px solid var(--gd);
+  border-radius:16px;
+  padding:14px;
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:12px;
+}
+
+.bundle-icon{
+  width:40px;height:40px;
+  background:var(--gd);
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  box-shadow:0 4px 12px rgba(26,140,91,0.25);
+}
+
+.nobundle-card{
+  background:var(--g0);
+  border:1px solid var(--g1);
+  border-radius:16px;
+  padding:14px;
+  margin-bottom:12px;
+}
+
+.drow{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:11px 14px;
+  border-top:1px solid var(--n100);
+  font-size:13px;
+}
+.drow:first-child{border-top:none;}
+.dl{color:var(--n500);}
+.dv{font-weight:700;color:var(--n900);}
+
+/* Toggle between scan and manual list */
+.tab-row{
+  display:flex;
+  gap:8px;
+  margin-bottom:14px;
+}
+.tab{
+  flex:1;
+  padding:10px;
+  border-radius:12px;
+  border:1px solid var(--n200);
+  font-size:13px;
+  font-weight:600;
+  text-align:center;
+  cursor:pointer;
+  background:white;
+  color:var(--n500);
+  transition:all 0.15s;
+}
+.tab.active{
+  background:var(--p0);
+  border-color:var(--p5);
+  color:var(--p5);
+}
+
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+
+/* Info box */
+.info-box{
+  background:var(--p0);
+  border-radius:14px;
+  padding:12px 14px;
+  margin-bottom:14px;
+  font-size:12px;
+  color:var(--p7);
+  line-height:1.5;
+}
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <!-- STATUS BAR -->
+  <div class="sbar"><span>9:41</span><span>📶</span></div>
+
+  <!-- ══════════════════════════════════
+       SCREEN: SCANNER
+  ══════════════════════════════════ -->
+  <div class="screen active" id="s-scan">
+    <div class="topbar">
+      <div class="tb-logo">MyPlace</div>
+      <div class="tb-title">Scan Product</div>
+      <div class="beta-pill">BETA</div>
+    </div>
+
+    <div class="scroll" style="background:#0A0A0A">
+
+      <!-- Camera area -->
+      <div class="camera-area" style="height:310px;">
+        <video id="preview" playsinline muted></video>
+        <div class="camera-overlay"></div>
+        <div class="scan-frame">
+          <div class="corner corner-tl"></div>
+          <div class="corner corner-tr"></div>
+          <div class="corner corner-bl"></div>
+          <div class="corner corner-br"></div>
+          <div class="scan-line" id="scan-line"></div>
+        </div>
+        <div class="camera-status" id="camera-status">
+          Tap "Start Camera" to begin scanning
+        </div>
+        <div class="camera-hint" id="camera-hint" style="display:none">
+          Point camera at a product barcode
+        </div>
+      </div>
+
+      <!-- Scan body -->
+      <div class="scan-body" style="background:var(--ww)">
+
+        <!-- Camera controls -->
+        <button class="btn btn-p" id="start-btn" onclick="startCamera()">Start Camera</button>
+        <button class="btn btn-g" id="stop-btn" style="display:none" onclick="stopCamera()">Stop Camera</button>
+
+        <!-- Demo scan -->
+        <button class="btn btn-green" onclick="demoScan()">Demo Scan — Scrubbing Bubbles</button>
+
+        <div class="info-box">Point your camera at any product barcode. Works with barcodes on SC Johnson products at Home Depot, Target, and Walmart.</div>
+
+        <!-- Tab toggle: Browse SKUs -->
+        <div class="tab-row">
+          <div class="tab active" onclick="switchTab('browse')" id="tab-browse">Browse All SKUs</div>
+          <div class="tab" onclick="switchTab('stores')" id="tab-stores">By Store</div>
+        </div>
+
+        <div class="tab-content active" id="content-browse">
+          <div class="sec-lbl">All Valid Products (21)</div>
+          <div id="sku-all-list"></div>
+        </div>
+
+        <div class="tab-content" id="content-stores">
+          <div class="sec-lbl">Home Depot</div>
+          <div id="sku-hd-list"></div>
+          <div class="sec-lbl" style="margin-top:10px">Target</div>
+          <div id="sku-tgt-list"></div>
+          <div class="sec-lbl" style="margin-top:10px">Walmart</div>
+          <div id="sku-wm-list"></div>
+        </div>
+
+      </div>
+      <div class="scroll-pad"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       SCREEN: SCAN RESULT
+  ══════════════════════════════════ -->
+  <div class="screen" id="s-result">
+    <div class="topbar">
+      <div style="font-size:14px;font-weight:600;color:var(--p5);cursor:pointer" onclick="showScanner()">← Scanner</div>
+      <div class="tb-title">Product Verified</div>
+      <div style="width:60px"></div>
+    </div>
+    <div class="scroll">
+      <div id="result-content"></div>
+      <div class="scroll-pad"></div>
+    </div>
+  </div>
+
+</div><!-- /phone -->
+
+<script>
+// ══════════════════════════════════════
+// SKU DATABASE
+// ══════════════════════════════════════
+const SKUS = [
+  {sku:"003-05-0816", name:"Windex Original 26 oz",                          store:"Target",     bundle:true},
+  {sku:"003-05-1039", name:"Pledge Multisurface Cleaner 9.7oz",               store:"Target",     bundle:true},
+  {sku:"003-05-0498", name:"Scrubbing Bubbles Bathroom Grime Fighter 20oz",   store:"Target",     bundle:true},
+  {sku:"003-04-1891", name:"Glade Automatic Air Freshener Refills",            store:"Target",     bundle:true},
+  {sku:"253-01-0395", name:"Ziploc Sandwich Bags 150 ct",                     store:"Target",     bundle:true},
+  {sku:"003-02-0189", name:"Mrs. Meyer's Lemon Dish Soap 16oz",               store:"Target",     bundle:true},
+  {sku:"003-05-0117", name:"Drano Clog Remover 32oz",                         store:"Target",     bundle:true},
+  {sku:"1000044182",  name:"Windex Original 23oz",                            store:"Home Depot", bundle:true},
+  {sku:"1004676913",  name:"Pledge Multisurface Cleaner 14.2oz",              store:"Home Depot", bundle:true},
+  {sku:"1002833388",  name:"Scrubbing Bubbles Grime Fighter Citrus 20oz 2pk", store:"Home Depot", bundle:true},
+  {sku:"1004122486",  name:"Glade Linen Scented Oil Plug In Starter Kit",     store:"Home Depot", bundle:true},
+  {sku:"1009115634",  name:"Raid Ant and Roach Killer 20oz",                  store:"Home Depot", bundle:false},
+  {sku:"1014323835",  name:"Mrs. Meyer's Snow Drop Hand Soap",                store:"Home Depot", bundle:true},
+  {sku:"128371",      name:"Drano Commercial Max Gel Clog Remover 42oz",      store:"Home Depot", bundle:true},
+  {sku:"122519458",   name:"Windex Original 23oz",                            store:"Walmart",    bundle:true},
+  {sku:"20636265",    name:"Pledge Multisurface Cleaner 9.7oz",               store:"Walmart",    bundle:true},
+  {sku:"199350363",   name:"Scrubbing Bubbles Bathroom Grime Fighter 20oz",   store:"Walmart",    bundle:true},
+  {sku:"18190757032", name:"Glade Linen Scented Oil Plug In Starter Kit",     store:"Walmart",    bundle:true},
+  {sku:"385387405",   name:"Ziploc Sandwich Bags 200ct",                      store:"Walmart",    bundle:true},
+  {sku:"748370443",   name:"Mrs. Meyer's Clean Day Dish Soap 16oz",           store:"Walmart",    bundle:true},
+  {sku:"11027258",    name:"Drano Max Gel Drain Clog Remover 32oz",           store:"Walmart",    bundle:true},
+];
+
+const storeColor = { "Target":"#FFE5E5", "Walmart":"#E5F0FF", "Home Depot":"#FFE8D6" };
+const storeFg    = { "Target":"#CC0000", "Walmart":"#004C97", "Home Depot":"#C15800" };
+
+// ══════════════════════════════════════
+// RENDER SKU LISTS
+// ══════════════════════════════════════
+function skuRowHTML(p) {
+  return `
+    <div class="sku-row" onclick="showResult('${p.sku}')">
+      <div class="sku-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5B4E9E" stroke-width="2.5" stroke-linecap="round">
+          <rect x="2" y="2" width="4" height="4" rx="0.5"/><rect x="18" y="2" width="4" height="4" rx="0.5"/><rect x="2" y="18" width="4" height="4" rx="0.5"/>
+          <line x1="10" y1="2" x2="10" y2="6"/><line x1="14" y1="2" x2="14" y2="6"/>
+          <line x1="2" y1="10" x2="6" y2="10"/><line x1="2" y1="14" x2="6" y2="14"/>
+          <line x1="10" y1="10" x2="14" y2="10"/><line x1="10" y1="14" x2="14" y2="14"/>
+          <line x1="18" y1="10" x2="22" y2="10"/><line x1="18" y1="14" x2="22" y2="14"/>
+          <line x1="10" y1="18" x2="10" y2="22"/><line x1="14" y1="18" x2="14" y2="22"/>
+          <line x1="18" y1="18" x2="22" y2="18"/><line x1="18" y1="22" x2="22" y2="22"/>
+        </svg>
+      </div>
+      <div style="flex:1">
+        <div class="sku-name">${p.name}</div>
+        <div class="sku-num">${p.sku}</div>
+      </div>
+      <span class="store-badge" style="background:${storeColor[p.store]};color:${storeFg[p.store]}">${p.store}</span>
+    </div>`;
+}
+
+function renderLists() {
+  document.getElementById('sku-all-list').innerHTML  = SKUS.map(skuRowHTML).join('');
+  document.getElementById('sku-hd-list').innerHTML   = SKUS.filter(p=>p.store==="Home Depot").map(skuRowHTML).join('');
+  document.getElementById('sku-tgt-list').innerHTML  = SKUS.filter(p=>p.store==="Target").map(skuRowHTML).join('');
+  document.getElementById('sku-wm-list').innerHTML   = SKUS.filter(p=>p.store==="Walmart").map(skuRowHTML).join('');
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.getElementById('content-' + tab === 'browse' ? 'content-browse' : 'content-stores').classList.add('active');
+}
+
+// Fix tab switch
+function switchTab(tab) {
+  document.getElementById('tab-browse').classList.toggle('active', tab==='browse');
+  document.getElementById('tab-stores').classList.toggle('active', tab==='stores');
+  document.getElementById('content-browse').classList.toggle('active', tab==='browse');
+  document.getElementById('content-stores').classList.toggle('active', tab==='stores');
+}
+
+// ══════════════════════════════════════
+// SCREEN NAVIGATION
+// ══════════════════════════════════════
+function showScanner() {
+  document.getElementById('s-scan').classList.add('active');
+  document.getElementById('s-result').classList.remove('active');
+}
+
+function showResult(sku) {
+  const p = SKUS.find(x => x.sku === sku);
+  if (!p) return;
+  renderResult(p);
+  document.getElementById('s-scan').classList.remove('active');
+  document.getElementById('s-result').classList.add('active');
+  document.getElementById('s-result').querySelector('.scroll').scrollTop = 0;
+}
+
+// ══════════════════════════════════════
+// RENDER RESULT
+// ══════════════════════════════════════
+function renderResult(p) {
+  const sc = storeColor[p.store];
+  const sf = storeFg[p.store];
+  const shortName = p.name.split(' ').slice(0, 4).join(' ');
+
+  const checkSVG = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+  const xSVG     = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+
+  const bundleCard = p.bundle ? `
+    <div class="bundle-card">
+      <div class="bundle-icon">${checkSVG}</div>
+      <div>
+        <div style="font-size:14px;font-weight:700;color:var(--n900)">In your MyPlace bundle</div>
+        <div style="font-size:12px;color:var(--gd);margin-top:2px">This product is included in your SC Johnson benefit</div>
+      </div>
+    </div>` : `
+    <div class="nobundle-card">
+      <div style="font-size:14px;font-weight:700;color:var(--g9);margin-bottom:4px">Not in current bundle</div>
+      <div style="font-size:12px;color:var(--g7);line-height:1.5">This product is not part of your MyPlace SC Johnson benefit. Check your Home screen for active bundle items.</div>
+    </div>`;
+
+  document.getElementById('result-content').innerHTML = `
+    <div class="result-hero ${p.bundle ? 'result-hero-bundle' : 'result-hero-nobundle'}">
+      <div class="result-circle">${p.bundle ? checkSVG : xSVG}</div>
+      <div>
+        <div class="result-eyebrow">${p.bundle ? 'Product Verified' : 'Not In Bundle'}</div>
+        <div class="result-name">${shortName}</div>
+      </div>
+    </div>
+    <div style="padding:16px">
+      ${bundleCard}
+      <div class="card">
+        <div class="drow"><span class="dl">Product</span><span class="dv" style="max-width:190px;text-align:right;font-size:12px">${p.name}</span></div>
+        <div class="drow"><span class="dl">SKU</span><span class="dv" style="font-family:monospace;font-size:12px">${p.sku}</span></div>
+        <div class="drow"><span class="dl">Retailer</span><span class="store-badge" style="background:${sc};color:${sf}">${p.store}</span></div>
+        <div class="drow"><span class="dl">Status</span><span class="dv" style="color:${p.bundle?'var(--gd)':'var(--g7)'}">${p.bundle ? 'Included in bundle' : 'Not in bundle'}</span></div>
+      </div>
+      <button onclick="showScanner()" class="btn btn-p">Scan Another Product</button>
+      <button onclick="demoScan()" class="btn btn-g btn-sm">Demo Scan — Scrubbing Bubbles</button>
+    </div>`;
+}
+
+// ══════════════════════════════════════
+// DEMO SCAN
+// ══════════════════════════════════════
+function demoScan() {
+  showResult('1002833388');
+}
+
+// ══════════════════════════════════════
+// LIVE CAMERA (ZXing)
+// ══════════════════════════════════════
+let codeReader = null;
+let stream = null;
+
+async function startCamera() {
+  try {
+    // Check ZXing loaded
+    if (typeof ZXing === 'undefined') {
+      alert('Scanner library not loaded. Please check your connection and reload.');
+      return;
+    }
+
+    document.getElementById('start-btn').style.display = 'none';
+    document.getElementById('stop-btn').style.display = 'flex';
+    document.getElementById('camera-status').style.display = 'none';
+    document.getElementById('camera-hint').style.display = 'block';
+    document.getElementById('scan-line').classList.add('active');
+
+    codeReader = new ZXing.BrowserMultiFormatReader();
+
+    const devices = await ZXing.BrowserCodeReader.listVideoInputDevices();
+    // Prefer back camera
+    const device = devices.find(d => /back|rear|environment/i.test(d.label)) || devices[devices.length - 1];
+    const deviceId = device ? device.deviceId : undefined;
+
+    await codeReader.decodeFromVideoDevice(deviceId, 'preview', (result, err) => {
+      if (result) {
+        const scanned = result.getText();
+        const match = SKUS.find(p => p.sku === scanned);
+        stopCamera();
+        if (match) {
+          showResult(match.sku);
+        } else {
+          // Unknown SKU — show a not-found result
+          showUnknownResult(scanned);
+        }
+      }
+    });
+
+  } catch(err) {
+    console.error('Camera error:', err);
+    document.getElementById('camera-status').textContent = 'Camera unavailable. Use Demo Scan or tap a product below.';
+    document.getElementById('camera-status').style.display = 'block';
+    document.getElementById('camera-hint').style.display = 'none';
+    document.getElementById('scan-line').classList.remove('active');
+    document.getElementById('start-btn').style.display = 'flex';
+    document.getElementById('stop-btn').style.display = 'none';
+  }
+}
+
+function stopCamera() {
+  if (codeReader) {
+    codeReader.reset();
+    codeReader = null;
+  }
+  document.getElementById('scan-line').classList.remove('active');
+  document.getElementById('camera-hint').style.display = 'none';
+  document.getElementById('camera-status').textContent = 'Tap "Start Camera" to begin scanning';
+  document.getElementById('camera-status').style.display = 'block';
+  document.getElementById('start-btn').style.display = 'flex';
+  document.getElementById('stop-btn').style.display = 'none';
+}
+
+function showUnknownResult(scanned) {
+  document.getElementById('result-content').innerHTML = `
+    <div class="result-hero result-hero-nobundle">
+      <div class="result-circle">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </div>
+      <div>
+        <div class="result-eyebrow">Product Not Found</div>
+        <div class="result-name">Unknown SKU</div>
+      </div>
+    </div>
+    <div style="padding:16px">
+      <div class="nobundle-card">
+        <div style="font-size:14px;font-weight:700;color:var(--g9);margin-bottom:4px">Not in MyPlace system</div>
+        <div style="font-size:12px;color:var(--g7);line-height:1.5">This product was not found in your MyPlace bundle. It may not be an eligible SC Johnson product.</div>
+      </div>
+      <div class="card">
+        <div class="drow"><span class="dl">Scanned SKU</span><span class="dv" style="font-family:monospace;font-size:12px">${scanned}</span></div>
+        <div class="drow"><span class="dl">Status</span><span class="dv" style="color:var(--g7)">Not in bundle</span></div>
+      </div>
+      <button onclick="showScanner();startCamera();" class="btn btn-p">Scan Again</button>
+      <button onclick="showScanner()" class="btn btn-g btn-sm">Browse Valid Products</button>
+    </div>`;
+  document.getElementById('s-scan').classList.remove('active');
+  document.getElementById('s-result').classList.add('active');
+}
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  renderLists();
+});
+</script>
+</body>
+</html>
