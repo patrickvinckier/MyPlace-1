@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="MyRide Travel Insurance page — manage trips, file claims, and access global health & travel services. Powered by Allianz Travel.">
+<meta name="theme-color" content="#003781">
+<title>MyRide — Travel Insurance (Allianz)</title>
+<style>
+  :root {
+    --allianz-blue: #003781;
+    --allianz-blue-dark: #002868;
+    --allianz-blue-light: #0066B2;
+    --allianz-accent: #00A8E1;
+    --bg: #FFFFFF;
+    --soft-bg: #F4F7FB;
+    --card: #FFFFFF;
+    --text: #1A2233;
+    --muted: #6B7689;
+    --line: #E5E9EF;
+    --check: #1B8E5A;
+    --shadow: 0 2px 10px rgba(10, 25, 60, 0.05);
+    --shadow-lg: 0 8px 28px rgba(10, 25, 60, 0.10);
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #FFFFFF;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+  .page { display: flex; align-items: flex-start; justify-content: center; padding: 24px; }
+
+  /* Phone frame — auto-height */
+  .phone {
+    width: 390px;
+    background: var(--bg);
+    border-radius: 48px;
+    border: 10px solid #1A1F2E;
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .notch {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 28px;
+    background: #1A1F2E;
+    border-radius: 0 0 18px 18px;
+    z-index: 20;
+  }
+
+  .status-bar {
+    height: 44px;
+    padding: 0 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+    background: white;
+    color: var(--text);
+    flex-shrink: 0;
+  }
+  .status-bar .right { display: flex; gap: 6px; align-items: center; }
+
+  /* Page header with plane background */
+  .page-header {
+    position: relative;
+    background: white;
+    padding: 8px 18px 14px;
+    overflow: hidden;
+  }
+  .plane-bg {
+    position: absolute;
+    right: -24px;
+    top: -8px;
+    color: #DCE6F1;
+    opacity: 0.55;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .header-row {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 40px;
+  }
+  .back-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    color: var(--allianz-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .header-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--allianz-blue);
+    letter-spacing: -0.3px;
+  }
+
+  /* Body */
+  .body {
+    background: white;
+    padding: 4px 18px 16px;
+  }
+
+  .section-h2 {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text);
+    margin: 16px 0 12px;
+    letter-spacing: -0.4px;
+  }
+  .section-h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin: 6px 0 10px;
+  }
+
+  /* Plan / claim / trip cards */
+  .info-card {
+    background: var(--soft-bg);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+  .info-card h4 {
+    margin: 0 0 4px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .info-card .lead {
+    font-size: 12.5px;
+    color: var(--muted);
+    margin: 0 0 12px;
+    line-height: 1.4;
+  }
+  .check-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .check-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12.5px;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .check-list svg {
+    color: var(--check);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .pill-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    background: white;
+    border: 1px solid var(--line);
+    color: var(--allianz-blue);
+    padding: 12px;
+    border-radius: 24px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 1px 3px rgba(10, 25, 60, 0.04);
+  }
+  .pill-btn .plus {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--allianz-blue);
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1;
+  }
+
+  /* Service grid */
+  .service-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .service {
+    background: var(--soft-bg);
+    border-radius: 14px;
+    padding: 12px 12px 14px;
+    position: relative;
+    min-height: 110px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .service-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .service-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: white;
+    color: var(--allianz-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .service-toggle {
+    background: white;
+    color: var(--muted);
+    font-size: 9px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid var(--line);
+  }
+  .service h5 {
+    margin: 4px 0 2px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .service p {
+    margin: 0;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.35;
+  }
+
+  /* Tab bar */
+  .tabbar {
+    background: white;
+    border-top: 1px solid var(--line);
+    height: 78px;
+    padding: 6px 4px 18px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 500;
+  }
+  .tab.active { color: var(--allianz-blue); font-weight: 700; }
+  .tab svg { width: 22px; height: 22px; }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="phone">
+    <div class="notch"></div>
+
+    <!-- STATUS BAR -->
+    <div class="status-bar">
+      <span>9:41</span>
+      <div class="right">
+        <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.5"/><rect x="4" y="5" width="3" height="6" rx="0.5"/><rect x="8" y="2.5" width="3" height="8.5" rx="0.5"/><rect x="12" y="0" width="3" height="11" rx="0.5"/></svg>
+        <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor"><path d="M8 9.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm0-5c1.8 0 3.4.7 4.6 1.9l1.4-1.4C12.4 3.5 10.3 2.5 8 2.5S3.6 3.5 2 5l1.4 1.4A6.5 6.5 0 018 4.5z"/></svg>
+        <svg width="24" height="11" viewBox="0 0 24 11" fill="none"><rect x="0.5" y="0.5" width="21" height="10" rx="2.5" stroke="currentColor"/><rect x="2" y="2" width="16" height="7" rx="1" fill="currentColor"/><rect x="22" y="3.5" width="1.5" height="4" rx="0.5" fill="currentColor"/></svg>
+      </div>
+    </div>
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <svg class="plane-bg" width="220" height="180" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
+      </svg>
+      <div class="header-row">
+        <div class="back-btn">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        </div>
+        <div class="header-title">Travel Insurance</div>
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="body">
+
+      <!-- HOME -->
+      <div class="section-h2">Home</div>
+
+      <div class="section-h3">Your plans</div>
+      <div class="info-card">
+        <h4>Already protected a trip?</h4>
+        <p class="lead">Add an existing travel insurance plan</p>
+        <ul class="check-list">
+          <li>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Access and manage plan details
+          </li>
+          <li>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Streamline the claims process
+          </li>
+        </ul>
+        <div class="pill-btn">
+          <span class="plus">+</span>
+          Add existing plan
+        </div>
+      </div>
+
+      <div class="section-h3">Your claims</div>
+      <div class="info-card">
+        <h4>Start a claim now using your app</h4>
+        <ul class="check-list" style="margin-top: 6px;">
+          <li>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Give us details — the more the better
+          </li>
+          <li>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Upload documents or photos as proof of loss
+          </li>
+          <li>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Check your status in real time
+          </li>
+        </ul>
+        <div class="pill-btn">
+          <span class="plus">+</span>
+          File a claim
+        </div>
+      </div>
+
+      <!-- TRIPS -->
+      <div class="section-h2">Trips</div>
+
+      <div class="info-card">
+        <h4>Travelling soon?</h4>
+        <p class="lead">Create your trip and get:</p>
+        <ul class="check-list">
+          <li>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Access to trip notifications
+          </li>
+          <li>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Alerts about flight changes
+          </li>
+        </ul>
+        <div class="pill-btn">
+          <span class="plus">+</span>
+          Add new trip
+        </div>
+      </div>
+
+      <!-- SERVICES -->
+      <div class="section-h2">Services</div>
+
+      <div class="section-h3">Health services</div>
+      <div class="service-grid">
+
+        <div class="service">
+          <div class="service-head">
+            <div class="service-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0016.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 002 8.5c0 2.29 1.51 4.04 3 5.5l7 7z"/></svg>
+            </div>
+          </div>
+          <h5>Global doctor visits</h5>
+          <p>Schedule in-person or virtual consultations when abroad.</p>
+        </div>
+
+        <div class="service">
+          <div class="service-head">
+            <div class="service-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16"/><line x1="3" y1="21" x2="21" y2="21"/><line x1="12" y1="7" x2="12" y2="13"/><line x1="9" y1="10" x2="15" y2="10"/></svg>
+            </div>
+          </div>
+          <h5>Hospital finder</h5>
+          <p>Find the nearest hospital to you when abroad.</p>
+        </div>
+
+        <div class="service">
+          <div class="service-head">
+            <div class="service-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/></svg>
+            </div>
+          </div>
+          <h5>Medical translator</h5>
+          <p>Easily translate medical terms in 30+ languages.</p>
+        </div>
+
+        <div class="service">
+          <div class="service-head">
+            <div class="service-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 20.5l10-10a4.95 4.95 0 10-7-7l-10 10a4.95 4.95 0 107 7z"/><line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/></svg>
+            </div>
+          </div>
+          <h5>Medication dictionary</h5>
+          <p>Find universal names for medicines anywhere.</p>
+        </div>
+
+      </div>
+
+      <div class="section-h3">Travel services</div>
+      <div class="service-grid">
+
+        <div class="service">
+          <div class="service-head">
+            <div class="service-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+            </div>
+          </div>
+          <h5>Trip organiser</h5>
+          <p>Add trips, register for alerts, and more.</p>
+        </div>
+
+        <div class="service">
+          <div class="service-head">
+            <div class="service-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <span class="service-toggle">Off</span>
+          </div>
+          <h5>Safety alerts</h5>
+          <p>Location-based alerts to help stay safe while travelling.</p>
+        </div>
+
+        <div class="service">
+          <div class="service-head">
+            <div class="service-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h.01M15 9h.01M9 13h.01M15 13h.01M9 17h.01M15 17h.01"/></svg>
+            </div>
+          </div>
+          <h5>Embassy finder</h5>
+          <p>Find the nearest British embassy or consulate.</p>
+        </div>
+
+        <div class="service">
+          <div class="service-head">
+            <div class="service-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+            </div>
+          </div>
+          <h5>Currency &amp; tipping</h5>
+          <p>Live FX rates and local tipping etiquette.</p>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- TAB BAR -->
+    <div class="tabbar">
+      <div class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Home
+      </div>
+      <div class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Find
+      </div>
+      <div class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H6a2 2 0 010-4h12v4"/><path d="M4 6v12a2 2 0 002 2h14v-4"/><path d="M18 12a2 2 0 000 4h4v-4z"/></svg>
+        Offers
+      </div>
+      <div class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        Savings
+      </div>
+      <div class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        AskDad
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
