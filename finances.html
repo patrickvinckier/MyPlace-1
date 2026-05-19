@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="MyRide Finances page — explore investment options for all of life's stages. Powered by State Farm.">
+<meta name="theme-color" content="#E22925">
+<title>MyRide — Finances (State Farm)</title>
+<style>
+  :root {
+    --sf-red: #E22925;
+    --sf-red-dark: #B71B22;
+    --sf-red-deep: #9E1418;
+    --sf-accent: #FFB81C;
+    --bg: #F4F4F4;
+    --soft-bg: #F6F2EA;
+    --card: #FFFFFF;
+    --text: #1A1A1A;
+    --muted: #6B6B6B;
+    --line: #E6E6E6;
+    --check: #1B8E5A;
+    --shadow: 0 2px 10px rgba(30, 10, 10, 0.05);
+    --shadow-lg: 0 8px 28px rgba(30, 10, 10, 0.10);
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #FFFFFF;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+  .page { display: flex; align-items: flex-start; justify-content: center; padding: 24px; }
+
+  /* Phone frame — auto height */
+  .phone {
+    width: 390px;
+    background: var(--bg);
+    border-radius: 48px;
+    border: 10px solid #1A1F2E;
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .notch {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 28px;
+    background: #1A1F2E;
+    border-radius: 0 0 18px 18px;
+    z-index: 20;
+  }
+
+  .status-bar {
+    height: 44px;
+    padding: 0 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+    background: var(--sf-red);
+    color: white;
+    flex-shrink: 0;
+  }
+  .status-bar .right { display: flex; gap: 6px; align-items: center; }
+
+  /* Page header */
+  .page-header {
+    background: var(--sf-red);
+    color: white;
+    padding: 4px 16px 16px;
+  }
+  .page-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 44px;
+  }
+  .icon-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.14);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+  .page-title {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.1px;
+  }
+
+  /* Hero band — under the header */
+  .hero {
+    background: var(--sf-red);
+    color: white;
+    padding: 4px 18px 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-mark {
+    position: absolute;
+    right: -10px;
+    top: -16px;
+    color: rgba(255, 255, 255, 0.10);
+    pointer-events: none;
+  }
+  .hero h1 {
+    margin: 4px 0 6px;
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.4px;
+    position: relative;
+  }
+  .hero p {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.92);
+    position: relative;
+  }
+  .agent-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.16);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: white;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 600;
+    margin-top: 12px;
+    position: relative;
+  }
+  .agent-pill .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #6FE07A;
+    box-shadow: 0 0 0 3px rgba(111, 224, 122, 0.25);
+  }
+
+  /* Body */
+  .body {
+    background: white;
+    padding: 4px 18px 16px;
+  }
+
+  .section-h2 {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text);
+    margin: 18px 0 12px;
+    letter-spacing: -0.4px;
+  }
+  .section-h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin: 6px 0 10px;
+  }
+
+  /* Feature / disclosure card */
+  .info-card {
+    background: var(--soft-bg);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+  .info-card h4 {
+    margin: 0 0 4px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .info-card .lead {
+    font-size: 12.5px;
+    color: var(--muted);
+    margin: 0 0 12px;
+    line-height: 1.4;
+  }
+  .check-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .check-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12.5px;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .check-list svg {
+    color: var(--check);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .pill-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    background: white;
+    border: 1px solid var(--line);
+    color: var(--sf-red);
+    padding: 12px;
+    border-radius: 24px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 1px 3px rgba(10, 10, 10, 0.04);
+  }
+  .pill-btn .arrow {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--sf-red);
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 1;
+  }
+
+  /* Big product card (Retirement / Investment Services hero block) */
+  .product-card {
+    background: linear-gradient(135deg, #FFF6E5 0%, #FFFFFF 60%);
+    border: 1px solid #F1E2BD;
+    border-radius: 16px;
+    padding: 14px 14px 16px;
+    margin-bottom: 14px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .product-card .pc-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--sf-red);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .product-card h4 {
+    margin: 0 0 3px;
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--text);
+  }
+  .product-card p {
+    margin: 0 0 10px;
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+  .product-card .pc-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--sf-red);
+    text-decoration: none;
+  }
+
+  /* Service grid — six products from the State Farm finances page */
+  .service-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .service {
+    background: var(--soft-bg);
+    border-radius: 14px;
+    padding: 12px 12px 14px;
+    position: relative;
+    min-height: 130px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .service-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .service-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: white;
+    color: var(--sf-red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .service-tag {
+    background: white;
+    color: var(--muted);
+    font-size: 9px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid var(--line);
+  }
+  .service-tag.new {
+    color: var(--sf-red);
+    border-color: #F5C7C5;
+    background: #FDECEB;
+  }
+  .service h5 {
+    margin: 4px 0 2px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .service p {
+    margin: 0;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.35;
+  }
+
+  /* Resource list ("Want to know more about investments?") */
+  .resource-list {
+    background: var(--soft-bg);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .resource-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+  .resource-row:last-child { border-bottom: none; }
+  .resource-row .r-icon {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: white;
+    color: var(--sf-red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .resource-row .r-title {
+    flex: 1;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .resource-row .chev {
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+
+  /* Disclosure block */
+  .disclosure {
+    background: #FAFAFA;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-top: 6px;
+    margin-bottom: 8px;
+  }
+  .disclosure p {
+    margin: 0 0 6px;
+    font-size: 10.5px;
+    color: var(--muted);
+    line-height: 1.45;
+  }
+  .disclosure p:last-child { margin-bottom: 0; }
+  .disclosure strong { color: #3A3A3A; font-weight: 700; }
+
+  /* Tab bar */
+  .tabbar {
+    background: white;
+    border-top: 1px solid var(--line);
+    height: 78px;
+    padding: 6px 4px 18px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 500;
+  }
+  .tab.active { color: var(--sf-red); font-weight: 700; }
+  .tab svg { width: 22px; height: 22px; }
+
+  .label {
+    text-align: center;
+    color: #4A5568;
+    font-size: 13px;
+    margin-top: 14px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="phone">
+    <div class="notch"></div>
+
+    <!-- STATUS BAR -->
+    <div class="status-bar">
+      <span>9:41</span>
+      <div class="right">
+        <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.5"/><rect x="4" y="5" width="3" height="6" rx="0.5"/><rect x="8" y="2.5" width="3" height="8.5" rx="0.5"/><rect x="12" y="0" width="3" height="11" rx="0.5"/></svg>
+        <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor"><path d="M8 9.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm0-5c1.8 0 3.4.7 4.6 1.9l1.4-1.4C12.4 3.5 10.3 2.5 8 2.5S3.6 3.5 2 5l1.4 1.4A6.5 6.5 0 018 4.5z"/></svg>
+        <svg width="24" height="11" viewBox="0 0 24 11" fill="none"><rect x="0.5" y="0.5" width="21" height="10" rx="2.5" stroke="currentColor"/><rect x="2" y="2" width="16" height="7" rx="1" fill="currentColor"/><rect x="22" y="3.5" width="1.5" height="4" rx="0.5" fill="currentColor"/></svg>
+      </div>
+    </div>
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <div class="page-header-row">
+        <div class="icon-btn">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        </div>
+        <div class="page-title">Finances</div>
+        <div class="icon-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33h0a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82v0a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- HERO BAND -->
+    <div class="hero">
+      <svg class="hero-mark" width="200" height="200" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M3 3h18v18H3z" opacity="0"/>
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+      </svg>
+      <h1>Let us help you with your financial goals</h1>
+      <p>When it comes to working toward your dreams, we're here to help you make the right choices.</p>
+      <div class="agent-pill">
+        <span class="dot"></span>
+        Your agent · Sarah Patel
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="body">
+
+      <!-- HIGHLIGHT — Retirement & IRAs -->
+      <div class="section-h2">For your future</div>
+
+      <div class="product-card">
+        <div class="pc-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20s2-6 10-6 10 6 10 6"/><circle cx="12" cy="8" r="4"/></svg>
+        </div>
+        <div style="flex:1;">
+          <h4>Retirement &amp; IRAs</h4>
+          <p>Numerous securities products and services to match your investment goals with your future dreams.</p>
+          <a class="pc-link" href="#">Learn more about retirement &amp; IRAs
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- INVESTMENT SERVICES -->
+      <div class="section-h3">Investment services</div>
+      <div class="info-card">
+        <h4>Talk to a State Farm registered agent</h4>
+        <p class="lead">Get personalized guidance on choosing the right mix of investment options for you.</p>
+        <ul class="check-list">
+          <li>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Mutual funds across all major asset classes
+          </li>
+          <li>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Advisory services from a registered investment adviser
+          </li>
+          <li>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Plain-language guidance — no jargon
+          </li>
+        </ul>
+        <div class="pill-btn">
+          <span class="arrow">›</span>
+          Dive into investment services
+        </div>
+      </div>
+
+      <!-- ALL PRODUCTS -->
+      <div class="section-h2">Explore products</div>
+
+      <div class="service-grid">
+
+        <div class="service">
+          <div class="service-head">
+            <div class="service-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </div>
+          </div>
+          <h5>Retirement &amp; IRAs</h5>
+          <p>Traditional, Roth, SEP, SIMPLE — match goals to your future.</p>
+        </div>
+
+        <div class="service">
+          <div class="service-head">
+            <div class="service-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 6-6"/></svg>
+            </div>
+          </div>
+          <h5>Investment services</h5>
+          <p>Mutual funds and advisory services from SFIMC.</p>
+        </div>
+
+        <div class="service">
+          <div class="service-head">
+            <div class="service-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6a2 2 0 01-2 2H4a2 2 0 01-2-2v-6"/><path d="M2 10l10-7 10 7"/><path d="M6 18v-6h12v6"/></svg>
+            </div>
+            <span class="service-tag">529</span>
+          </div>
+          <h5>Education savings</h5>
+          <p>Help make graduation a reality with 529 plans.</p>
+        </div>
+
+        <div class="service">
+          <div class="service-head">
+            <div class="service-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+            </div>
+          </div>
+          <h5>Estate planning</h5>
+          <p>Learn what estate planning means and who to ask for help.</p>
+        </div>
+
+        <div class="service">
+          <div class="service-head">
+            <div class="service-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+            </div>
+          </div>
+          <h5>Annuities</h5>
+          <p>Create a future stream of income that can grow over time.</p>
+        </div>
+
+        <div class="service">
+          <div class="service-head">
+            <div class="service-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+            </div>
+            <span class="service-tag new">SEP · 401k</span>
+          </div>
+          <h5>Business retirement</h5>
+          <p>Attract and retain employees with SEP, SIMPLE, or 401k plans.</p>
+        </div>
+
+      </div>
+
+      <!-- RESOURCES -->
+      <div class="section-h2">Want to know more?</div>
+
+      <div class="resource-list">
+        <div class="resource-row">
+          <div class="r-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+          </div>
+          <div class="r-title">How to calculate your finances</div>
+          <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="resource-row">
+          <div class="r-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+          </div>
+          <div class="r-title">Decode the language of finances</div>
+          <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="resource-row">
+          <div class="r-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1118 0 9 9 0 01-18 0z"/><polyline points="12 7 12 12 15 14"/></svg>
+          </div>
+          <div class="r-title">Planning for life's stages</div>
+          <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="resource-row">
+          <div class="r-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div class="r-title">Which IRA works best for me?</div>
+          <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="resource-row">
+          <div class="r-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 11-6.219-8.56"/><polyline points="21 3 12 12 9 9"/></svg>
+          </div>
+          <div class="r-title">Traditional IRA vs. Roth IRA</div>
+          <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="resource-row">
+          <div class="r-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+          </div>
+          <div class="r-title">How do you make a rollover or transfer?</div>
+          <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>
+
+      <!-- DISCLOSURES -->
+      <div class="section-h3">Important disclosures</div>
+      <div class="disclosure">
+        <p><strong>Securities are not FDIC insured, are not bank guaranteed and are subject to investment risk, including possible loss of principal.</strong></p>
+        <p>Securities available through State Farm VP Management Corp. — a separate entity from those affiliated and/or unaffiliated entities which provide advisory services, banking and insurance products.</p>
+        <p>Advisory Services provided by State Farm Investment Management Corp. (SFIMC), a registered investment adviser. Neither State Farm nor its agents provide tax or legal advice.</p>
+        <p style="color:#999;">AP2025/05/0878</p>
+      </div>
+
+    </div>
+
+    <!-- TAB BAR -->
+    <div class="tabbar">
+      <div class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Home
+      </div>
+      <div class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Find
+      </div>
+      <div class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H6a2 2 0 010-4h12v4"/><path d="M4 6v12a2 2 0 002 2h14v-4"/><path d="M18 12a2 2 0 000 4h4v-4z"/></svg>
+        Offers
+      </div>
+      <div class="tab active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        Finances
+      </div>
+      <div class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        AskDad
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
