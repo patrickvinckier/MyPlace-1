@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Avail × MyPlace — Link Account Screen</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #dde0e8;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px 60px;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .page-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 20px;
+    }
+
+    /* ── Phone ───────────────────────────────────── */
+    .phone {
+      width: 390px;
+      background: #f4f5f7;
+      border-radius: 48px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.22), 0 0 0 1px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    .phone-notch {
+      background: #111;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      border-radius: 48px 48px 0 0;
+    }
+    .notch-time { color: #fff; font-size: 13px; font-weight: 600; }
+    .notch-icons { display: flex; align-items: center; gap: 6px; }
+
+    .phone-screen {
+      height: 820px;
+      overflow-y: auto;
+      scrollbar-width: none;
+      display: flex;
+      flex-direction: column;
+    }
+    .phone-screen::-webkit-scrollbar { display: none; }
+
+    .phone-bottom {
+      background: #111;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0 0 48px 48px;
+    }
+    .home-indicator {
+      width: 100px; height: 4px;
+      background: rgba(255,255,255,0.35);
+      border-radius: 4px;
+    }
+
+    /* ── Tokens ──────────────────────────────────── */
+    :root {
+      --navy:        #1b3a6b;
+      --navy-mid:    #2550a0;
+      --teal:        #2dbfb0;
+      --teal-dark:   #1a9e91;
+      --teal-light:  #e8faf8;
+      --mp-purple:   #5B4E9E;
+      --mp-purple-dk:#362E5E;
+      --mp-gold:     #E08C00;
+      --border:      #e0e3ec;
+      --text-dark:   #1a1a2e;
+      --text-mid:    #555e7a;
+      --text-soft:   #9ba3b8;
+      --bg:          #f4f5f7;
+    }
+
+    /* ── Avail top bar ───────────────────────────── */
+    .avail-nav {
+      background: #fff;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .back-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: var(--bg);
+      border: none;
+      cursor: pointer;
+    }
+    .avail-logo-row {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .avail-wordmark {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--navy);
+      letter-spacing: -0.3px;
+    }
+
+    /* ── Hero partnership strip ──────────────────── */
+    .partnership-strip {
+      background: #fff;
+      padding: 28px 24px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo-bridge {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .logo-avail {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .logo-avail .wordmark {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--navy);
+      letter-spacing: -0.2px;
+    }
+    .bridge-connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+    .bridge-line {
+      width: 24px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--navy) 0%, var(--teal) 50%, var(--mp-purple) 100%);
+      border-radius: 2px;
+    }
+    .bridge-dot {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--teal), var(--mp-purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .bridge-dot svg { width: 10px; height: 10px; }
+    .logo-mp {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .logo-mp .mp-badge {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--mp-purple-dk), var(--mp-purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-mp .wordmark {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--mp-purple);
+      letter-spacing: -0.2px;
+    }
+    .avail-a-mark {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #e8edf5, #d0d8ea);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .partnership-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-dark);
+      text-align: center;
+      margin-bottom: 6px;
+      letter-spacing: -0.3px;
+    }
+    .partnership-sub {
+      font-size: 13px;
+      color: var(--text-mid);
+      text-align: center;
+      line-height: 1.5;
+      max-width: 280px;
+    }
+
+    /* ── Pre-filled account card ─────────────────── */
+    .section-block {
+      background: #fff;
+      margin: 14px 16px 0;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1.5px solid var(--border);
+    }
+    .section-block-header {
+      padding: 12px 16px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .section-block-header .label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--text-soft);
+    }
+    .section-block-header .from-avail {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--navy-mid);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .lock-icon {
+      width: 10px; height: 10px;
+      fill: var(--teal-dark);
+    }
+
+    .account-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-bottom: 1px solid #f5f6f9;
+    }
+    .account-row:last-child { border-bottom: none; }
+    .account-row .row-icon {
+      width: 36px; height: 36px;
+      border-radius: 9px;
+      background: var(--teal-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .account-row .row-label {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-bottom: 2px;
+    }
+    .account-row .row-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+    .account-row .row-value.muted {
+      color: var(--text-mid);
+      font-weight: 400;
+      font-size: 13px;
+    }
+    .prefill-chip {
+      margin-left: auto;
+      font-size: 10px;
+      font-weight: 700;
+      background: var(--teal-light);
+      color: var(--teal-dark);
+      padding: 3px 8px;
+      border-radius: 10px;
+      letter-spacing: 0.2px;
+      flex-shrink: 0;
+    }
+
+    /* ── What you unlock ─────────────────────────── */
+    .perks-block {
+      background: #fff;
+      margin: 14px 16px 0;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1.5px solid var(--border);
+    }
+    .perks-header {
+      padding: 12px 16px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--text-soft);
+    }
+    .perk-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-bottom: 1px solid #f5f6f9;
+    }
+    .perk-row:last-child { border-bottom: none; }
+    .perk-icon {
+      font-size: 20px;
+      width: 36px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .perk-text .perk-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 1px;
+    }
+    .perk-text .perk-desc {
+      font-size: 11px;
+      color: var(--text-soft);
+      line-height: 1.35;
+    }
+    .perk-row .check {
+      margin-left: auto;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--teal);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ── Data sharing notice ─────────────────────── */
+    .consent-block {
+      margin: 14px 16px 0;
+      background: #fff;
+      border-radius: 14px;
+      border: 1.5px solid var(--border);
+      overflow: hidden;
+    }
+    .consent-header {
+      padding: 12px 16px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--text-soft);
+    }
+    .consent-body {
+      padding: 14px 16px;
+    }
+    .consent-body p {
+      font-size: 12px;
+      color: var(--text-mid);
+      line-height: 1.55;
+    }
+    .consent-body .highlight {
+      color: var(--navy);
+      font-weight: 600;
+    }
+    .consent-items {
+      margin: 10px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .consent-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-mid);
+    }
+    .consent-item::before {
+      content: '·';
+      color: var(--teal);
+      font-size: 18px;
+      line-height: 1;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* ── CTA area ────────────────────────────────── */
+    .cta-area {
+      padding: 20px 16px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .btn-activate {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(120deg, var(--navy) 0%, var(--navy-mid) 100%);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      letter-spacing: -0.2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 6px 20px rgba(27,58,107,0.28);
+      transition: filter .2s, transform .15s;
+    }
+    .btn-activate:hover { filter: brightness(1.08); transform: translateY(-1px); }
+    .btn-activate .mp-m {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px; height: 24px;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.18);
+    }
+    .btn-skip {
+      width: 100%;
+      padding: 12px;
+      background: transparent;
+      color: var(--text-soft);
+      border: none;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+    }
+    .fine-print {
+      font-size: 10px;
+      color: var(--text-soft);
+      text-align: center;
+      padding: 0 16px 20px;
+      line-height: 1.5;
+    }
+    .fine-print a {
+      color: var(--navy-mid);
+      text-decoration: underline;
+    }
+
+    /* Step indicator */
+    .step-dots {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      padding: 16px 0 4px;
+    }
+    .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+    .dot.active {
+      width: 18px;
+      border-radius: 3px;
+      background: var(--teal);
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-label">Avail × MyPlace — Account Linking Screen (Mobile)</div>
+
+<div class="phone">
+
+  <!-- Status Bar -->
+  <div class="phone-notch">
+    <span class="notch-time">9:41</span>
+    <div class="notch-icons">
+      <svg width="16" height="12" viewBox="0 0 16 12" fill="white">
+        <rect x="0" y="6" width="3" height="6" rx="1"/>
+        <rect x="4.5" y="4" width="3" height="8" rx="1"/>
+        <rect x="9" y="2" width="3" height="10" rx="1"/>
+        <rect x="13.5" y="0" width="3" height="12" rx="1"/>
+      </svg>
+      <svg width="16" height="12" viewBox="0 0 24 18" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+        <path d="M2 6c5.5-5.3 14.5-5.3 20 0"/>
+        <path d="M5 10c3.9-3.7 10.1-3.7 14 0"/>
+        <path d="M8.5 14c1.9-1.8 5.1-1.8 7 0"/>
+        <circle cx="12" cy="17" r="1.2" fill="white" stroke="none"/>
+      </svg>
+      <svg width="22" height="12" viewBox="0 0 22 12">
+        <rect x="0" y="1" width="19" height="10" rx="2.5" fill="none" stroke="white" stroke-width="1.5"/>
+        <rect x="19.5" y="3.5" width="2" height="5" rx="1" fill="white"/>
+        <rect x="1.5" y="2.5" width="15" height="7" rx="1.5" fill="white"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Screen -->
+  <div class="phone-screen">
+
+    <!-- Avail Nav -->
+    <div class="avail-nav">
+      <button class="back-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1b3a6b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </button>
+      <div class="avail-logo-row">
+        <svg width="20" height="14" viewBox="0 0 28 20" fill="none">
+          <path d="M4 18L14 2L24 18" stroke="#1b3a6b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M7.5 13H20.5" stroke="#1b3a6b" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        <span class="avail-wordmark">avail</span>
+      </div>
+    </div>
+
+    <!-- Step dots -->
+    <div class="step-dots">
+      <div class="dot"></div>
+      <div class="dot active"></div>
+      <div class="dot"></div>
+    </div>
+
+    <!-- Partnership Hero -->
+    <div class="partnership-strip">
+      <div class="logo-bridge">
+        <!-- Avail logo -->
+        <div class="logo-avail">
+          <div class="avail-a-mark">
+            <svg width="22" height="16" viewBox="0 0 28 20" fill="none">
+              <path d="M4 18L14 2L24 18" stroke="#1b3a6b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M7.5 13H20.5" stroke="#1b3a6b" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="wordmark">avail</span>
+        </div>
+
+        <!-- Connector -->
+        <div class="bridge-connector">
+          <div class="bridge-line"></div>
+          <div class="bridge-dot">
+            <svg viewBox="0 0 10 10" fill="white">
+              <path d="M1 8 L3 3 L5 7 L7 3 L9 8" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="bridge-line"></div>
+        </div>
+
+        <!-- MyPlace logo -->
+        <div class="logo-mp">
+          <div class="mp-badge">
+            <svg width="22" height="18" viewBox="0 0 28 22" fill="none">
+              <path d="M2 18 L7 6 L14 16 L21 6 L26 18" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="wordmark">MyPlace</span>
+        </div>
+      </div>
+
+      <div class="partnership-title">Link Your Avail Account</div>
+      <div class="partnership-sub">Activate your free MyPlace membership and unlock exclusive savings — no new account needed.</div>
+    </div>
+
+    <!-- Pre-filled Account Info -->
+    <div class="section-block">
+      <div class="section-block-header">
+        <span class="label">Your Avail Info</span>
+        <span class="from-avail">
+          <svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="#1a9e91" stroke-width="2.5" stroke-linecap="round">
+            <rect x="3" y="11" width="18" height="11" rx="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          Pulled from Avail
+        </span>
+      </div>
+      <div class="account-row">
+        <div class="row-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1a9e91" stroke-width="2" stroke-linecap="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </div>
+        <div>
+          <div class="row-label">Name</div>
+          <div class="row-value">Alex Johnson</div>
+        </div>
+        <span class="prefill-chip">Auto-filled</span>
+      </div>
+      <div class="account-row">
+        <div class="row-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1a9e91" stroke-width="2" stroke-linecap="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+        </div>
+        <div>
+          <div class="row-label">Email</div>
+          <div class="row-value">alex.j@email.com</div>
+        </div>
+        <span class="prefill-chip">Auto-filled</span>
+      </div>
+      <div class="account-row">
+        <div class="row-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1a9e91" stroke-width="2" stroke-linecap="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+        </div>
+        <div>
+          <div class="row-label">Home Address</div>
+          <div class="row-value">1234 Apple Ln., Boston MA</div>
+        </div>
+        <span class="prefill-chip">Auto-filled</span>
+      </div>
+    </div>
+
+    <!-- What You Unlock -->
+    <div class="perks-block">
+      <div class="perks-header">What You Unlock</div>
+      <div class="perk-row">
+        <div class="perk-icon">🏷️</div>
+        <div class="perk-text">
+          <div class="perk-title">300+ Brand Discounts</div>
+          <div class="perk-desc">Home goods, groceries, dining, health & more</div>
+        </div>
+        <div class="check">
+          <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+      </div>
+      <div class="perk-row">
+        <div class="perk-icon">🚗</div>
+        <div class="perk-text">
+          <div class="perk-title">MyRide Auto Savings</div>
+          <div class="perk-desc">Gas, maintenance, tires & more</div>
+        </div>
+        <div class="check">
+          <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+      </div>
+      <div class="perk-row">
+        <div class="perk-icon">📦</div>
+        <div class="perk-text">
+          <div class="perk-title">Quarterly MyPlace Package</div>
+          <div class="perk-desc">Curated products delivered to your door</div>
+        </div>
+        <div class="check">
+          <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+      </div>
+      <div class="perk-row">
+        <div class="perk-icon">⭐</div>
+        <div class="perk-text">
+          <div class="perk-title">Loyalty Points & Tier Rewards</div>
+          <div class="perk-desc">Earn points on every redemption</div>
+        </div>
+        <div class="check">
+          <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Consent Notice -->
+    <div class="consent-block">
+      <div class="consent-header">What Avail Shares with MyPlace</div>
+      <div class="consent-body">
+        <p>To personalize your experience, Avail will securely share the following with MyPlace:</p>
+        <div class="consent-items">
+          <div class="consent-item">Your <span class="highlight">&nbsp;name and email&nbsp;</span> — to create your MyPlace profile</div>
+          <div class="consent-item">Your <span class="highlight">&nbsp;home address&nbsp;</span> — to surface local deals and services</div>
+          <div class="consent-item">Your <span class="highlight">&nbsp;active lease status&nbsp;</span> — to confirm Avail membership</div>
+        </div>
+        <p>MyPlace will <strong>never</strong> share your information with third parties or use it for advertising.</p>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-area">
+      <button class="btn-activate">
+        <div class="mp-m">
+          <svg width="14" height="11" viewBox="0 0 28 22" fill="none">
+            <path d="M2 18 L7 6 L14 16 L21 6 L26 18" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        Activate MyPlace — It's Free
+      </button>
+      <button class="btn-skip">Maybe later</button>
+    </div>
+
+    <div class="fine-print">
+      By activating, you agree to MyPlace's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>. You can unlink your account at any time in Settings.
+    </div>
+
+  </div><!-- /phone-screen -->
+
+  <div class="phone-bottom"><div class="home-indicator"></div></div>
+</div>
+
+</body>
+</html>
